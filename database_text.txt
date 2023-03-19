@@ -1,0 +1,41 @@
+roles
+PK: id
+type
+description
+
+users
+PK: id
+FK role_id
+firstname
+lastname
+email
+password
+
+tickets
+PK: id
+FK: users_id
+FK: status_id
+FK: priority_id
+subject
+description
+conforme_slip_path
+proof_of_payment_path
+scanned_OR_slip_path
+timestamp
+
+conformes
+PK: id
+FK: tickets_id
+details
+timestamp
+
+status
+PK: id
+type
+description
+
+priorities
+PK: id
+type
+description
+
