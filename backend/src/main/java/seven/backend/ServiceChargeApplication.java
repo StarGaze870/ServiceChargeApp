@@ -1,13 +1,13 @@
-package com.uc.alliance.servicechargeapp;
+package seven.backend;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class ServiceChargeAppApplication {
+public class ServiceChargeApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(ServiceChargeAppApplication.class, args);
+		SpringApplication.run(ServiceChargeApplication.class, args);
 	}
 
 }

@@ -1,10 +1,10 @@
-package com.uc.alliance.servicechargeapp;
+package seven.backend;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class ServiceChargeAppApplicationTests {
+class ServiceChargeApplicationTests {
 
 	@Test
 	void contextLoads() {
