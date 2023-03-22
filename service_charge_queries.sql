@@ -1,5 +1,9 @@
 use service_charge;
 
+select * from roles;
+select * from status;
+select * from priorities;
+
 -- TODO: GENERATE DEFAULT VALUES
 
 -- GENERATE ROLES
