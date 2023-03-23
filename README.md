@@ -1,5 +1,9 @@
 # Service Charge Application - Team 7
 
+---
+![appLogo](/guide_images/appLogo.png) 
+---
+
 Lj Vincent Tudtud
 <br>Jeorge Ryan Lou
 <br>Cathleen Rose Gadiane
