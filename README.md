@@ -31,7 +31,7 @@ https://start.spring.io/#!type=maven-project&language=java&platformVersion=3.0.5
 3. check the username and password are correct base on your mysql
 
 ---
-## Create Database Schema using model
+## Create Database Schema using model (My SQL)
 
 1. Select file tab and choose Open Model then choose database_model file from the root folder
 2. Select database tab and choose forward engineer
