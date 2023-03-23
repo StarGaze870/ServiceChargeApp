@@ -1,4 +1,4 @@
-# ServiceChargeApp Team 7
+# Service Charge Application - Team 7
 
 Lj Vincent Tudtud
 <br>Jeorge Ryan Lou
