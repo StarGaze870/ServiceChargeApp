@@ -14,7 +14,7 @@ https://start.spring.io/#!type=maven-project&language=java&platformVersion=3.0.5
 2. Select Maven and choose Existing Maven Projects
 3. Browse to the directory of the SpringBootApplication
 
-<br>
+---
 ## Application Properties Setup
 
 1. open application.properties
@@ -24,14 +24,14 @@ https://start.spring.io/#!type=maven-project&language=java&platformVersion=3.0.5
 
 3. check the username and password are correct base on your mysql
 
-<br>
+---
 ## Create Database Schema using model
 
 1. Select file tab and choose Open Model then choose database_model file from the root folder
 2. Select database tab and choose forward engineer
 3. click next... and finish
 
-<br>
+---
 ## Adding SQL Connection
 
 1. Select Data Source Explorer. Right click and select New..
@@ -51,7 +51,7 @@ https://start.spring.io/#!type=maven-project&language=java&platformVersion=3.0.5
 
 ![pingSuccess](/guide_images/pingSuccess.png)
 
-<br>
+---
 ## Build Project
 
 1. Right click the project then select Run As then Maven install
@@ -59,7 +59,7 @@ https://start.spring.io/#!type=maven-project&language=java&platformVersion=3.0.5
 
 If everthing is up and running go to your postman
 
-<br>
+---
 ## Configure Postman
 
 1. Create a Post request and configure the URL to http://localhost:8080/api/v1/login
