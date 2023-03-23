@@ -53,7 +53,7 @@ https://start.spring.io/#!type=maven-project&language=java&platformVersion=3.0.5
 
 ![connectionProfile](/guide_images/connectionProfile.png)
 
-8. Click Test Connection if it is successfully conencted to the database
+8. Click Test Connection if it is successfully connected to the database
 
 ![pingSuccess](/guide_images/pingSuccess.png)
 
