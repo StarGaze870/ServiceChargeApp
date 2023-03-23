@@ -4,9 +4,9 @@
 
 <br>
 Collaborators:<br>
-<br>Lj Vincent Tudtud
-<br>Jeorge Ryan Lou
-<br>Cathleen Rose Gadiane
+<br>Lj Vincent Tudtud - UCLM
+<br>Jeorge Ryan Lou - UC Banilad
+<br>Cathleen Rose Gadiane - UCLM
 
 ---
 ## Download SpringBootApplication
