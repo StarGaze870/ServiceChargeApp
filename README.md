@@ -23,12 +23,12 @@ https://start.spring.io/#!type=maven-project&language=java&platformVersion=3.0.5
 ---
 ## Application Properties Setup
 
-1. open application.properties
-2. check the appropriate port 
+1. In the resources folder open application.properties
+2. Check the appropriate port 
 
 ![MySQLport](/guide_images/mysqlPort.png) 
 
-3. check the username and password are correct base on your mysql
+3. check if the username and password are correct, base on your mysql
 
 ---
 ## Create Database Schema using model (My SQL)
