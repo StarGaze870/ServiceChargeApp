@@ -2,7 +2,9 @@
 
 ![appLogo](/guide_images/appLogo.png) 
 
-Lj Vincent Tudtud
+<br>
+Collaborators:
+<br>Lj Vincent Tudtud
 <br>Jeorge Ryan Lou
 <br>Cathleen Rose Gadiane
 
