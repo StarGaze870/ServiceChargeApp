@@ -70,8 +70,8 @@ If everthing is up and running go to your postman
 
 1. Create a Post request and configure the URL to http://localhost:8080/api/v1/login
 2. Configure Headers:
-    - Accept: application/json
-    - Content-Type: application/x-www-form-urlencoded
+    - **Accept:** application/json
+    - **Content-Type:** application/x-www-form-urlencoded
 
 ![setupHeaders](/guide_images/setupHeaders.png)
 
