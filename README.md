@@ -9,16 +9,10 @@ Collaborators:<br>
 <br>Cathleen Rose Gadiane - UCLM
 
 ---
-## Download SpringBootApplication
-<br>
-
-https://start.spring.io/#!type=maven-project&language=java&platformVersion=3.0.5&packaging=jar&jvmVersion=17&groupId=alliance.seven&artifactId=backend&name=ServiceCharge&description=Demo%20project%20for%20Spring%20Boot&packageName=alliance.seven.backend&dependencies=web,data-jpa,data-jdbc,lombok,mysql,mail
-
----
 ## Open your Eclipse for J2EE
 1. Select file tab and choose Import
 2. Select Maven and choose Existing Maven Projects
-3. Browse to the directory of the SpringBootApplication
+3. Browse to the directory of the ServiceChargeApp
 
 ---
 ## Application Properties Setup
