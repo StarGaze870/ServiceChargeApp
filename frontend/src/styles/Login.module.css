@@ -1,0 +1,22 @@
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  
+  .left {
+    background-color: white;
+    color: rgb(255, 81, 0);
+    padding: 2rem;
+    text-align: center;
+    flex-basis: 50%;
+  }
+  
+  .right {
+    background-color: rgb(255, 81, 0);
+    color: white;
+    padding: 2rem;
+    text-align: center;
+    flex-basis: 50%;
+  }
