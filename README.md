@@ -31,7 +31,7 @@ https://start.spring.io/#!type=maven-project&language=java&platformVersion=3.0.5
 
 ![MySQLport](/guide_images/mysqlPort.png)
 
-3. check if the username and password are correct, base on your mysql
+3. check if the username and password are correct, based on your MySQL
 
 ---
 ## Create Database Schema using model (My SQL)
@@ -44,7 +44,7 @@ https://start.spring.io/#!type=maven-project&language=java&platformVersion=3.0.5
 ## Adding SQL Connection (Eclipse)
 
 1. Select Data Source Explorer. Right click and select New..
-2. Select MySql
+2. Select MySQL
 3. Click the add driver icon
 
 ![newConnection](/guide_images/newSqlConnection.png)
@@ -52,7 +52,7 @@ https://start.spring.io/#!type=maven-project&language=java&platformVersion=3.0.5
 4. In the Name/Type tab select MySQL JDBC Driver version 5.1
 5. In JAR List tab select the driver file and click Edit JAR/Zip...
 6. Open file mysql-connector-j-8.0.32 in root folder of the app
-7. In Properties tab, Check every attributes if it syncs with your database that you just configure earlier then click ok
+7. In Properties tab, check every attribute if it syncs with your database that you just configure earlier then click ok
 
 ![connectionProfile](/guide_images/connectionProfile.png)
 
@@ -67,11 +67,11 @@ https://start.spring.io/#!type=maven-project&language=java&platformVersion=3.0.5
 
 ![mavenInstall](/guide_images/mavenInstall.png)
 
-2. If build is success then right click the ServiceChargeApplication.java select Run As then Java Application
+2. If build is success, then right click the ServiceChargeApplication.java select Run As then Java Application
 
 ![runApp](/guide_images/runApp.png)
 
-If everthing is up and running go to your postman
+If everything is up and running go to your postman
 
 ---
 ## Configure Postman
