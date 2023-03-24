@@ -21,14 +21,14 @@ Collaborators:<br>
 
 ![applcationProperties](/guide_images/applcationProperties.png)
 
-2. Check the appropriate port (MySQL)
+2. Check the appropriate port (MySQL Workbench)
 
 ![MySQLport](/guide_images/mysqlPort.png)
 
 3. check if the `username` and `password` are correct, based on your MySQL
 
 ---
-## Create Database Schema using model (My SQL)
+## Create Database Schema using model (MySQL Workbench)
 
 1. Select file tab and choose Open Model then choose `database_model` file from the root folder
 2. Select database tab and choose forward engineer
