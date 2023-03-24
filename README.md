@@ -15,7 +15,7 @@ Collaborators:<br>
 https://start.spring.io/#!type=maven-project&language=java&platformVersion=3.0.5&packaging=jar&jvmVersion=17&groupId=alliance.seven&artifactId=backend&name=ServiceCharge&description=Demo%20project%20for%20Spring%20Boot&packageName=alliance.seven.backend&dependencies=web,data-jpa,data-jdbc,lombok,mysql,mail
 
 ---
-## Open your Ecliplse for J2EE
+## Open your Eclipse for J2EE
 1. Select file tab and choose Import
 2. Select Maven and choose Existing Maven Projects
 3. Browse to the directory of the SpringBootApplication
@@ -24,9 +24,12 @@ https://start.spring.io/#!type=maven-project&language=java&platformVersion=3.0.5
 ## Application Properties Setup
 
 1. In the resources folder open application.properties
-2. Check the appropriate port 
 
-![MySQLport](/guide_images/mysqlPort.png) 
+![applcationProperties](/guide_images/applcationProperties.png)
+
+2. Check the appropriate port (MySQL)
+
+![MySQLport](/guide_images/mysqlPort.png)
 
 3. check if the username and password are correct, base on your mysql
 
@@ -38,7 +41,7 @@ https://start.spring.io/#!type=maven-project&language=java&platformVersion=3.0.5
 3. click next... and finish
 
 ---
-## Adding SQL Connection
+## Adding SQL Connection (Eclipse)
 
 1. Select Data Source Explorer. Right click and select New..
 2. Select MySql
@@ -61,7 +64,12 @@ https://start.spring.io/#!type=maven-project&language=java&platformVersion=3.0.5
 ## Build Project
 
 1. Right click the project then select Run As then Maven install
+
+![mavenInstall](/guide_images/mavenInstall.png)
+
 2. If build is success then right click the ServiceChargeApplication.java select Run As then Java Application
+
+![runApp](/guide_images/runApp.png)
 
 If everthing is up and running go to your postman
 
