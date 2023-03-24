@@ -19,4 +19,3 @@ export default function Home() {
     </div>
   );
 }
-//Make sure to save your changes and restart the development server. The login page should now be displayed when you navigate to http://localhost:3000.
