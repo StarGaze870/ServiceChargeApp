@@ -1,0 +1,2 @@
+@RequestMapping("/api")
+@CrossOrigin(origins = "http://localhost:3000")
