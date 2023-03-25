@@ -7,15 +7,15 @@ export default function Home() {
   const router = useRouter();
 
   useEffect(() => {
-    router.push("/login");
+    router.push("/Login");
   }, []);
-
-  return (
-    <div>
-      <Head>
-        <title>My App - Login</title>
-      </Head>
-      <Login />
-    </div>
-  );
+return null;
+  // return (
+  //   <div>
+  //     <Head>
+  //       <title>My App - Login</title>
+  //     </Head>
+  //     <Login />
+  //   </div>
+  // );
 }

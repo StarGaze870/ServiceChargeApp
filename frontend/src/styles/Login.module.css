@@ -2,21 +2,93 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    
     height: 100vh;
   }
   
+  .centerContainer{
+    
+    width: 1000;
+    height: 500px;
+    
+    overflow: auto;
+  }
+
   .left {
+    border-style: solid;
+    border-color:#f2702b;
     background-color: white;
-    color: rgb(255, 81, 0);
+    float: left;
+    width: 500px;
+    justify-content:center;
+    height: 494px;
     padding: 2rem;
+    display: flex;
+    flex-direction: column;
     text-align: center;
     flex-basis: 50%;
   }
   
   .right {
-    background-color: rgb(255, 81, 0);
+    border-style: solid;
+    border-color:#ff4552;
+    background-color: #ff4552;
     color: white;
+    float: right;
+    display: flex;
+    flex-direction: column;
+    justify-content:center;
+    width: 500px;
+    height: 494px;
     padding: 2rem;
     text-align: center;
     flex-basis: 50%;
   }
+  .Spacing{
+    padding-bottom: 10px;
+  }
+  .inputs{
+    height: 35px;
+    width: 340px;
+    background-color:#eeeeee;
+    padding-left: 10px;
+    border: none;
+  }
+  
+  .RoundButton {
+    border-radius: 18px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    text-align: center;
+    width: 150px;
+  }
+  .SignUp:hover {
+    border-color: #ff4552 !important;
+    background-color: white !important;
+    color: #ff4552 !important;
+  }
+
+  .SignUp{
+    color:white;
+    background-color:#ff4552;
+    border-style: solid;
+    border-color:white;
+    
+  }
+  .SignIn{
+    color: #ff4552;
+    border-style: solid;
+    background-color:white;
+    border-color:#ff4552;
+  }
+  .SignIn:hover{
+    color: white;
+    border-style: solid;
+    background-color:#ff4552;
+    border-color:white;
+  }
+.ForgotPassword:hover{
+  color: #ff4552;
+}
+
+ 
