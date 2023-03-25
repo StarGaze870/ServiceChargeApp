@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import styles from "@/styles/Login.module.css";
+import { useEffect } from "react";
+import { useRouter } from "next/router";
 
 function Login() {
   const [credentials, setCredentials] = useState({
@@ -13,10 +15,12 @@ function Login() {
 
     // add code to submit the form data to the backend API
   };
-  const [text, setText] = useState("For got Password?");
+  const router = useRouter();
   function handleForgotPassword() {
     // your function logic here
-      setText("new text");
+      router.push("/ForgotPassword");
+    
+
   };
   // handle form input changes
   const handleChange = (event) => {
@@ -30,52 +34,49 @@ function Login() {
   return (
     <div className={styles.container}>
       <div className={styles.centerContainer}>
-          <div className={styles.left}>
-            <h1 className={styles.Spacing} >Sign In</h1>
-            
+        <div className={styles.left}>
+          <h1 className={styles.Spacing} >Sign In</h1>
 
-              <div className={styles.Spacing} >
-                {/* <label htmlFor="email">Email:</label> */}
-                <input className={styles.inputs}  placeholder="Enter your Email" type="email" id="email" name="email" value={credentials.email} onChange={handleChange} required />
-              </div>
+          <form onSubmit={handleSubmit}>
+          <div className={styles.Spacing} >
+            {/* <label htmlFor="email">Email:</label> */}
+            <input className={styles.inputs} placeholder="Enter your Email" type="email" id="email" name="email" value={credentials.email} onChange={handleChange} required />
+          </div>
 
-              <div className={styles.Spacing}>
-                {/* <label htmlFor="password">Password:</label> */}
-                <input className={styles.inputs} placeholder="Enter your Password" type="password" id="password" name="password" value={credentials.password} onChange={handleChange} required />
-              </div>
-
-                 <a href="#" onClick={handleForgotPassword} className={`${styles.Spacing} ${styles.ForgotPassword}`}>For got Password?</a> 
-             
-
-              <form onSubmit={handleSubmit}>
-              <button  className={`${styles.Spacing} ${styles.RoundButton} ${styles.SignIn}`} id="signin" >Sign In</button>
-              </form>
-            
-            {/* <p className={styles.Spacing}>Enter your personal details and start your journey with us</p> */}
+          <div className={styles.Spacing}>
+            {/* <label htmlFor="password">Password:</label> */}
+            <input className={styles.inputs} placeholder="Enter your Password" type="password" id="password" name="password" value={credentials.password} onChange={handleChange} required />
+          </div>
+        <div className={styles.Spacing}>
+        <a href="#" onClick={handleForgotPassword} className={`${styles.Spacing} ${styles.ForgotPassword}`}>Forgot Password?</a>
+        </div>
           
-          </div>
+            <button className={`${styles.Spacing} ${styles.RoundButton} ${styles.SignIn}`} id="signin" >Sign In</button>
+          </form>
 
-          <div className={styles.right}>
-            <div>
+        </div>
+
+        <div className={styles.right}>
+          <div>
             <h1 className={styles.Spacing}>Welcome to</h1>
-            </div>
-
-            <div>
-            <h1 className={styles.Spacing}><strong>Service Charge App</strong></h1>
-            </div>
-            
-            <div>
-            <p className={styles.Spacing}>Enter your personal details and start your journey with us</p>
-            </div>
-           
-            <div>
-            <button className={`${styles.Spacing} ${styles.RoundButton} ${styles.SignUp}`} id="signup" data-type="signup">Sign Up</button>            </div>
-            
           </div>
+
+          <div>
+            <h1 className={styles.Spacing}><strong>Service Charge App</strong></h1>
+          </div>
+
+          <div>
+            <p className={styles.Spacing}>Enter your personal details and start your journey with us</p>
+          </div>
+
+          <div>
+            <button className={`${styles.Spacing} ${styles.RoundButton} ${styles.SignUp}`} id="signup" data-type="signup">Sign Up</button>            </div>
+
+        </div>
       </div>
-      
+
     </div>
-    
+
   );
 
-}  export default Login;
+} export default Login;
