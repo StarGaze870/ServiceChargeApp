@@ -28,10 +28,10 @@ public class User {
 	private Integer id;
 
 	@ManyToOne
-    @JoinColumn(name = "roles_id")
+    @JoinColumn(name = "role_id")
     private Role role;
-		
-	@Column(name="email", nullable=false)
+	
+	@Column(name="email", nullable=false, unique=true)
 	private String email;
 		
 	@Column(name="firstname", nullable=false)
@@ -45,12 +45,12 @@ public class User {
 	
 	@CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name="created_at", nullable=false, updatable=false)
+    @Column(name="created_at", updatable=false)
     private Date createdAt;
 
     @UpdateTimestamp
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name="updated_at", nullable=false)
+    @Column(name="updated_at")
     private Date updatedAt;
 }
 

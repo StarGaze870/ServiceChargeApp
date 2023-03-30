@@ -3,14 +3,8 @@ package alliance.seven.backend.controller;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
+import org.springframework.http.*;
+import org.springframework.web.bind.annotation.*;
 import com.google.gson.Gson;
 
 import alliance.seven.backend.ENV;
@@ -41,7 +35,7 @@ public class AuthenticationController {
 			user.get().setPassword(null);
 	        return ResponseEntity.ok(user);
 		}
-		catch (Exception e) {
+		catch (Exception e) {	
 			System.err.println(e.getMessage());							
 			Response<String> error = new Response<String>(HttpStatus.BAD_REQUEST.value(), e.getMessage());
 	        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
@@ -53,13 +47,17 @@ public class AuthenticationController {
 		
 		try {		
 						
-			Optional<User> user = userService.login(email, password);							        
-	        Response<Boolean> error = new Response<Boolean>(HttpStatus.OK.value(), true);
-	        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+			Optional<User> user = userService.login(email, password);				
+			Object[] arr = new Object[2];
+			arr[0] = true;
+			arr[1] = user;
+			
+	        Response<Object[]> data = new Response<Object[]>(HttpStatus.OK.value(), arr);
+	        return ResponseEntity.status(HttpStatus.OK).body(data);
 		}
 		catch (Exception e) {
 			System.err.println(e.getMessage());							
-			Response<Boolean> error = new Response<Boolean>(HttpStatus.BAD_REQUEST.value(), false);
+			Response<Boolean> error = new Response<Boolean>(HttpStatus.NOT_FOUND.value(), false);
 	        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
 		}
     }	

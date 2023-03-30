@@ -3,6 +3,11 @@ use service_charge;
 select * from roles;
 select * from status;
 select * from priorities;
+select * from users;
+select * from invoices;
+select * from otps;
+
+INSERT otps(user_id, otp) VALUES(1, 12345);
 
 -- TODO: GENERATE DEFAULT VALUES
 

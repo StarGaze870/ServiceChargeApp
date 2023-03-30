@@ -1,0 +1,13 @@
+.appTitle {
+  font-family: Calibri;
+  text-align: center;
+  white-space: pre-wrap;
+  margin-bottom: 5rem;
+  font-size: calc((8 - 1) * calc(.012 * min(100vh, 900px)) + 1rem);
+}
+
+@media screen and (max-width: 767px) and (orientation: portrait) {
+  .appTitle {
+    font-size: calc((5.5 - 1) * calc(.012 * min(100vh, 900px)) + 1rem);
+  }
+}

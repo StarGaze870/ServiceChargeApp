@@ -1,9 +1,6 @@
 package alliance.seven.backend.controller;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
+import org.springframework.web.bind.annotation.*;
 import alliance.seven.backend.ENV;
 
 @RestController
@@ -14,8 +11,8 @@ public class UserController {
 //	1. REGISTER USER
 //	2. UPDATE USER
 	
-	@GetMapping("/user")
-	public String test() {
+	@PostMapping("/user/create")
+	public String store() {
 	    return "user";
 	}		
 }
