@@ -5,9 +5,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { useRouter } from 'next/router';
 import isLoggedIn from '../isLoggedIn';
 import { CircularProgress } from '@mui/material';
-import CollapsibleTable from '@/components/CollapsibleTable';
 
-const AdminDashboard = () => {    
+const ClientDashboard = () => {    
 
   const router = useRouter();
   const [showProgress, setShowProgress] = useState(false);
@@ -20,11 +19,10 @@ const AdminDashboard = () => {
         await router.replace('/');      
       }
       else {
-        
-        if (isAuthrorized[1].toString() !== 'Admin') {
-          await router.replace(`/dashboard/${isAuthrorized[1].toString().toLowerCase()}`);
+        if (isAuthrorized[1].toString() !== 'Client') {
+            await router.replace(`/dashboard/${isAuthrorized[1].toString().toLowerCase()}`);
         } else {
-          setLoading(false);
+            setLoading(false);
         }
       }
     };
@@ -68,18 +66,15 @@ const AdminDashboard = () => {
           </div>
           )}
         <Head>
-          <title>Admin Dashboard</title>
+          <title>Client Dashboard</title>
         </Head>
-        <h1>ADMIN DASHBOARD</h1>                    
-        <button className='btn btn-dark' onClick={onLogout}>LOGOUT</button>            
-        <div className='d-flex justify-content-end'>                    
-            <div className='d-flex w-75 me-5' style={{height: '100%'}}>
-              <CollapsibleTable></CollapsibleTable>            
-            </div>
-        </div>
+        <Container maxWidth="lg">
+          <h1>CLIENT DASHBOARD</h1>          
+          <button className='btn btn-dark' onClick={onLogout}>LOGOUT</button>
+        </Container>
       </>
     )
   );
 };
 
-export default AdminDashboard;
+export default ClientDashboard;

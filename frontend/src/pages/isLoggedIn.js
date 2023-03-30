@@ -18,7 +18,7 @@ const isLoggedIn = async () => {
         const decryptedPasswordBytes = CryptoJS.AES.decrypt(encryptedPassword, 'password');
         const decryptedPassword = decryptedPasswordBytes.toString(CryptoJS.enc.Utf8);
         const decryptedRoleBytes = CryptoJS.AES.decrypt(encryptedPassword, 'password');
-        const decryptedRole = decryptedPasswordBytes.toString(CryptoJS.enc.Utf8);
+        const decryptedRole = decryptedRoleBytes.toString(CryptoJS.enc.Utf8);
 
         if (!decryptedEmail || !decryptedPassword || !decryptedRole) {
             return [false, null]

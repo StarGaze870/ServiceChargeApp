@@ -63,10 +63,11 @@ export default function LoginModal({ modalOpen, setModalOpen }) {
     // Store encrypted email and password in local storage
     localStorage.setItem('email', encryptedEmail);
     localStorage.setItem('password', encryptedPassword);
+    localStorage.setItem('role', encryptedRole);
   
-    setTimeout(() => {
+    setTimeout(() => {      
+      router.push(`/dashboard/${getLoginResponse[1].role.type.toString().toLowerCase()}`);      
       setShowProgress(false);
-      router.push('/dashboard/admin');
     }, 1500);
   };
   
