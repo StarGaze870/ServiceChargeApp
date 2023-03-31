@@ -31,21 +31,31 @@ export default function LoginModal({ modalOpen, setModalOpen }) {
   const formRef = useRef();
   const [showProgress, setShowProgress] = useState(false);
   const [error, setError] = useState('');
+  const [statusCode, setStatusCode] = useState(0);
 
   const handleLogin = async (event) => {
     event.preventDefault();
     setShowProgress(true);
     setError('');
+    setStatusCode(0);
   
     const formData = new FormData(formRef.current);
     const data = Object.fromEntries(formData.entries());
   
     const getLoginResponse = await login({ email: data.email, password: data.password });
-  
+    console.log(getLoginResponse)
+
     if (getLoginResponse[0] !== 200) {
       setTimeout(() => {
         setShowProgress(false);
+        setStatusCode(getLoginResponse[0])
+
+        if (getLoginResponse[0] === 500) {
+          setError(getLoginResponse[1])
+          return
+        }          
         setError(getLoginResponse[1].data);
+
       }, 500);
       return;
     }
@@ -65,8 +75,8 @@ export default function LoginModal({ modalOpen, setModalOpen }) {
     localStorage.setItem('password', encryptedPassword);
     localStorage.setItem('role', encryptedRole);
   
-    setTimeout(() => {      
-      router.push(`/dashboard/${getLoginResponse[1].role.type.toString().toLowerCase()}`);      
+    setTimeout(async () => {      
+      await router.push(`/dashboard/${getLoginResponse[1].role.type.toString().toLowerCase()}`);      
       setShowProgress(false);
     }, 1500);
   };
@@ -144,7 +154,7 @@ export default function LoginModal({ modalOpen, setModalOpen }) {
                 label="Email"                
                 margin="normal"
                 variant="outlined"
-                error={error === 'Email does not exist'}             
+                error={error === 'Email does not exist' || statusCode === 500}
               />              
               <TextField
                 name="password"
@@ -153,7 +163,7 @@ export default function LoginModal({ modalOpen, setModalOpen }) {
                 type="password"                
                 margin="normal"
                 variant="outlined"
-                error={error === 'Password does not match'}              
+                error={error === 'Password does not match' || statusCode === 500}
               />
             </form>            
             <Button variant="text" onClick={handleForgotPassword} style={{ textAlign: 'right', display: 'block', marginBottom: '1em' }}>

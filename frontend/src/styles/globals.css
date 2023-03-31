@@ -12,3 +12,8 @@ body {
   height: 100%;
   min-height: 100%;
 }
+
+body {
+  overflow-y: scroll;
+  z-index: 0;
+}
