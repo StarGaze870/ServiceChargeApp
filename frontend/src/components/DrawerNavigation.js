@@ -18,8 +18,24 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
 import MailIcon from '@mui/icons-material/Mail';
+import LogoutIcon from '@mui/icons-material/Logout';
+import DeleteIcon from '@mui/icons-material/Delete';
 
-const drawerWidth = 240;
+const drawerWidth = 300;
+
+const topMenuItems = [
+    { text: 'Inbox', icon: <InboxIcon /> },
+    { text: 'Starred', icon: <MailIcon /> },
+    { text: 'Send email', icon: <InboxIcon /> },
+    { text: 'Drafts', icon: <MailIcon /> },
+  ];
+  
+  const bottomMenuItems = [
+    { text: 'All mail', icon: <InboxIcon /> },
+    { text: 'Trash', icon: <DeleteIcon /> },
+    { text: 'Logout', icon: <LogoutIcon /> },
+  ];
+  
 
 const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(
   ({ theme, open }) => ({
@@ -66,9 +82,13 @@ const DrawerHeader = styled('div')(({ theme }) => ({
   justifyContent: 'flex-end',
 }));
 
-export default function PersistentDrawerLeft({children}) {
+export default function PersistentDrawerLeft({children, onLogout}) {
+  
   const theme = useTheme();
   const [open, setOpen] = React.useState(true);
+  const [selectedItem, setSelectedItem] = React.useState('Inbox');
+
+  // DRAWER FUNCTIONS
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -76,6 +96,15 @@ export default function PersistentDrawerLeft({children}) {
 
   const handleDrawerClose = () => {
     setOpen(false);
+  };
+
+  // FUNCTIONS
+  const handleItemClick = (text) => {
+
+    if (text === 'Logout')
+        onLogout();
+
+    setSelectedItem(text);
   };
 
   return (
@@ -98,8 +127,8 @@ export default function PersistentDrawerLeft({children}) {
           </Typography>
         </Toolbar>
       </AppBar>
-      <Drawer
-        sx={{
+      <Drawer className='d-flex'
+        sx={{            
           width: drawerWidth,
           flexShrink: 0,
           '& .MuiDrawer-paper': {
@@ -110,7 +139,7 @@ export default function PersistentDrawerLeft({children}) {
         variant="persistent"
         anchor="left"
         open={open}
-      >
+      >    
         <DrawerHeader>
           <IconButton onClick={handleDrawerClose}>
             {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
@@ -118,35 +147,55 @@ export default function PersistentDrawerLeft({children}) {
         </DrawerHeader>
         <Divider />
         <List>
-          {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-            <ListItem key={text} disablePadding>
-              <ListItemButton>
-                <ListItemIcon>
-                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                </ListItemIcon>
-                <ListItemText primary={text} />
-              </ListItemButton>
-            </ListItem>
-          ))}
+            {topMenuItems.map((item) => (
+                <ListItem key={item.text} disablePadding>
+                <ListItemButton
+                    // selected={item.text === selectedItem}
+                    onClick={() => handleItemClick(item.text)}
+                    sx={{
+                    backgroundColor: item.text === selectedItem ? 'rgba(23, 48, 88, 0.1)' : 'transparent',
+                    '&:hover': {
+                        backgroundColor: 'rgba(0, 0, 0, .1)',
+                    },
+                    }}
+                >
+                    <ListItemIcon>{item.icon}</ListItemIcon>
+                    <ListItemText primary={item.text} />
+                </ListItemButton>
+                </ListItem>
+            ))}
         </List>
         <Divider />
         <List>
-          {['All mail', 'Trash', 'Spam'].map((text, index) => (
-            <ListItem key={text} disablePadding>
-              <ListItemButton>
-                <ListItemIcon>
-                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                </ListItemIcon>
-                <ListItemText primary={text} />
-              </ListItemButton>
-            </ListItem>
-          ))}
+            {bottomMenuItems.map((item) => (
+                <ListItem key={item.text} disablePadding>
+                <ListItemButton
+                    selected={item.text === selectedItem}
+                    onClick={() => handleItemClick(item.text)}
+                    sx={{
+                    backgroundColor: item.text === selectedItem ? 'rgba(0, 0, 0, 0.08)' : 'transparent',
+                    '&:hover': {
+                        backgroundColor: 'rgba(0, 0, 0, 0.08)',
+                    },
+                    }}
+                >
+                    <ListItemIcon>{item.icon}</ListItemIcon>
+                    <ListItemText primary={item.text} />
+                </ListItemButton>
+                </ListItem>
+            ))}
         </List>
+        <img
+              className='d-flex mt-auto mx-auto mb-5'
+              src="/appLogoBlack.png"
+              alt="App Logo"
+              style={{ width: '6em', height: '6em' }}
+            />
       </Drawer>
       <Main open={open}>                
-            <DrawerHeader />
-            {children}        
-      </Main>
+        <DrawerHeader />
+        {children}        
+      </Main>      
     </Box>
   );
 }

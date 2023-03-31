@@ -86,19 +86,12 @@ const AdminDashboard = () => {
           <meta name="viewport" content="width=device-width, initial-scale=1" />
           <link rel="icon" href="/appLogoWhite.ico" />        
         </Head>        
-        <PersistentDrawerLeft>
+        <PersistentDrawerLeft onLogout={onLogout}>
         <div className='d-flex w-100'>
             {ticketTableData !== null && (
               <CollapsibleTable data={ticketTableData} />
             )}
-        </div>
-          {/* <div className="d-flex justify-content-end">
-            <div className="d-flex w-75 me-5">
-              {ticketTableData !== null && (
-                <CollapsibleTable data={ticketTableData} />
-              )}
-            </div>
-          </div> */}
+        </div>          
         </PersistentDrawerLeft>
       </>
     )

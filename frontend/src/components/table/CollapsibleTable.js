@@ -94,7 +94,7 @@ function Row(props) {
       <TableRow
         sx={{
           '& > *': { borderBottom: 'unset' },
-          backgroundColor: index % 2 === 1 ? 'rgb(248, 249, 250)' : 'white', // Add this line
+          backgroundColor: index % 2 === 1 ? 'rgba(23, 48, 88, 0.1)' : 'white', // Add this line
         }}
       >
         <TableCell>
@@ -260,7 +260,7 @@ export default function CollapsibleTable({data}) {
 
   return (   
     <div className='d-flex flex-column shadow w-100'>
-      <div className='d-flex justify-content-end shadow bg-light'>
+      <div className='d-flex justify-content-end shadow' style={{backgroundColor: 'rgba(23, 48, 88, 0.1)'}}>
         <TablePagination
             className='d-flex me-4'  
             component='div'           
@@ -288,9 +288,13 @@ export default function CollapsibleTable({data}) {
           {/* TABLE HEADER */}          
           <TableHead>          
             <TableRow>
-              <TableCell className='bg-light' />            
-              <TableCell className='bg-light'><button className='btn m-0 p-0' onClick={() => requestSort('subject')}>Subject</button></TableCell>              
-              <TableCell className='bg-light' align="right">
+              <TableCell className='' style={{backgroundColor: 'rgba(23, 48, 88, 0.1)'}} />            
+              <TableCell className='' style={{backgroundColor: 'rgba(23, 48, 88, 0.1)'}}>
+                <button className='btn m-0 p-0' onClick={() => requestSort('subject')}>
+                  Subject
+                </button>
+              </TableCell>              
+              <TableCell className='' style={{backgroundColor: 'rgba(23, 48, 88, 0.1)'}} align="right">
                   <div className='d-flex flex-column flex-lg-row justify-content-end'>                  
                   <InputLabel className='d-flex align-self-end me-lg-3 text-black'>Status</InputLabel>
                   <Select
@@ -318,7 +322,7 @@ export default function CollapsibleTable({data}) {
                   </Select>
                   </div>
               </TableCell>
-              <TableCell className='bg-light' align="right">
+              <TableCell className='' style={{backgroundColor: 'rgba(23, 48, 88, 0.1)'}} align="right">
                   <div className='d-flex flex-column flex-lg-row justify-content-end'>                  
                   <InputLabel className='d-flex align-self-end me-lg-3 text-black'>Priority</InputLabel>
                   <Select
@@ -345,8 +349,12 @@ export default function CollapsibleTable({data}) {
                   </Select>
                   </div>
               </TableCell>
-              <TableCell className='bg-light' align="right"><button className='btn m-0 p-0' onClick={() => requestSort('date')}>Date</button></TableCell>              
-              <TableCell className='bg-light' />
+              <TableCell className='' style={{backgroundColor: 'rgba(23, 48, 88, 0.1)'}} align="right">
+                <button className='btn m-0 p-0' onClick={() => requestSort('date')}>
+                  Date
+                </button>
+              </TableCell>              
+              <TableCell className='' style={{backgroundColor: 'rgba(23, 48, 88, 0.1)'}} />
             </TableRow>
           </TableHead>          
           <TableBody>
