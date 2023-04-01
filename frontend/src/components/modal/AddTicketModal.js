@@ -10,6 +10,7 @@ import { useRouter } from 'next/router';
 import { CircularProgress } from '@mui/material';
 import { login } from '@/apiRequests/authentication/loginRequest';
 import CryptoJS from 'crypto-js';
+import { createTicket } from '@/apiRequests/tickets/createTicket';
 
 const style = {
   position: 'absolute',
@@ -25,7 +26,7 @@ const style = {
   p: 8,
 };
 
-export default function LoginModal({ modalOpen, setModalOpen }) {
+export default function AddTicketModal({ modalOpen, setModalOpen }) {
   
   const router = useRouter();
   const formRef = useRef();
@@ -33,7 +34,7 @@ export default function LoginModal({ modalOpen, setModalOpen }) {
   const [error, setError] = useState('');
   const [statusCode, setStatusCode] = useState(0);
 
-  const handleLogin = async (event) => {
+  const handleAddTicket = async (event) => {
     event.preventDefault();
     setShowProgress(true);
     setError('');
@@ -42,43 +43,18 @@ export default function LoginModal({ modalOpen, setModalOpen }) {
     const formData = new FormData(formRef.current);
     const data = Object.fromEntries(formData.entries());
   
-    const getLoginResponse = await login({ email: data.email, password: data.password });
-    console.log(getLoginResponse)
-
-    if (getLoginResponse[0] !== 200) {
-      setTimeout(() => {
-        setShowProgress(false);
-        setStatusCode(getLoginResponse[0])
-
-        if (getLoginResponse[0] === 500) {
-          setError(getLoginResponse[1])
-          return
-        }          
-        setError(getLoginResponse[1].data);
-
-      }, 500);
-      return;
-    }
-  
-    console.log('-- LOGIN RESPONSE --');
-    console.log(getLoginResponse);    
+    console.log(data);
     
+    console.log('-- CREATING TICKETS --')
+    const getLoginResponse = await createTicket({ 
+      subject: data.subject, 
+      description: data.description, 
+      userID: 1 
+    });        
+    setModalOpen(false)
+    setShowProgress(false);
+    console.log(getLoginResponse);
 
-    // Encrypt email and password using AES encryption
-    const secretKey = 'your-secret-key'; // Replace this with your actual secret key
-    const encryptedEmail = CryptoJS.AES.encrypt(data.email, 'email').toString();
-    const encryptedPassword = CryptoJS.AES.encrypt(data.password, 'password').toString();
-    const encryptedRole = CryptoJS.AES.encrypt(getLoginResponse[1].role.type, 'role').toString();
-  
-    // Store encrypted email and password in local storage
-    localStorage.setItem('email', encryptedEmail);
-    localStorage.setItem('password', encryptedPassword);
-    localStorage.setItem('role', encryptedRole);
-  
-    setTimeout(async () => {      
-      await router.push(`/dashboard/${getLoginResponse[1].role.type.toString().toLowerCase()}`);      
-      setShowProgress(false);
-    }, 1500);
   };
   
 
@@ -136,46 +112,32 @@ export default function LoginModal({ modalOpen, setModalOpen }) {
               </div>
             )}
 
-            <div className="d-flex flex-column flex-xxl-row align-items-center mx-auto mb-5">
-            <img
-              className='me-5 mb-3'
-              src="/appLogoBlack.png"
-              alt="App Logo"
-              style={{ width: '150px', height: '150px' }}
-            />
-            <h1 className='mx-auto my-auto'>Service Charge Application</h1>
-          </div>
-            <h3 id="transition-modal-title" className='mb-4' style={{ textAlign: 'start' }}>Login</h3>                                    
-            <form ref={formRef} onSubmit={handleLogin}>
+            <div className="d-flex flex-column flex-xxl-row align-items-center mx-auto mb-5">            
+            <h1 className='mx-auto my-auto'>Add Ticket</h1>
+          </div>            
+            <form ref={formRef} onSubmit={handleAddTicket}>
             {error && <p className='m-0 p-0' style={{ color: 'red' }}>{error}</p>}
               <TextField
-                name="email"
+                name="subject"
                 fullWidth
-                label="Email"                
+                label="Subject"                
                 margin="normal"
-                variant="outlined"
-                error={error === 'Email does not exist' || statusCode === 500}
+                variant="outlined"                
               />              
               <TextField
-                name="password"
+                name="description"
                 fullWidth
-                label="Password"
-                type="password"                
+                multiline
+                rows={6} 
+                label="Description"                
                 margin="normal"
-                variant="outlined"
-                error={error === 'Password does not match' || statusCode === 500}
+                variant="outlined"                
               />
-            </form>            
-            <Button variant="text" onClick={handleForgotPassword} style={{ textAlign: 'right', display: 'block', marginBottom: '1em' }}>
-              Forgot password?
-            </Button>
+            </form>                        
             <div className="d-flex justify-content-end">
-              <button className="btn btn-dark me-3" onClick={handleLogin} style={{ marginTop: '16px' }}>
-                Sign In
-              </button>
-              <button className="btn btn-light" onClick={closeModal} style={{ marginTop: '16px' }}>
-                Cancel
-              </button>
+              <button className="btn btn-dark w-25" onClick={handleAddTicket} style={{ marginTop: '16px' }}>
+                Add
+              </button>              
             </div>
           </Box>
         </Fade>

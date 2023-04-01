@@ -21,7 +21,7 @@ import MailIcon from '@mui/icons-material/Mail';
 import LogoutIcon from '@mui/icons-material/Logout';
 import DeleteIcon from '@mui/icons-material/Delete';
 
-const drawerWidth = 300;
+const drawerWidth = 250;
 
 const topMenuItems = [
     { text: 'Inbox', icon: <InboxIcon /> },

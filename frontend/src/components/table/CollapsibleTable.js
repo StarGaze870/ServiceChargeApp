@@ -180,7 +180,7 @@ export default function CollapsibleTable({data}) {
           description: item.description,
           status: item.status.type,
           user: item.user.firstname + ' ' + item.user.lastname,
-          priority: item.priority.type,
+          priority: item.priority && item.priority.type !== null ? item.priority.type : '', 
           date: item.created_at}));
       setRows(rowData);
 
