@@ -27,10 +27,13 @@ public class User {
 	@Column(name="id", nullable=false)	
 	private Integer id;
 
-	@ManyToOne
-    @JoinColumn(name = "roles_id")
-    private Role role;
-		
+//	  @ManyToOne 
+//    @JoinColumn(name = "roles_id", nullable=false)
+//    private Role role;
+//			
+	@Column(name = "roles_id", nullable=false)
+	private Integer role;
+	
 	@Column(name="email", nullable=false)
 	private String email;
 		

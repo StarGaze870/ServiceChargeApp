@@ -1,20 +1,24 @@
+
 import React, { useState } from "react";
 import { useRouter } from "next/router";
 import styles from "@/styles/ForgotPassword.module.css";
+import axios from 'axios';
 
-function ForgotPassword() {
+function ResetPAssword() {
     const [credentials, setCredentials] = useState({
-        email: "",
-        password: ""
+        email: '',
+        password: '',
+        confirmPassword: '',
       });
-    
-      // handle form submission
+console.log(credentials); 
+
       const handleSubmit = (event) => {
         event.preventDefault();
-        router.push("/ForgotPassword");
-        // add code to submit the form data to the backend API
+          // Get the values of the form fields
+        router.push("/Login");
       };
-      const router = useRouter();
+
+    const router = useRouter();
     
       function handleSignIn(event) {
         // your function logic here
@@ -34,14 +38,27 @@ function ForgotPassword() {
         <div className={styles.container}>
         <div className={styles.centerContainer}>
           <div className={styles.right}>
-            <h1 className={styles.Spacing} >ForgotPassword</h1>
+            <h1 className={styles.Spacing} >Create an Account</h1>
             <form onSubmit={handleSubmit}>
+                
             <div className={styles.Spacing} >
               <input className={styles.inputs} placeholder="Enter your Email" type="email" id="email" name="email" value={credentials.email} onChange={handleChange} required />
             </div>
-  
+
+            <div className={styles.Spacing} >
+              <input className={styles.inputs} placeholder="Enter the Otp" type="text" id="otp" name="otp"  onChange={handleChange} required />
+            </div>
+
+            <div className={styles.Spacing}>
+              {/* <label htmlFor="password">Password:</label> */}
+              <input className={styles.inputs} placeholder="Enter your New Password" type="password" id="password" name="password" value={credentials.password} onChange={handleChange} required />
+            </div>
+            <div className={styles.Spacing}>
+              {/* <label htmlFor="password">Password:</label> */}
+              <input className={styles.inputs} placeholder="Confirm New Password" type="password" id="confirmpassword" name="confirmpassword"  onChange={handleChange} required />
+            </div>
             
-              <button className={`${styles.Spacing} ${styles.RoundButton} ${styles.Sendcode}`} id="sendcode" >Send Code</button>
+              <button className={`${styles.Spacing} ${styles.RoundButton} ${styles.Sendcode}`} id="sendcode" >Submit</button>
             </form>
           </div>
   
@@ -70,4 +87,4 @@ function ForgotPassword() {
       </div>
     );
 
-} export default ForgotPassword;
+} export default ResetPAssword;

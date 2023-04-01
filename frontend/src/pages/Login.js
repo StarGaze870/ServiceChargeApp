@@ -7,21 +7,11 @@ import axios from 'axios';
 function Login() {
   const [data, setData] = useState([]);
   const [stringFromSpringBoot, setStringFromSpringBoot] = useState("");
-  // useEffect(() => {
-  //   axios.get('http://localhost:8080/api/user')
-  //     .then(response => {
-  //       setData(response.data);
-  //     })
-  //     .catch(error => {
-  //       console.error('Error fetching data: ', error);
-  //     });
-  // }, []);
 
   useEffect(() => {
-    fetch("http://localhost:8080/api/user") // Replace with the actual endpoint URL
-      .then((response) => response.text())
-      .then((data) => setStringFromSpringBoot(data))
-      .catch((error) => console.error(error));
+    axios.get('http://localhost:8080/api/user')
+  .then(response => setStringFromSpringBoot(response.data))
+  .catch(error => console.error(error));
   }, []);
 
   const [credentials, setCredentials] = useState({
@@ -32,15 +22,38 @@ function Login() {
   // handle form submission
   const handleSubmit = (event) => {
     event.preventDefault();
+  // Get the values of the form fields
+  const email = event.target.email.value;
+  const password = event.target.password.value;
 
-    // add code to submit the form data to the backend API
+  const user = {
+    email: email,
+    password: password,
+  };
+// Send a POST request to the backend API to register the user
+axios.post('http://localhost:8080/api/login', user)
+.then(response => {
+  console.log(response.data);   
+  alert(response.data);
+  if(response.data === "Login Successful! : Logging In"){
+    //router.push("/Login");
+  }
+})
+.catch(error => {
+  console.log(error);
+  alert('Error Bad Gate Way : http://localhost:8080/api/login');
+});
+
   };
   const router = useRouter();
   function handleForgotPassword() {
     // your function logic here
     router.push("/ForgotPassword");
-
-
+  };
+  
+  function handleSignUp() {
+    // your function logic here
+    router.push("/SignUp");
   };
   // handle form input changes
   const handleChange = (event) => {
@@ -90,15 +103,20 @@ function Login() {
           </div>
 
           <div>
-            <button className={`${styles.Spacing} ${styles.RoundButton} ${styles.SignUp}`} id="signup" data-type="signup">Sign Up</button>
+            <button onClick={handleSignUp} className={`${styles.Spacing} ${styles.RoundButton} ${styles.SignUp}`} id="signup" data-type="signup">Sign Up</button>
           </div>
 
-          <div className={styles.Spacing}>
+          {/* <div className={styles.Spacing}>
+          {stringFromSpringBoot ? (
+        <p>Data from backend: {stringFromSpringBoot}</p>
+      ) : (
+        <p>Loading data...</p>
+      )}
           <p>{stringFromSpringBoot}</p>
-            {/* {data.map(item => (
+            {data.map(item => (
               <div key={item.id}>{item.name}</div>
-            ))} */}
-          </div>
+            ))}
+          </div> */}
 
 
         </div>

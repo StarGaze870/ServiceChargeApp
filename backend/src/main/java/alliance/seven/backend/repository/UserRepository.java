@@ -12,7 +12,8 @@ import alliance.seven.backend.entity.User;
 public interface UserRepository extends JpaRepository<User, Integer> {
 
 	Optional<User> findByEmail(String email);
-
+	Optional<User> findByPassword(String email);
+	
 	// Define any custom methods you need here
 
 }
