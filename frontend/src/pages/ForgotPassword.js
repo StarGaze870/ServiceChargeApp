@@ -11,7 +11,7 @@ function ForgotPassword() {
       // handle form submission
       const handleSubmit = (event) => {
         event.preventDefault();
-        router.push("/ForgotPassword");
+        router.push("/ResetPassword");
         // add code to submit the form data to the backend API
       };
       const router = useRouter();
