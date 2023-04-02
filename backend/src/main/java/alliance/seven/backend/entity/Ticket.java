@@ -34,7 +34,7 @@ public class Ticket {
     @JoinColumn(name = "status_id")
     private Status status;
 
-    @ManyToOne
+    @ManyToOne(optional = true)
     @JoinColumn(name = "priority_id")
     private Priorities priority;
 

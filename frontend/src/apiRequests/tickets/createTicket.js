@@ -26,7 +26,7 @@ export async function createTicket({subject='default', description='default', us
       statusCode = response.status;
       console.log('IN CREATE TICKETS');
       console.log(response);
-      return [statusCode, response.data.data];   
+      return [statusCode, JSON.parse(response.data.data)];
   
     } catch (error) {
         console.error(error);

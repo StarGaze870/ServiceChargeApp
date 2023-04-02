@@ -16,50 +16,6 @@ import { TablePagination } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import { Select, MenuItem, InputLabel } from '@mui/material';
 
-
-const rows = [
-  createData('Website Redesign', 'Processing', 'High', 'Apr 12, 2023'),
-  createData('Server Maintenance', 'Completed', 'Low', 'Apr 8, 2023'),
-  createData('Customer Support Tickets', 'Pending', 'Medium', 'Apr 15, 2023'),
-  createData('Bug Fixing', 'Processing', 'High', 'Apr 17, 2023'),
-  createData('Social Media Campaign', 'Pending', 'Low', 'Apr 20, 2023'),
-  createData('Content Creation', 'Processing', 'Medium', 'Apr 22, 2023'),
-  createData('Email Marketing', 'Closed', 'High', 'Apr 5, 2023'),
-  createData('Database Optimization', 'Rejected', 'Low', 'Apr 25, 2023'),
-  createData('Analytics Setup', 'Processing', 'Medium', 'Apr 28, 2023'),
-  createData('SEO Audit', 'Completed', 'High', 'Apr 2, 2023'),
-  createData('Security Update', 'Pending', 'Low', 'Apr 30, 2023'),
-  createData('Mobile App Development', 'Processing', 'Medium', 'May 3, 2023'),
-  createData('Software Upgrade', 'Completed', 'High', 'Apr 1, 2023'),
-  createData('Website Migration', 'Rejected', 'Low', 'May 6, 2023'),
-  createData('Network Configuration', 'Processing', 'Medium', 'May 8, 2023'),
-  createData('Plugin Update', 'Closed', 'Low', 'May 10, 2023'),
-  createData('Product Launch', 'Processing', 'High', 'May 15, 2023'),
-  createData('User Testing', 'Pending', 'Medium', 'May 18, 2023'),
-  createData('API Integration', 'Processing', 'High', 'May 22, 2023'),
-  createData('Payment Gateway Setup', 'Rejected', 'Low', 'May 25, 2023'),
-  createData('Backup and Recovery', 'Processing', 'Medium', 'May 28, 2023'),
-  createData('User Interface Improvement', 'Closed', 'High', 'May 30, 2023'),
-  createData('Performance Tuning', 'Pending', 'Low', 'Jun 2, 2023'),
-  createData('Domain Renewal', 'Processing', 'Medium', 'Jun 5, 2023'),
-  createData('SSL Certificate Installation', 'Completed', 'High', 'Jun 8, 2023'),
-  createData('Code Refactoring', 'Rejected', 'Low', 'Jun 12, 2023'),
-  createData('User Experience Review', 'Processing', 'Medium', 'Jun 15, 2023'),
-  createData('Load Testing', 'Closed', 'High', 'Jun 18, 2023'),
-  createData('Accessibility Audit', 'Pending', 'Low', 'Jun 22, 2023'),
-  createData('Server Scaling', 'Processing', 'Medium', 'Jun 25, 2023'),  
-  createData('Database Migration', 'Processing', 'Low', 'Jun 28, 2023'),
-  createData('Keyword Research', 'Completed', 'Medium', 'Jun 30, 2023'),
-  createData('API Documentation', 'Processing', 'High', 'Jul 3, 2023'),
-  createData('Code Review', 'Pending', 'Low', 'Jul 6, 2023'),
-  createData('A/B Testing', 'Processing', 'Medium', 'Jul 10, 2023'),
-  createData('System Monitoring', 'Rejected', 'High', 'Jul 12, 2023'),
-  createData('Data Analysis', 'Completed', 'Low', 'Jul 15, 2023'),
-  createData('Bug Tracking', 'Closed', 'Medium', 'Jul 18, 2023'),
-  createData('User Onboarding', 'Pending', 'High', 'Jul 22, 2023'),
-  createData('Performance Monitoring', 'Processing', 'Low', 'Jul 25, 2023')
-];
-
 function createData({id, subject, description, user, status, priority, date}) {
   return {
     subject,
@@ -180,7 +136,7 @@ export default function CollapsibleTable({data}) {
           description: item.description,
           status: item.status.type,
           user: item.user.firstname + ' ' + item.user.lastname,
-          priority: item.priority && item.priority.type !== null ? item.priority.type : '', 
+          priority: item.priority && item.priority.type !== null ? item.priority.type : 'Pending', 
           date: item.created_at}));
       setRows(rowData);
 
@@ -362,9 +318,9 @@ export default function CollapsibleTable({data}) {
               .filter((row) => (statusFilter !== 'All' ? row.status === statusFilter : true))
               .filter((row) => (priorityFilter !== 'All' ? row.priority === priorityFilter : true))
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((row, index) => (
+              .map((row, index) => (                
                 <Row
-                  key={row.subject}
+                  key={row.details[0].ticketID}
                   row={row}
                   onSubjectClick={handleSubjectClick}
                   onEditClick={handleEditClick}

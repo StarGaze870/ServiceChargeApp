@@ -16,13 +16,18 @@ const style = {
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  height: '80vh',
   width: '30vw',
   minWidth: '500px',
-  bgcolor: 'white',  
+  maxHeight: '95vh',
+  overflowY: 'scroll',
+  scrollbarWidth: 'none', // Add this line for Firefox
+  bgcolor: 'white',
   boxShadow: 24,
   borderRadius: '8px',
   p: 8,
+  '&::-webkit-scrollbar': { // Add this block for WebKit-based browsers
+    display: 'none',
+  },
 };
 
 export default function LoginModal({ modalOpen, setModalOpen }) {
@@ -137,14 +142,14 @@ export default function LoginModal({ modalOpen, setModalOpen }) {
             )}
 
             <div className="d-flex flex-column flex-xxl-row align-items-center mx-auto mb-5">
-            <img
-              className='me-5 mb-3'
-              src="/appLogoBlack.png"
-              alt="App Logo"
-              style={{ width: '150px', height: '150px' }}
-            />
-            <h1 className='mx-auto my-auto'>Service Charge Application</h1>
-          </div>
+              <img
+                className='mb-4 me-xxl-5 mb-xxl-3'
+                src="/appLogoBlack.png"
+                alt="App Logo"
+                style={{ width: '150px', height: '150px' }}
+              />
+              <h1 className='mx-auto my-auto text-center text-xxl-start'>Service Charge Application</h1>
+            </div>
             <h3 id="transition-modal-title" className='mb-4' style={{ textAlign: 'start' }}>Login</h3>                                    
             <form ref={formRef} onSubmit={handleLogin}>
             {error && <p className='m-0 p-0' style={{ color: 'red' }}>{error}</p>}

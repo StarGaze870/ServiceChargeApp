@@ -16,23 +16,30 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
-import MailIcon from '@mui/icons-material/Mail';
+import PersonIcon from '@mui/icons-material/Person';
 import LogoutIcon from '@mui/icons-material/Logout';
 import DeleteIcon from '@mui/icons-material/Delete';
+import DashboardIcon from '@mui/icons-material/Dashboard';
+import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1';
+import PostAddIcon from '@mui/icons-material/PostAdd';
+import SummarizeIcon from '@mui/icons-material/Summarize';
+import EmailIcon from '@mui/icons-material/Email';
+import ListAltIcon from '@mui/icons-material/ListAlt';
 
-const drawerWidth = 250;
+const drawerWidth = 260;
 
 const topMenuItems = [
-    { text: 'Inbox', icon: <InboxIcon /> },
-    { text: 'Starred', icon: <MailIcon /> },
-    { text: 'Send email', icon: <InboxIcon /> },
-    { text: 'Drafts', icon: <MailIcon /> },
+    { text: 'Dashboard', icon: <DashboardIcon /> },
+    { text: 'Add New User', icon: <PersonAddAlt1Icon /> },
+    { text: 'Add New Ticket', icon: <PostAddIcon /> },
+    { text: 'Send Email', icon: <EmailIcon /> },    
   ];
   
   const bottomMenuItems = [
-    { text: 'All mail', icon: <InboxIcon /> },
-    { text: 'Trash', icon: <DeleteIcon /> },
+        
+    { text: 'View Tickets', icon: <ListAltIcon /> },
+    { text: 'VIew Users', icon: <PersonIcon /> },
+    { text: 'Generate Report', icon: <SummarizeIcon /> },    
     { text: 'Logout', icon: <LogoutIcon /> },
   ];
   
@@ -82,7 +89,7 @@ const DrawerHeader = styled('div')(({ theme }) => ({
   justifyContent: 'flex-end',
 }));
 
-export default function PersistentDrawerLeft({children, onLogout}) {
+export default function DrawerSidebarNavigation({children, onAddTicket, onLogout}) {
   
   const theme = useTheme();
   const [open, setOpen] = React.useState(true);
@@ -101,10 +108,16 @@ export default function PersistentDrawerLeft({children, onLogout}) {
   // FUNCTIONS
   const handleItemClick = (text) => {
 
-    if (text === 'Logout')
-        onLogout();
-
     setSelectedItem(text);
+
+    if (text === 'Add New Ticket') {
+      onAddTicket();
+      return;
+    }
+    if (text === 'Logout') {
+      onLogout();
+      return;
+    }            
   };
 
   return (
@@ -185,12 +198,15 @@ export default function PersistentDrawerLeft({children, onLogout}) {
                 </ListItem>
             ))}
         </List>
+        <div className='d-flex flex-column mt-auto pt-4'>
         <img
-              className='d-flex mt-auto mx-auto mb-5'
+              className='d-flex mx-auto mb-4'
               src="/appLogoBlack.png"
               alt="App Logo"
               style={{ width: '6em', height: '6em' }}
             />
+        <p className='mx-auto text-decoration-none text-black small'>© Team Seven</p>
+        </div>
       </Drawer>
       <Main open={open}>                
         <DrawerHeader />

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import Head from 'next/head';
 import Container from '@mui/material/Container';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -7,16 +7,28 @@ import isLoggedIn from '../isLoggedIn';
 import { CircularProgress } from '@mui/material';
 import CollapsibleTable from '@/components/table/CollapsibleTable';
 import { getAllTickets } from '@/apiRequests/tickets/getAllTickets';
-import PersistentDrawerLeft from '@/components/DrawerNavigation';
+import DrawerSidebarNavigation from '@/components/appBar/DrawerSidebarNavigation';
+// import AddTicketModal from '@/components/modal/AddTicketModal';
 import AddTicketModal from '@/components/modal/AddTicketModal';
+import { getSingleTicket } from '@/apiRequests/tickets/getSingleTicket';
+import LogoutModal from '@/components/modal/LogoutModal';
+
 
 const AdminDashboard = () => {    
 
+  // SELF VARIABLES
   const router = useRouter();
   const [showProgress, setShowProgress] = useState(false);
   const [loading, setLoading] = useState(true);
+
+  // TICKET TABLE VARIABLE
   const [ticketTableData, setTicketTableData] = useState(null)
-  const [modalOpen, setModalOpen] = useState(false);  
+
+  // TICKETS VARIABLE
+  const [addTicketmodalOpen, setAddTicketModalOpen] = useState(false);    
+
+  // LOGOUT VARIABLE
+  const [logoutModalOpen, setLogoutModalOpen] = useState(false);    
 
   useEffect(() => {
 
@@ -47,7 +59,10 @@ const AdminDashboard = () => {
 
   }, []);
 
-  const onLogout = () => {
+  const onAddTicket = () => setAddTicketModalOpen(true);      
+  const onLogoutClick = () => setLogoutModalOpen(true);
+
+  const handleLogoutCallback = useCallback(() => {
 
     setShowProgress(true)
 
@@ -59,12 +74,14 @@ const AdminDashboard = () => {
       await router.push('/');
       setShowProgress(false);      
     }, 1000);
-  };
+  })  
 
-  const onAddTicket = () => {
-    console.log("FROM ADMIN");
-    setModalOpen(true);
-  } 
+  const onAddTicketCallback = useCallback(async ({ticketId}) => {
+    
+    const newTicket = await getSingleTicket(ticketId);
+    setTicketTableData([newTicket[1], ...ticketTableData])
+    
+  });
 
   return (
     !loading   && (
@@ -93,15 +110,63 @@ const AdminDashboard = () => {
           <meta name="viewport" content="width=device-width, initial-scale=1" />
           <link rel="icon" href="/appLogoWhite.ico" />        
         </Head>                
-        <AddTicketModal modalOpen={modalOpen} setModalOpen={setModalOpen} />     
-        <PersistentDrawerLeft onLogout={onLogout}>        
-        <button className='btn btn-dark' onClick={onAddTicket}>Add Ticket</button>
-        <div className='d-flex w-100'>
+        <AddTicketModal modalOpen={addTicketmodalOpen} setModalOpen={setAddTicketModalOpen} onAddTicketCallback={onAddTicketCallback} />     
+        <LogoutModal modalOpen={logoutModalOpen} setModalOpen={setLogoutModalOpen} onLogoutCallBack={handleLogoutCallback}/>
+
+        <DrawerSidebarNavigation
+          onDashboard={onLogoutClick}
+          onAddUser={onLogoutClick}
+          onAddTicket={onAddTicket}
+          onSendEmail={onLogoutClick}
+          onViewTickets={onLogoutClick}
+          onViewUsers={onLogoutClick}
+          onGenerateReport={onLogoutClick}
+          onLogout={onLogoutClick}
+
+          >        
+
+        {/* DASHBOARD */}
+        <div className='d-flex flex-column'>
+            
+            {/* DASHBOARD DATA */}
+            <div className='d-flex flex-column flex-xxl-row justify-content-between'>
+              <div className='col-12 col-xxl-7 d-flex flex-column'>
+                <div className='d-flex flex-row justify-content-between w-100'>
+                  {/* PENDING TICKETS */}
+                  <div className='flex-fill d-flex bg-secondary'>
+                    <h1 className='m-auto'>Pending Tickets</h1>
+                  </div>
+                  <div className='flex-fill d-flex bg-primary'>
+                    <h1 className='m-auto'>Medium Priority</h1>
+                  </div>
+                </div>
+                <div className='d-flex flex-row'>
+                  <div className='flex-fill d-flex bg-info-subtle'>
+                    <h1 className='m-auto'>High Priority</h1>
+                  </div>
+                  <div className='flex-fill d-flex bg-warning-subtle'>
+                    <h1 className='m-auto'>Low Priority</h1>
+                  </div>
+                </div>
+              </div>
+              <div className='col-12 col-xxl-5 d-flex'>
+                <div className='flex-fill d-flex bg-light'>
+                  <h1 className='m-auto'>Total Available Devs</h1>
+                </div>
+              </div>
+            </div>
+
+
+            {/* DASHBOARD TABLE */}
+            <div>
+            <h3 className='ms-2'>Tickets</h3>
             {ticketTableData !== null && (
               <CollapsibleTable data={ticketTableData} />
             )}
+            </div>
         </div>          
-        </PersistentDrawerLeft>
+
+        </DrawerSidebarNavigation>
       </>
     )
   );

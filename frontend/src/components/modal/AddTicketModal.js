@@ -4,12 +4,8 @@ import Backdrop from '@mui/material/Backdrop';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import Fade from '@mui/material/Fade';
-import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
-import { useRouter } from 'next/router';
 import { CircularProgress } from '@mui/material';
-import { login } from '@/apiRequests/authentication/loginRequest';
-import CryptoJS from 'crypto-js';
 import { createTicket } from '@/apiRequests/tickets/createTicket';
 
 const style = {
@@ -17,50 +13,67 @@ const style = {
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  height: '80vh',
   width: '30vw',
   minWidth: '500px',
-  bgcolor: 'white',  
+  maxHeight: '95vh',
+  overflowY: 'scroll',
+  scrollbarWidth: 'none', // Add this line for Firefox
+  bgcolor: 'white',
   boxShadow: 24,
   borderRadius: '8px',
   p: 8,
+  '&::-webkit-scrollbar': { // Add this block for WebKit-based browsers
+    display: 'none',
+  },
 };
 
-export default function AddTicketModal({ modalOpen, setModalOpen }) {
-  
-  const router = useRouter();
+const AddTicketModal = React.memo(({ modalOpen, setModalOpen, onAddTicketCallback }) => {
+    
   const formRef = useRef();
   const [showProgress, setShowProgress] = useState(false);
   const [error, setError] = useState('');
   const [statusCode, setStatusCode] = useState(0);
 
   const handleAddTicket = async (event) => {
-    event.preventDefault();
+
+    event.preventDefault();        
+
     setShowProgress(true);
     setError('');
     setStatusCode(0);
   
     const formData = new FormData(formRef.current);
-    const data = Object.fromEntries(formData.entries());
-  
-    console.log(data);
+    const data = Object.fromEntries(formData.entries());      
     
-    console.log('-- CREATING TICKETS --')
-    const getLoginResponse = await createTicket({ 
+    console.log('-- CREATING TICKETS --');
+
+    const createTicketResponse = await createTicket({ 
       subject: data.subject, 
       description: data.description, 
       userID: 1 
-    });        
-    setModalOpen(false)
-    setShowProgress(false);
-    console.log(getLoginResponse);
+    });
+    console.log(createTicketResponse);    
 
-  };
-  
+    if (createTicketResponse[0] !== 201) {
+      setTimeout(() => {
+        setShowProgress(false);
+        setStatusCode(createTicketResponse[0])
 
-  const handleForgotPassword = () => {
-    // Implement your forgot password logic here
-    console.log('Forgot password clicked');
+        if (createTicketResponse[0] === 500) {
+          setError(createTicketResponse[1])
+          return
+        }          
+        setError(createTicketResponse[1].data);
+
+      }, 500);
+      return;
+    }    
+
+    setTimeout(async () => {      
+      onAddTicketCallback({ticketId: createTicketResponse[1].id});                  
+      setModalOpen(false)
+      setShowProgress(false);  
+    }, 500);      
   };
 
   const closeModal = () => {
@@ -110,10 +123,15 @@ export default function AddTicketModal({ modalOpen, setModalOpen }) {
               >
                 <CircularProgress color="warning" size="5rem" thickness={5}/>
               </div>
-            )}
-
-            <div className="d-flex flex-column flex-xxl-row align-items-center mx-auto mb-5">            
-            <h1 className='mx-auto my-auto'>Add Ticket</h1>
+            )}            
+            <div className="d-flex flex-column mx-auto">                        
+            <img
+              className='me-5 mb-3 img-fluid'
+              src="/appLogoBlack.png"
+              alt="App Logo"
+              style={{ width: '150px', height: '150px' }}
+            />
+            <h1 className=''>Add Ticket</h1>
           </div>            
             <form ref={formRef} onSubmit={handleAddTicket}>
             {error && <p className='m-0 p-0' style={{ color: 'red' }}>{error}</p>}
@@ -144,4 +162,7 @@ export default function AddTicketModal({ modalOpen, setModalOpen }) {
       </Modal>
     </div>
   );
-}
+})
+
+
+export default AddTicketModal;
