@@ -118,17 +118,17 @@ function Row(props) {
   );
 }
 
-export default function CollapsibleTable({data}) {    
+export default function CollapsibleTable({data, initialStatusFilter, initialPriorityFilter}) {    
 
   const [rows, setRows] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [sortConfig, setSortConfig] = useState({ key: '', direction: 'asc' });
-  const [priorityFilter, setPriorityFilter] = useState('All');
-  const [statusFilter, setStatusFilter] = useState('All');
+  const [priorityFilter, setPriorityFilter] = useState(initialPriorityFilter);
+  const [statusFilter, setStatusFilter] = useState(initialStatusFilter);
 
-  useEffect(() => {
-            
+  useEffect(() => {                  
+
       let rowData = data.map(item => 
         createData({
           id: item.id,
@@ -141,6 +141,14 @@ export default function CollapsibleTable({data}) {
       setRows(rowData);
 
   }, [data]);
+  
+  useEffect(() => {
+    setStatusFilter(initialStatusFilter);
+  }, [initialStatusFilter]);
+  
+  useEffect(() => {
+    setPriorityFilter(initialPriorityFilter);
+  }, [initialPriorityFilter]);
   
 
   const handleChangePage = (event, newPage) => {
@@ -166,10 +174,18 @@ export default function CollapsibleTable({data}) {
     let direction = 'asc';
     if (sortConfig.key === key && sortConfig.direction === 'asc') {
       direction = 'desc';
-    }
+    }    
     setSortConfig({ key, direction });
   };
   
+  const onStatusChange = (e) => {
+    setStatusFilter(e.target.value)
+  }
+
+  const onPriorityChange = (e) => {
+    setPriorityFilter(e.target.value)
+  }
+
   const sortedRows = useMemo(() => {
     let sortableRows = [...rows];
   
@@ -256,7 +272,7 @@ export default function CollapsibleTable({data}) {
                   <Select
                       className='d-flex align-self-end'
                       value={statusFilter}
-                      onChange={(e) => setStatusFilter(e.target.value)}
+                      onChange={onStatusChange}
                       displayEmpty
                       inputProps={{ 'aria-label': 'Without label' }}
                       sx={{                     
@@ -284,7 +300,7 @@ export default function CollapsibleTable({data}) {
                   <Select
                       className='d-flex align-self-end'
                       value={priorityFilter}
-                      onChange={(event) => setPriorityFilter(event.target.value)}
+                      onChange={onPriorityChange}
                       displayEmpty
                       inputProps={{ 'aria-label': 'Without label' }}
                       sx={{                     

@@ -93,7 +93,7 @@ export default function DrawerSidebarNavigation({children, onAddTicket, onLogout
   
   const theme = useTheme();
   const [open, setOpen] = React.useState(true);
-  const [selectedItem, setSelectedItem] = React.useState('Inbox');
+  const [selectedItem, setSelectedItem] = React.useState('Dashboard');
 
   // DRAWER FUNCTIONS
 
