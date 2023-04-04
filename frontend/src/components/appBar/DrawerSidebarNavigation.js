@@ -25,6 +25,7 @@ import PostAddIcon from '@mui/icons-material/PostAdd';
 import SummarizeIcon from '@mui/icons-material/Summarize';
 import EmailIcon from '@mui/icons-material/Email';
 import ListAltIcon from '@mui/icons-material/ListAlt';
+import { useRouter } from 'next/router';
 
 const drawerWidth = 260;
 
@@ -89,11 +90,12 @@ const DrawerHeader = styled('div')(({ theme }) => ({
   justifyContent: 'flex-end',
 }));
 
-export default function DrawerSidebarNavigation({children, onAddTicket, onLogout}) {
+export default function DrawerSidebarNavigation({headerTitle='Header Title', selectedOption, children, onAddTicket, onLogout}) {
   
   const theme = useTheme();
   const [open, setOpen] = React.useState(true);
-  const [selectedItem, setSelectedItem] = React.useState('Dashboard');
+  const [selectedItem, setSelectedItem] = React.useState(selectedOption);    
+  const router = useRouter();
 
   // DRAWER FUNCTIONS
 
@@ -106,12 +108,17 @@ export default function DrawerSidebarNavigation({children, onAddTicket, onLogout
   };
 
   // FUNCTIONS
-  const handleItemClick = (text) => {
+  const handleItemClick = async (text) => {
 
     setSelectedItem(text);
 
+    if (text === 'Dashboard') {
+      await router.replace('/dashboard/admin');
+      return;
+    } 
     if (text === 'Add New Ticket') {
-      onAddTicket();
+      // onAddTicket();
+      await router.replace('/dashboard/add/ticket');
       return;
     }
     if (text === 'Logout') {
@@ -135,8 +142,7 @@ export default function DrawerSidebarNavigation({children, onAddTicket, onLogout
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" noWrap component="div">
-            {/* TODO: SHOULD CHANGE EVERYTIME THE USER SELECT IN THE DRAWER */}
-            Dashboard
+            {headerTitle}            
           </Typography>
         </Toolbar>
       </AppBar>

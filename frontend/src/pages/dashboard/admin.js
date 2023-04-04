@@ -87,7 +87,7 @@ const AdminDashboard = () => {
 
   const onCardsClickDashboard = useCallback((e) => {
             
-    if (e.target.value === 'Pending') {
+    if (e.currentTarget.value === 'Pending') {
     
       setInitialStatusFilter('Pending');
       setInitialPriotityFilter('All');            
@@ -98,8 +98,7 @@ const AdminDashboard = () => {
     }               
   })
 
-  return (
-    !loading   && (
+  return (    
       <>
       {showProgress && (
           <div
@@ -129,6 +128,8 @@ const AdminDashboard = () => {
         <LogoutModal modalOpen={logoutModalOpen} setModalOpen={setLogoutModalOpen} onLogoutCallBack={handleLogoutCallback}/>
 
         <DrawerSidebarNavigation
+          headerTitle='Dashboard'
+          selectedOption='Dashboard'
           onDashboard={onLogoutClick}
           onAddUser={onLogoutClick}
           onAddTicket={onAddTicket}
@@ -138,67 +139,57 @@ const AdminDashboard = () => {
           onGenerateReport={onLogoutClick}
           onLogout={onLogoutClick}
 
-          >        
-
-        {/* DASHBOARD */}
+          >                
         <div className="container-fluid">
           {/* DASHBOARD */}
           <div className="d-flex flex-column mb-4"> 
-  {/* DASHBOARD DATA */}
-  <div className="d-flex flex-column flex-xl-row">
-    
-    {/* PENDING TICKETS AND HIGH PRIORITY WRAPPER */}
-    <div className="d-flex col-12 col-xl-6">
-      {/* PENDING TICKETS */}
-      <div className="col-6 d-flex" style={{minHeight: '13rem'}}>
-        <button value='Pending' className='btn d-flex flex-column rounded-4 flex-fill m-3 shadow' onClick={(e) => onCardsClickDashboard(e)}>        
-          <h5 className="mx-auto pt-4">Pending Tickets</h5>
-          <h1 className="mx-auto pt-3 text-success text-opacity-75" style={{ fontSize: "3.5em" }}>15</h1>        
-        </button>
-      </div>
-      {/* HIGH PRIORITY TICKETS */}
-      <div className="col-6 d-flex">
-        <button value='High' className='btn d-flex flex-column rounded-4 flex-fill m-3 shadow' onClick={(e) => onCardsClickDashboard(e)}>
-          <h5 className="mx-auto pt-4">High Priority</h5>
-          <h1 className="mx-auto pt-3 text-danger text-opacity-75" style={{ fontSize: "3.5em" }}>7</h1>
-        </button>
-      </div>
-    </div>                
-    {/* MEDIUM PRIORITY AND LOW PRIORITY WRAPPER */}
-    <div className="d-flex col-12 col-xl-6">
-      {/* MEDIUM PRIORITY */}
-      <div className="col-6 d-flex" style={{minHeight: '13rem'}} >
-        <button value='Medium' className='btn d-flex flex-column rounded-4 flex-fill m-3 shadow' onClick={(e) => onCardsClickDashboard(e)}>
-          <h5 className="mx-auto pt-4">Medium Priority</h5>
-          <h1 className="mx-auto pt-3 text-warning text-opacity-75" style={{ fontSize: "3.5em"}}>21</h1>
-        </button>
-      </div>
-      {/* LOW PRIORITY TICKETS */}
-      <div className="col-6 d-flex">
-        <button value='Low' className='btn d-flex flex-column rounded-4 flex-fill m-3 shadow' onClick={(e) => onCardsClickDashboard(e)}>
-          <h5 className="mx-auto pt-4">Low Priority</h5>
-          <h1 className="mx-auto pt-3 text-opacity-75 text-dark" style={{ fontSize: "3.5em" }}>6</h1>
-        </button>
-      </div>
-    </div>
-              
-  </div>
-</div>
-
-
+            {/* DASHBOARD DATA */}
+            <div className="d-flex flex-column flex-xl-row">              
+              {/* PENDING TICKETS AND HIGH PRIORITY WRAPPER */}
+              <div className="d-flex col-12 col-xl-6">
+                {/* PENDING TICKETS */}
+                <div className="col-6 d-flex" style={{minHeight: '13rem'}}>
+                  <button value='Pending' className='btn d-flex flex-column rounded-4 flex-fill m-3 shadow' onClick={(e) => onCardsClickDashboard(e)}>        
+                    <h5 className="mx-auto pt-4">Pending Tickets</h5>
+                    <h1 className="mx-auto pt-3 text-success text-opacity-75" style={{ fontSize: "3.5em" }}>15</h1>        
+                  </button>
+                </div>
+                {/* HIGH PRIORITY TICKETS */}
+                <div className="col-6 d-flex">
+                  <button value='High' className='btn d-flex flex-column rounded-4 flex-fill m-3 shadow' onClick={(e) => onCardsClickDashboard(e)}>
+                    <h5 className="mx-auto pt-4">High Priority</h5>
+                    <h1 className="mx-auto pt-3 text-danger text-opacity-75" style={{ fontSize: "3.5em" }}>7</h1>
+                  </button>
+                </div>
+              </div>                
+              {/* MEDIUM PRIORITY AND LOW PRIORITY WRAPPER */}
+              <div className="d-flex col-12 col-xl-6">
+                {/* MEDIUM PRIORITY */}
+                <div className="col-6 d-flex" style={{minHeight: '13rem'}} >
+                  <button value='Medium' className='btn d-flex flex-column rounded-4 flex-fill m-3 shadow' onClick={(e) => onCardsClickDashboard(e)}>
+                    <h5 className="mx-auto pt-4">Medium Priority</h5>
+                    <h1 className="mx-auto pt-3 text-warning text-opacity-75" style={{ fontSize: "3.5em"}}>21</h1>
+                  </button>
+                </div>
+                {/* LOW PRIORITY TICKETS */}
+                <div className="col-6 d-flex">
+                  <button value='Low' className='btn d-flex flex-column rounded-4 flex-fill m-3 shadow' onClick={(e) => onCardsClickDashboard(e)}>
+                    <h5 className="mx-auto pt-4">Low Priority</h5>
+                    <h1 className="mx-auto pt-3 text-opacity-75 text-dark" style={{ fontSize: "3.5em" }}>6</h1>
+                  </button>
+                </div>
+              </div>                        
+            </div>
+          </div>
           {/* DASHBOARD TABLE */}
           <div className="d-flex flex-column">
             <h3 className="ms-2">Tickets</h3>
-            {ticketTableData !== null && <CollapsibleTable data={ticketTableData} initialStatusFilter={initialStatusFilter} initialPriorityFilter={initialPriorityFilter} />}
+            {!loading && ticketTableData !== null && <CollapsibleTable data={ticketTableData} initialStatusFilter={initialStatusFilter} initialPriorityFilter={initialPriorityFilter} />}
           </div>
-
-        </div>
-       
-
+        </div>       
         </DrawerSidebarNavigation>
       </>
-    )
-  );
+    )  
 };
 
 export default AdminDashboard;
