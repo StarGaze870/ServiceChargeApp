@@ -8,6 +8,8 @@ select * from invoices;
 select * from tickets;
 select * from otps;
 
+UPDATE TICKETS SET priority_id = null WHERE status_id = 6;
+
 INSERT INTO tickets (user_id, status_id, priority_id, subject, description, created_at, updated_at)
 VALUES
 (1, 5, 3, 'Website Redesign', 'Redesign the website to improve user experience and incorporate new features. Update the layout and color scheme for better accessibility.', '2023-04-12', '2023-04-12'),

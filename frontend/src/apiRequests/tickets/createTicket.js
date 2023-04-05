@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-export async function createTicket({subject='default', description='default', userID}) {
+export async function createTicket({userID=1, statusID=6, priorityID=1, subject, description, }) {
     
     var statusCode = 0;
     try {
@@ -11,7 +11,10 @@ export async function createTicket({subject='default', description='default', us
           id: userID
         },
         status: {
-          id: 6
+          id: statusID
+        },
+        priorities: {
+          id: priorityID
         },
         subject: subject,
         description: description
