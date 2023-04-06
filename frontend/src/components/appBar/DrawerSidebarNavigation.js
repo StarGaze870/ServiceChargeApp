@@ -26,22 +26,23 @@ import SummarizeIcon from '@mui/icons-material/Summarize';
 import EmailIcon from '@mui/icons-material/Email';
 import ListAltIcon from '@mui/icons-material/ListAlt';
 import { useRouter } from 'next/router';
+import Link from 'next/link';
 
 const drawerWidth = 260;
 
 const topMenuItems = [
-    { text: 'Dashboard', icon: <DashboardIcon /> },
-    { text: 'Add New User', icon: <PersonAddAlt1Icon /> },
-    { text: 'Add New Ticket', icon: <PostAddIcon /> },
-    { text: 'Send Email', icon: <EmailIcon /> },    
+    { text: 'Dashboard', icon: <DashboardIcon />, href: '/dashboard/admin' },
+    { text: 'Add New User', icon: <PersonAddAlt1Icon />, href: '/dashboard/admin' },
+    { text: 'Add New Ticket', icon: <PostAddIcon />, href: '/dashboard/add/ticket' },
+    { text: 'Send Email', icon: <EmailIcon />, href: '/dashboard/admin' },    
   ];
   
   const bottomMenuItems = [
         
-    { text: 'View Tickets', icon: <ListAltIcon /> },
-    { text: 'VIew Users', icon: <PersonIcon /> },
-    { text: 'Generate Report', icon: <SummarizeIcon /> },    
-    { text: 'Logout', icon: <LogoutIcon /> },
+    { text: 'View Tickets', icon: <ListAltIcon />, href: '/dashboard/admin' },
+    { text: 'VIew Users', icon: <PersonIcon />, href: '/dashboard/admin' },
+    { text: 'Generate Report', icon: <SummarizeIcon />, href: '/dashboard/admin' },    
+    { text: 'Logout', icon: <LogoutIcon />, href: '' },
   ];
   
 
@@ -113,13 +114,13 @@ export default function DrawerSidebarNavigation({headerTitle='Header Title', sel
     setSelectedItem(text);
 
     if (text === 'Dashboard') {
-      await router.replace('/dashboard/admin');
-      return;
+      // await router.replace('/dashboard/admin');
+      // return;
     } 
     if (text === 'Add New Ticket') {
-      // onAddTicket();
-      await router.replace('/dashboard/add/ticket');
-      return;
+      
+      // await router.replace('/dashboard/add/ticket');
+      // return;
     }
     if (text === 'Logout') {
       onLogout();
@@ -164,12 +165,13 @@ export default function DrawerSidebarNavigation({headerTitle='Header Title', sel
             {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
           </IconButton>
         </DrawerHeader>
-        <Divider />
+        <Divider />        
         <List>
             {topMenuItems.map((item) => (
-                <ListItem key={item.text} disablePadding>
+              <Link key={item.text} href={item.href} className='text-decoration-none text-black'>
+                <ListItem disablePadding>
                 <ListItemButton
-                    // selected={item.text === selectedItem}
+                    selected={item.text === selectedItem}
                     onClick={() => handleItemClick(item.text)}
                     sx={{
                     backgroundColor: item.text === selectedItem ? 'rgba(23, 48, 88, 0.1)' : 'transparent',
@@ -182,19 +184,20 @@ export default function DrawerSidebarNavigation({headerTitle='Header Title', sel
                     <ListItemText primary={item.text} />
                 </ListItemButton>
                 </ListItem>
+              </Link>
             ))}
-        </List>
+        </List>        
         <Divider />
         <List>
             {bottomMenuItems.map((item) => (
                 <ListItem key={item.text} disablePadding>
                 <ListItemButton
-                    selected={item.text === selectedItem}
+                    // selected={item.text === selectedItem}
                     onClick={() => handleItemClick(item.text)}
                     sx={{
-                    backgroundColor: item.text === selectedItem ? 'rgba(0, 0, 0, 0.08)' : 'transparent',
+                    backgroundColor: item.text === selectedItem ? 'rgba(23, 48, 88, 0.1)' : 'transparent',
                     '&:hover': {
-                        backgroundColor: 'rgba(0, 0, 0, 0.08)',
+                        backgroundColor: 'rgba(0, 0, 0, .1)',
                     },
                     }}
                 >

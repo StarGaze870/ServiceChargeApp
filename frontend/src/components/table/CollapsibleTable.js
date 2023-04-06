@@ -226,9 +226,7 @@ export default function CollapsibleTable({data, initialStatusFilter, initialPrio
     });
   
     return sortableRows;
-  }, [rows, sortConfig, priorityFilter, statusFilter]);
-  
-  
+  }, [rows, sortConfig, priorityFilter, statusFilter]);      
 
   return (   
     <div className='d-flex flex-column shadow w-100'>

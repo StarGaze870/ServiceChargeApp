@@ -13,7 +13,7 @@ export async function createTicket({userID=1, statusID=6, priorityID=1, subject,
         status: {
           id: statusID
         },
-        priorities: {
+        priority: {
           id: priorityID
         },
         subject: subject,
