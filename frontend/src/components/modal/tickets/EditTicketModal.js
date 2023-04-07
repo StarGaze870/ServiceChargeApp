@@ -11,6 +11,8 @@ import statusID from '@/db_default_variables/status';
 import YesNoModal from '../YesNoModal';
 import CircularProgressModal from '../CircularProgressModal';
 import DeleteTicketModal from '../DeleteTicketModal';
+import { updateTicket } from '@/apiRequests/tickets/updateTicket';
+import PostAddIcon from '@mui/icons-material/PostAdd';
 
 const style = {    
   overflowY: 'scroll',
@@ -32,12 +34,12 @@ const style = {
   },  
 };
 
-const EditTicketModal = memo(({ modalOpen, setModalOpen, onYesCallback, data}) => {        
+const EditTicketModal = memo(({ modalOpen, setModalOpen, onSaveCallback, onDeleteCallback, data}) => {        
 
   const called = useRef(false);  
   const [showProgressBar, setShowProgressBar] = useState(false);
 
-  const [userID, setUserID] = useState(0);
+  const [ticketID, setTicketID] = useState(0);  
   const [userName, setUserName] = useState('');
   const [priority, setPriority] = useState(priorityID[0]);  
   const [status, setStatus] = useState(statusID[5]);
@@ -48,10 +50,9 @@ const EditTicketModal = memo(({ modalOpen, setModalOpen, onYesCallback, data}) =
   const [priorityValid, setPriorityValid] = useState(true);
 
   useEffect(() => {
-    if (!data) return;      
-  
-    called.current = false; 
+    if (!data) return;            
 
+    console.log(data)
     const priorityItem = priorityID.find((item) => item.type === data.priority);
     if (priorityItem) setPriority(priorityItem);
 
@@ -61,18 +62,22 @@ const EditTicketModal = memo(({ modalOpen, setModalOpen, onYesCallback, data}) =
     if (statusItem) setStatus(statusItem);
   
     setSubject(data.subject || '');
-    setDescription(data.details[0].description ? data.details[0].description : '');
-    setUserID(data.details[0].userID ? data.details[0].userID : 0);
+    setDescription(data.details[0].description ? data.details[0].description : '');    
+    setTicketID(data.details[0].ticketID ? data.details[0].ticketID : 0);
     setUserName(data.details[0].user ? data.details[0].user : 'User Undefined');
 
   }, [data]);
   
 
-  // SAVE MODAL
-  const [yesNoSaveModalOpen, setYesNoSaveModalOpen] = useState(false);
-  const onSaveClick = () => setYesNoSaveModalOpen(true);
+    // SAVE MODAL
+    const [yesNoSaveModalOpen, setYesNoSaveModalOpen] = useState(false);
+    const onSaveClick = () => setYesNoSaveModalOpen(true);
 
-  const handleYes = async () => {
+    // DELETE MODAL
+    const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+    const onDeleteClick = () => setDeleteModalOpen(true);
+
+  const handleSave = async () => {    
 
     setShowProgressBar(true);
 
@@ -81,13 +86,77 @@ const EditTicketModal = memo(({ modalOpen, setModalOpen, onYesCallback, data}) =
     }
     else {
 
+        if (ticketID === data.details[0].ticketID
+            && priority.type === data.priority
+            && status.type === data.status
+            && subject === data.subject
+            && description === description) {
+
+            console.log('-- NO CHANGES MADE --')
+
+            setModalOpen(false);           
+            setShowProgressBar(false);
+            called.current = false; 
+            
+            return
+        }
+
+        const priorityItem = priorityID.find((item) => item.type === data.priority);
+        if (priorityItem) setPriority(priorityItem);
+    
+        setPriorityValid(data.priority === 'Pending' ? false : true);
+      
+        const statusItem = statusID.find((item) => item.type === data.status);
+        if (statusItem) setStatus(statusItem);
+      
+        setSubject(data.subject || '');
+        setDescription(data.details[0].description ? data.details[0].description : '');    
+        setTicketID(data.details[0].ticketID ? data.details[0].ticketID : 0);
+        setUserName(data.details[0].user ? data.details[0].user : 'User Undefined')
+
         called.current = true;          
+        
+        const updatedTicketData = await updateTicket({
+            ticketID: ticketID,
+            priorityID: priority.id === 4 ? null : priority.id,
+            statusID: status.id,
+            subject: subject,
+            description: description
+        })
+        console.log('-- UPDATING TICKET --')  
+        console.log(updatedTicketData)        
+
         setTimeout(async () => {
           
-          await onYesCallback();
+          await onSaveCallback({fromEditTicket: true});
           setModalOpen(false);           
           setShowProgressBar(false);
+          called.current = false; 
+
+        }, 1400);
+    }   
+  };
+
+  const handleDelete = async () => {
+
+    setShowProgressBar(true);
+
+    if (called.current) {
+        return
+    }
+    else {
+
+        called.current = true;
+
+        // TODO: DELETE API
+
+        setTimeout(async () => {
           
+          await onDeleteCallback();
+          setModalOpen(false);           
+          setShowProgressBar(false);
+          called.current = false; 
+
         }, 1400);
     }   
   };
@@ -114,9 +183,9 @@ const EditTicketModal = memo(({ modalOpen, setModalOpen, onYesCallback, data}) =
     <div>
       <CircularProgressModal modalOpen={showProgressBar} />
       {/* SAVE TICKET */}
-      {/* <YesNoModal width='45vw' modalOpen={yesNoSaveModalOpen} setModalOpen={setYesNoSaveModalOpen} title={'Save Ticket'} onYesCallback={handleYes}/> */}
+      <YesNoModal width='45vw' modalOpen={yesNoSaveModalOpen} setModalOpen={setYesNoSaveModalOpen} title={'Save Ticket'} onYesCallback={handleSave}/>
       {/* DELETE TICKET */}
-      <DeleteTicketModal width='45vw' modalOpen={yesNoSaveModalOpen} setModalOpen={setYesNoSaveModalOpen} title={'Delete Ticket'} onYesCallback={handleYes}/>
+      <DeleteTicketModal width='45vw' modalOpen={deleteModalOpen} setModalOpen={setDeleteModalOpen} title={'Delete Ticket'} onYesCallback={handleDelete}/>
       <Modal
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
@@ -134,7 +203,7 @@ const EditTicketModal = memo(({ modalOpen, setModalOpen, onYesCallback, data}) =
           <Box sx={style}>   
             <div className='d-flex flex-row justify-content-between mb-5'>
                 <h2 className=''>Ticket Update</h2>
-                <button className='btn'>
+                <button className='btn' onClick={onDeleteClick}>
                     <DeleteIcon className='' sx={{fontSize: '1.9em'}} color='error' />
                 </button>
             </div>                         
@@ -206,7 +275,10 @@ const EditTicketModal = memo(({ modalOpen, setModalOpen, onYesCallback, data}) =
                 <p className='ms-2' style={{fontSize: '.9em'}}>from: <strong>{userName}</strong></p>
             </div>
             <div className='d-flex flex-column mt-5'>
-                <label className='ms-2 mb-2'>Conforme Slip</label>
+                <div className='d-flex'>
+                    <label className='ms-2 mb-2'>Conforme Slip</label>
+                    <a href='#' className='ms-2 mb-auto' style={{marginTop: '-.1em'}}><PostAddIcon color={'success'} /></a>
+                </div>
                 <FileUpload maxFiles={1} />
                 <label className='ms-2 mb-2'>Proof of Payment</label>
                 <FileUpload maxFiles={1} />

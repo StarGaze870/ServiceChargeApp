@@ -1,9 +1,9 @@
 import { memo, useEffect, useState } from 'react';
 import Link from 'next/link';
 import Slide from '@mui/material/Slide';
-import { Alert, AlertTitle, Box, FormControlLabel, Switch } from '@mui/material';
+import { Alert, AlertTitle, Box } from '@mui/material';
 
-const SucessSlide = memo(({toggleShow=false, message='Message', hrefPath='/', queryDataJSON}) => {
+const SucessSlide = memo(({toggleShow=false, message='Message', hrefPath='/', queryDataJSON, disableLink=false, severity='success'}) => {
   const [checked, setChecked] = useState(toggleShow);  
 
   useEffect(() => {
@@ -14,19 +14,26 @@ const SucessSlide = memo(({toggleShow=false, message='Message', hrefPath='/', qu
     <div className='position-fixed end-0 me-3 bottom-0 mb-3'>      
       <Slide direction={toggleShow ? 'right' : 'up'} in={checked} mountOnEnter unmountOnExit>
         <Box>
-          <Link             
-            href={{
-              pathname: hrefPath,
-              query: queryDataJSON,
-            }}
-            className='text-decoration-none' 
-            target="_blank">
-
-            <Alert severity="success">
+          {disableLink ? (
+            <Alert severity={severity}>
               <AlertTitle className=''>Success</AlertTitle>
-              {message} — <strong className='text-success'>check it out!</strong>
+              {message}
             </Alert>
-          </Link>
+          ) : (
+            <Link
+              href={{
+                pathname: hrefPath,
+                query: queryDataJSON,
+              }}
+              className='text-decoration-none' 
+              target="_blank">
+
+              <Alert severity={severity}>
+                <AlertTitle className=''>Success</AlertTitle>
+                {message} — <strong className='text-success'>check it out!</strong>
+              </Alert>
+            </Link>
+          )}
         </Box>
       </Slide>
     </div>

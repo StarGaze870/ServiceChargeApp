@@ -7,9 +7,9 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import alliance.seven.backend.BeanUtilsHelper;
 import alliance.seven.backend.dto.TicketDTO;
 import alliance.seven.backend.dto.UserSummaryDTO;
-import alliance.seven.backend.entity.Priorities;
 import alliance.seven.backend.entity.Ticket;
 import alliance.seven.backend.repository.TicketRepository;
 import alliance.seven.backend.service.TicketService;
@@ -88,4 +88,18 @@ public class TicketServiceImpl implements TicketService {
         }
     }
 
+    @Override
+    public Optional<Ticket> updateTicket(Ticket updatedTicket, int id) {
+        Optional<Ticket> optionalTicket = ticketRepository.findById(id);
+        if (optionalTicket.isPresent()) {
+            Ticket existingTicket = optionalTicket.get();
+
+            BeanUtilsHelper.copyNonNullProperties(existingTicket, updatedTicket);
+
+            Ticket savedTicket = ticketRepository.save(existingTicket);
+            return Optional.of(savedTicket);
+        } else {
+            return Optional.empty();
+        }
+    }
 }

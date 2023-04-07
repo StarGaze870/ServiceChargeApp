@@ -10,6 +10,7 @@ import DrawerSidebarNavigation from '@/components/appBar/DrawerSidebarNavigation
 import { getSingleTicket } from '@/apiRequests/tickets/getSingleTicket';
 import LogoutModal from '@/components/modal/LogoutModal';
 import EditTicketModal from '@/components/modal/tickets/EditTicketModal';
+import SucessSlide from '@/components/transitions/SucessSlide';
 
 
 const AdminDashboard = () => {    
@@ -19,6 +20,8 @@ const AdminDashboard = () => {
   const query = router.query;  
   
   const [loading, setLoading] = useState(true);
+  const [showSuccessAlert, setShowSuccessAlert] = useState(false);
+  const [alertMessage, setAlertMessage] = useState('');
 
   // TICKET TABLE VARIABLE
   const [ticketTableData, setTicketTableData] = useState(null)
@@ -70,7 +73,18 @@ const AdminDashboard = () => {
 
   }, []);
   
-  const getTicketFunc = async () => {
+  // SUCESS ALERT
+  useEffect(() => {
+
+    if (!showSuccessAlert) return;
+
+    setTimeout(async () => {      
+      setShowSuccessAlert(false)
+    }, 5000);
+
+  }, [showSuccessAlert]);
+
+  const getTicketFunc = async ({fromEditTicket=false} = {}) => {
 
     const getTickets = await getAllTickets();
 
@@ -78,7 +92,23 @@ const AdminDashboard = () => {
     console.log(getTickets);
 
     setTicketTableData(getTickets[1]);
+
+    if (fromEditTicket) {
+
+      setTimeout(async () => {
+        setAlertMessage('Updated Successfully')                  
+        setShowSuccessAlert(true);
+      }, 600);
+    }
   }
+
+  const onDeleteTicketCallback = useCallback(async () => {    
+
+    setTimeout(async () => {
+      setAlertMessage('Deleted Successfully')                  
+      setShowSuccessAlert(true);
+    }, 600);
+  })
 
   const newTicketRefreshCallback = useCallback(async ({ticketId}) => {
         
@@ -125,7 +155,8 @@ const AdminDashboard = () => {
           <link rel="icon" href="/appLogoWhite.ico" />        
         </Head>                                
         <LogoutModal modalOpen={logoutModalOpen} setModalOpen={setLogoutModalOpen} onYesCallback={handleLogoutCallback} title={'Logout'} />
-        <EditTicketModal modalOpen={editTicketModalOpen} setModalOpen={setEditTicketModalOpen} onYesCallback={getTicketFunc} data={singleTicketData}/>
+        <EditTicketModal modalOpen={editTicketModalOpen} setModalOpen={setEditTicketModalOpen} onSaveCallback={getTicketFunc} onDeleteCallback={onDeleteTicketCallback} data={singleTicketData}/>
+        <SucessSlide toggleShow={showSuccessAlert} message={alertMessage} disableLink={true} />
         <DrawerSidebarNavigation
           headerTitle='Dashboard'
           selectedOption='Dashboard'

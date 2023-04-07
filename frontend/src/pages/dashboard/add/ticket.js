@@ -38,10 +38,6 @@ const AddTicket = () => {
   const [newTicketModal, setNewTicketModal] = useState(false);    
   const onSubmitClick = () => setNewTicketModal(true);
 
-  // UPDATE TICKET MODAL VARIABLES
-  const [updateTicketModal, setUpdateTicketModal] = useState(false);    
-  const onEditClick = () => setUpdateTicketModal(true);
-
   useEffect(() => {    
     
     // Check for saved data in local storage and set the state if it exists

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -84,6 +85,21 @@ public class TicketController {
         }
     }
 
-
-
+    @PatchMapping("/update/tickets/{id}")
+    public ResponseEntity<?> updateTicket(@PathVariable("id") int id, @RequestBody Ticket updatedTicket) {
+        try {
+            Optional<Ticket> ticketOpt = ticketService.updateTicket(updatedTicket, id);
+            if (ticketOpt.isPresent()) {
+                Response<Ticket> data = new Response<>(HttpStatus.OK.value(), ticketOpt.get());
+                return ResponseEntity.status(HttpStatus.OK).body(data);
+            } else {
+                Response<String> error = new Response<>(HttpStatus.NOT_FOUND.value(), "Ticket not found");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+            }
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+            Response<String> error = new Response<>(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
+        }
+    }
 }
