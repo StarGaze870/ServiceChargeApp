@@ -118,7 +118,7 @@ function Row(props) {
   );
 }
 
-export default function CollapsibleTable({data, initialStatusFilter, initialPriorityFilter}) {    
+export default function TicketCollapsibleTable({data, initialStatusFilter, initialPriorityFilter, sendTicketDataToParent}) {    
 
   const [rows, setRows] = useState([]);
   const [page, setPage] = useState(0);
@@ -166,10 +166,9 @@ export default function CollapsibleTable({data, initialStatusFilter, initialPrio
     console.log("Row Subject details:", data);
   };
 
-  const handleEditClick = (data) => {
-    console.log("Row Edit details:", data);
-  };
-
+  const handleEditClick = (data) => {    
+    sendTicketDataToParent(data);
+  }
   const requestSort = (key) => {
     let direction = 'asc';
     if (sortConfig.key === key && sortConfig.direction === 'asc') {

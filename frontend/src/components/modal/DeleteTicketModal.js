@@ -1,9 +1,9 @@
-import { useRef, useState, memo} from 'react';
+import * as React from 'react';
+import { useRef} from 'react';
 import Backdrop from '@mui/material/Backdrop';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import Fade from '@mui/material/Fade';
-import CircularProgressModal from './CircularProgressModal';
 
 const style = {
   position: 'absolute',
@@ -20,23 +20,19 @@ const style = {
   },
 };
 
-const LogoutModal = memo(({ width='50vw', modalOpen, setModalOpen, onYesCallback, title='Title', yesMessage='Yes', cancelMessage='Cancel' }) => {        
+const DeleteTicketModal = React.memo(({ width='50vw', modalOpen, setModalOpen, onYesCallback, title='Title', yesMessage='Yes', cancelMessage='Cancel' }) => {        
 
-  const called = useRef(false);  
-  const [showProgress, setShowProgress] = useState(false)
+  const called = useRef(false);
 
   const handleYes = () => {
-    setShowProgress(true);
-
     if (called.current) return;
     called.current = true;    
   
-    setModalOpen(false);
     setTimeout(async () => {
-      await onYesCallback();      
-      setShowProgress(false);
+      await onYesCallback();
+      setModalOpen(false);
       called.current = false;
-    }, 1500);
+    }, 150);
   };
   
 
@@ -52,7 +48,6 @@ const LogoutModal = memo(({ width='50vw', modalOpen, setModalOpen, onYesCallback
 
   return (
     <div>
-      <CircularProgressModal modalOpen={showProgress} />
       <Modal
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
@@ -69,10 +64,11 @@ const LogoutModal = memo(({ width='50vw', modalOpen, setModalOpen, onYesCallback
         <Fade in={modalOpen}>
           <Box sx={{ ...style, width: width }}>
             <div className="d-flex flex-column mx-auto">                                    
-            <h1 className=''>{title}</h1>
-          </div>                                            
+              <h1 className=''>{title}</h1>
+              <p className='ms-3 mt-3 mb-0'>This cannot be undone.</p>
+            </div>                                            
             <div className="d-flex justify-content-end">
-              <button className="btn btn-dark me-2" onClick={handleYes} style={{minWidth: '90px' }}>
+              <button className="btn btn-danger me-2" onClick={handleYes} style={{minWidth: '90px' }}>
                 {yesMessage}
               </button>              
               <button className="btn btn-light" onClick={closeModal} style={{minWidth: '90px' }}>
@@ -87,4 +83,4 @@ const LogoutModal = memo(({ width='50vw', modalOpen, setModalOpen, onYesCallback
 })
 
 
-export default LogoutModal;
+export default DeleteTicketModal;

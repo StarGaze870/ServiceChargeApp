@@ -38,6 +38,10 @@ const AddTicket = () => {
   const [newTicketModal, setNewTicketModal] = useState(false);    
   const onSubmitClick = () => setNewTicketModal(true);
 
+  // UPDATE TICKET MODAL VARIABLES
+  const [updateTicketModal, setUpdateTicketModal] = useState(false);    
+  const onEditClick = () => setUpdateTicketModal(true);
+
   useEffect(() => {    
     
     // Check for saved data in local storage and set the state if it exists
@@ -92,18 +96,15 @@ const AddTicket = () => {
 
   }, [showSuccessAlert]);
 
-  const handleLogoutCallback = useCallback(() => {
+  const handleLogoutCallback = useCallback(async () => {
 
     setShowProgress(true)
 
     localStorage.removeItem('email');
     localStorage.removeItem('password');
     localStorage.removeItem('role');              
-
-    setTimeout(async () => {
-      await router.push('/');
-      setShowProgress(false);      
-    }, 1000);
+    await router.push('/');
+    
   })
   
   const handlePriorityChange = (event) => {

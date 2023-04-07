@@ -9,19 +9,18 @@ const style = {
   position: 'absolute',
   top: '50%',
   left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: '50vw',
+  transform: 'translate(-50%, -50%)',  
   minWidth: '500px',  
   bgcolor: 'white',
   boxShadow: 24,
   borderRadius: '8px',
   p: 6,
-  '&::-webkit-scrollbar': { // Add this block for WebKit-based browsers
+  '&::-webkit-scrollbar': {
     display: 'none',
   },
 };
 
-const YesNoModal = React.memo(({ modalOpen, setModalOpen, onYesCallback, title='Title', yesMessage='Yes', cancelMessage='Cancel' }) => {        
+const YesNoModal = React.memo(({ width='50vw', modalOpen, setModalOpen, onYesCallback, title='Title', yesMessage='Yes', cancelMessage='Cancel' }) => {        
 
   const called = useRef(false);
 
@@ -63,7 +62,7 @@ const YesNoModal = React.memo(({ modalOpen, setModalOpen, onYesCallback, title='
         }}
       >
         <Fade in={modalOpen}>
-          <Box sx={style}>                   
+          <Box sx={{ ...style, width: width }}>
             <div className="d-flex flex-column mx-auto">                                    
             <h1 className=''>{title}</h1>
           </div>                                            

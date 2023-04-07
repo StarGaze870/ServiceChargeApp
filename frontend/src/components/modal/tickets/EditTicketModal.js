@@ -1,4 +1,4 @@
-import { memo, useRef, useState } from 'react';
+import { memo, useEffect, useRef, useState } from 'react';
 import Backdrop from '@mui/material/Backdrop';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
@@ -8,6 +8,9 @@ import priorityID from '@/db_default_variables/priorities';
 import DeleteIcon from '@mui/icons-material/Delete';
 import FileUpload from '@/components/file/FileUpload';
 import statusID from '@/db_default_variables/status';
+import YesNoModal from '../YesNoModal';
+import CircularProgressModal from '../CircularProgressModal';
+import DeleteTicketModal from '../DeleteTicketModal';
 
 const style = {    
   overflowY: 'scroll',
@@ -24,33 +27,79 @@ const style = {
   boxShadow: 24,
   borderRadius: '8px',
   p: 6,
-  '&::-webkit-scrollbar': { // Add this block for WebKit-based browsers
+  '&::-webkit-scrollbar': {
     display: 'none',    
   },  
 };
 
 const EditTicketModal = memo(({ modalOpen, setModalOpen, onYesCallback, data}) => {        
 
-  const called = useRef(false);
+  const called = useRef(false);  
+  const [showProgressBar, setShowProgressBar] = useState(false);
 
+  const [userID, setUserID] = useState(0);
+  const [userName, setUserName] = useState('');
   const [priority, setPriority] = useState(priorityID[0]);  
-  const [status, setStatus] = useState(statusID[5]);  
+  const [status, setStatus] = useState(statusID[5]);
+  const [subject, setSubject] = useState('');
+  const [description, setDescription] = useState('');
 
-  const handleYes = () => {
-    if (called.current) return;
-    called.current = true;    
+  // VALIDATION
+  const [priorityValid, setPriorityValid] = useState(true);
+
+  useEffect(() => {
+    if (!data) return;      
   
-    setTimeout(async () => {
-      await onYesCallback();
-      setModalOpen(false);
-      called.current = false;
-    }, 150);
+    called.current = false; 
+
+    const priorityItem = priorityID.find((item) => item.type === data.priority);
+    if (priorityItem) setPriority(priorityItem);
+
+    setPriorityValid(data.priority === 'Pending' ? false : true);
+  
+    const statusItem = statusID.find((item) => item.type === data.status);
+    if (statusItem) setStatus(statusItem);
+  
+    setSubject(data.subject || '');
+    setDescription(data.details[0].description ? data.details[0].description : '');
+    setUserID(data.details[0].userID ? data.details[0].userID : 0);
+    setUserName(data.details[0].user ? data.details[0].user : 'User Undefined');
+
+  }, [data]);
+  
+
+  // SAVE MODAL
+  const [yesNoSaveModalOpen, setYesNoSaveModalOpen] = useState(false);
+  const onSaveClick = () => setYesNoSaveModalOpen(true);
+
+  const handleYes = async () => {
+
+    setShowProgressBar(true);
+
+    if (called.current) {
+        return
+    }
+    else {
+
+        called.current = true;          
+        setTimeout(async () => {
+          
+          await onYesCallback();
+          setModalOpen(false);           
+          setShowProgressBar(false);
+          
+        }, 1400);
+    }   
   };
   
-  const handlePriorityChange = (event) => setPriority(JSON.parse(event.target.value));        
+  const handlePriorityChange = (event) => {
+    
+    setPriorityValid(true);
+    setPriority(JSON.parse(event.target.value));        
+  }
+
   const handleStatusChange = (event) => setStatus(JSON.parse(event.target.value));        
   
-
   const closeModal = () => {
 
     setModalOpen(false);
@@ -63,6 +112,11 @@ const EditTicketModal = memo(({ modalOpen, setModalOpen, onYesCallback, data}) =
 
   return (
     <div>
+      <CircularProgressModal modalOpen={showProgressBar} />
+      {/* SAVE TICKET */}
+      {/* <YesNoModal width='45vw' modalOpen={yesNoSaveModalOpen} setModalOpen={setYesNoSaveModalOpen} title={'Save Ticket'} onYesCallback={handleYes}/> */}
+      {/* DELETE TICKET */}
+      <DeleteTicketModal width='45vw' modalOpen={yesNoSaveModalOpen} setModalOpen={setYesNoSaveModalOpen} title={'Delete Ticket'} onYesCallback={handleYes}/>
       <Modal
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
@@ -83,8 +137,9 @@ const EditTicketModal = memo(({ modalOpen, setModalOpen, onYesCallback, data}) =
                 <button className='btn'>
                     <DeleteIcon className='' sx={{fontSize: '1.9em'}} color='error' />
                 </button>
-            </div>             
-            <div className='d-flex'>                
+            </div>                         
+            <div className='d-flex flex-column'>        
+                {!priorityValid &&  <p className='m-0 ms-2 mb-1 p-0 text-danger' style={{fontSize: '.9rem'}}>Priority needs to be set</p>}
                 <Select                
                     className=''
                     fullWidth
@@ -92,12 +147,16 @@ const EditTicketModal = memo(({ modalOpen, setModalOpen, onYesCallback, data}) =
                     value={JSON.stringify({ id: priority.id, type: priority.type })}
                     onChange={handlePriorityChange}            
                     renderValue={(selectedValue) => {
-                        const valueObj = JSON.parse(selectedValue);
-                        return <strong>{`${valueObj.type} Priority`}</strong>;
+                        const object = JSON.parse(selectedValue);
+
+                        if (object.type === 'Pending')
+                            return <strong className='text-danger'>{`${object.type} Priority`}</strong>;
+
+                        return <strong>{`${object.type} Priority`}</strong>;
                     }}
-                    inputProps={{ 'aria-label': 'Without label' }}
-                    
-                    >            
+                    inputProps={{ 'aria-label': 'Without label' }}                    
+                    >                            
+                <MenuItem className='d-none' value={JSON.stringify({ id: priorityID[3].id, type: priorityID[3].type })}>Pending</MenuItem>
                 <MenuItem value={JSON.stringify({ id: priorityID[2].id, type: priorityID[2].type })}>High</MenuItem>
                 <MenuItem value={JSON.stringify({ id: priorityID[1].id, type: priorityID[1].type })}>Medium</MenuItem>
                 <MenuItem value={JSON.stringify({ id: priorityID[0].id, type: priorityID[0].type })}>Low</MenuItem>
@@ -132,8 +191,8 @@ const EditTicketModal = memo(({ modalOpen, setModalOpen, onYesCallback, data}) =
                   label="Subject"
                   margin="normal"
                   variant="outlined"
-                //   value={subject}
-                //   onChange={(e) => setSubject(e.target.value)}
+                  value={subject}
+                  onChange={(e) => setSubject(e.target.value)}
                 />
                 <TextField
                   className="mt-3 mb-1"
@@ -141,10 +200,10 @@ const EditTicketModal = memo(({ modalOpen, setModalOpen, onYesCallback, data}) =
                   label="Description"
                   multiline
                   rows={8}
-                //   value={description}
-                //   onChange={(e) => setDescription(e.target.value)}                
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}                
                 />
-                <p className='ms-2' style={{fontSize: '.9em'}}>from: <strong>{'Alyssa Jumapao'}</strong></p>
+                <p className='ms-2' style={{fontSize: '.9em'}}>from: <strong>{userName}</strong></p>
             </div>
             <div className='d-flex flex-column mt-5'>
                 <label className='ms-2 mb-2'>Conforme Slip</label>
@@ -155,7 +214,8 @@ const EditTicketModal = memo(({ modalOpen, setModalOpen, onYesCallback, data}) =
                 <FileUpload maxFiles={1} />
             </div>
             <div className='d-flex justify-content-end mt-5'>
-                <button className='btn btn-dark px-4'>Save</button>
+                <button className='btn btn-dark px-4' onClick={onSaveClick}>Save</button>
+                <button className='btn btn-light px-4' onClick={closeModal}>Cancel</button>
             </div>
           </Box>
         </Fade>
