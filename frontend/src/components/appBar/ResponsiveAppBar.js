@@ -63,7 +63,7 @@ function ResponsiveAppBar({onSignIn}) {
       <Container maxWidth="">
         <Toolbar disableGutters>
           <Icon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }}> 
-            <img src='/appLogoBlack.ico'></img>
+            <img src='/appLogoBlack.png'></img>
           </Icon>          
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' }, color: 'black' }}>
             <IconButton
@@ -102,7 +102,7 @@ function ResponsiveAppBar({onSignIn}) {
             </Menu>
           </Box>          
           <Icon  sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} > 
-            <img src='/appLogoBlack.ico'></img>
+            <img src='/appLogoBlack.png'></img>
           </Icon>
           <Typography
             variant="h5"

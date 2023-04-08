@@ -16,7 +16,7 @@ import { TablePagination } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import { Select, MenuItem, InputLabel } from '@mui/material';
 
-function createData({id, subject, description, user, status, priority, date}) {
+function createData({ticketID, userID, subject, description, user, status, priority, date}) {
   return {
     subject,
     status,
@@ -24,7 +24,8 @@ function createData({id, subject, description, user, status, priority, date}) {
     date: new Date(date),
     details: [
       {
-        ticketID: id,
+        ticketID: ticketID,
+        userid: userID,
         description: description,
         user: user,
       },      
@@ -121,6 +122,7 @@ function Row(props) {
 export default function TicketCollapsibleTable({data, initialStatusFilter, initialPriorityFilter, sendTicketDataToParent}) {    
 
   const [rows, setRows] = useState([]);
+  const [filteredRowCount, setFilteredRowCount] = useState(rows.length);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [sortConfig, setSortConfig] = useState({ key: '', direction: 'asc' });
@@ -131,7 +133,8 @@ export default function TicketCollapsibleTable({data, initialStatusFilter, initi
 
       let rowData = data.map(item => 
         createData({
-          id: item.id,
+          ticketID: item.id,
+          userID: item.user.id,
           subject: item.subject,
           description: item.description,
           status: item.status.type,
@@ -224,7 +227,15 @@ export default function TicketCollapsibleTable({data, initialStatusFilter, initi
       return 0;
     });
   
-    return sortableRows;
+    const filteredRows = sortableRows
+      .filter((row) => (statusFilter !== 'All' ? row.status === statusFilter : true))
+      .filter((row) => (priorityFilter !== 'All' ? row.priority === priorityFilter : true));
+  
+
+    setFilteredRowCount(filteredRows.length);
+
+    return filteredRows;
+
   }, [rows, sortConfig, priorityFilter, statusFilter]);      
 
   return (   
@@ -234,7 +245,7 @@ export default function TicketCollapsibleTable({data, initialStatusFilter, initi
             className='d-flex me-4'  
             component='div'           
             rowsPerPageOptions={[5, 10, 25, 100]}          
-            count={rows.length}
+            count={filteredRowCount}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}

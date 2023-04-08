@@ -192,7 +192,7 @@ export default function DrawerSidebarNavigation({headerTitle='Header Title', sel
             {bottomMenuItems.map((item) => (
                 <ListItem key={item.text} disablePadding>
                 <ListItemButton
-                    // selected={item.text === selectedItem}
+                    selected={item.text === selectedItem}
                     onClick={() => handleItemClick(item.text)}
                     sx={{
                     backgroundColor: item.text === selectedItem ? 'rgba(23, 48, 88, 0.1)' : 'transparent',

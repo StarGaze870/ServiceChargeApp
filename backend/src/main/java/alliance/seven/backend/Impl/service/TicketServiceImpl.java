@@ -89,7 +89,7 @@ public class TicketServiceImpl implements TicketService {
     }
 
     @Override
-    public Optional<Ticket> updateTicket(Ticket updatedTicket, int id) {
+    public Optional<Ticket> updateTicketById(Ticket updatedTicket, int id) {
         Optional<Ticket> optionalTicket = ticketRepository.findById(id);
         if (optionalTicket.isPresent()) {
             Ticket existingTicket = optionalTicket.get();
@@ -102,4 +102,15 @@ public class TicketServiceImpl implements TicketService {
             return Optional.empty();
         }
     }
+
+	@Override
+	public Optional<Boolean> deleteTicketById(int id) {
+		Optional<Ticket> ticketOpt = ticketRepository.findById(id);
+        if (ticketOpt.isPresent()) {
+            ticketRepository.delete(ticketOpt.get());
+            return Optional.of(true);
+        } else {
+            return Optional.of(false);
+        }
+	}
 }

@@ -3,7 +3,7 @@ import Link from 'next/link';
 import Slide from '@mui/material/Slide';
 import { Alert, AlertTitle, Box } from '@mui/material';
 
-const SucessSlide = memo(({toggleShow=false, message='Message', hrefPath='/', queryDataJSON, disableLink=false, severity='success'}) => {
+const SucessSlide = memo(({toggleShow=false, title='Success', message='Message', hrefPath='/', queryDataJSON, disableLink=false, severity='success'}) => {
   const [checked, setChecked] = useState(toggleShow);  
 
   useEffect(() => {
@@ -16,7 +16,7 @@ const SucessSlide = memo(({toggleShow=false, message='Message', hrefPath='/', qu
         <Box>
           {disableLink ? (
             <Alert severity={severity}>
-              <AlertTitle className=''>Success</AlertTitle>
+              <AlertTitle className=''>{title}</AlertTitle>
               {message}
             </Alert>
           ) : (
@@ -29,7 +29,7 @@ const SucessSlide = memo(({toggleShow=false, message='Message', hrefPath='/', qu
               target="_blank">
 
               <Alert severity={severity}>
-                <AlertTitle className=''>Success</AlertTitle>
+                <AlertTitle className=''>{title}</AlertTitle>
                 {message} — <strong className='text-success'>check it out!</strong>
               </Alert>
             </Link>

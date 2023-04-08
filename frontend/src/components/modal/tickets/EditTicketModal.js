@@ -13,6 +13,7 @@ import CircularProgressModal from '../CircularProgressModal';
 import DeleteTicketModal from '../DeleteTicketModal';
 import { updateTicket } from '@/apiRequests/tickets/updateTicket';
 import PostAddIcon from '@mui/icons-material/PostAdd';
+import { deleteTicket } from '@/apiRequests/tickets/deleteTicket';
 
 const style = {    
   overflowY: 'scroll',
@@ -90,14 +91,14 @@ const EditTicketModal = memo(({ modalOpen, setModalOpen, onSaveCallback, onDelet
             && priority.type === data.priority
             && status.type === data.status
             && subject === data.subject
-            && description === description) {
+            && description === data.description) {
 
             console.log('-- NO CHANGES MADE --')
 
             setModalOpen(false);           
             setShowProgressBar(false);
             called.current = false; 
-            
+
             return
         }
 
@@ -126,14 +127,23 @@ const EditTicketModal = memo(({ modalOpen, setModalOpen, onSaveCallback, onDelet
         console.log('-- UPDATING TICKET --')  
         console.log(updatedTicketData)        
 
-        setTimeout(async () => {
+        if (updatedTicketData[0] === 200) {
+            setTimeout(async () => {
           
-          await onSaveCallback({fromEditTicket: true});
-          setModalOpen(false);           
-          setShowProgressBar(false);
-          called.current = false; 
-
-        }, 1400);
+                await onSaveCallback({fromEditTicket: true});
+                setModalOpen(false);           
+                setShowProgressBar(false);
+                called.current = false; 
+      
+              }, 1400);
+        }
+        else {
+            
+            await onSaveCallback({fromEditTicket: true, failed: true});
+            setModalOpen(false);           
+            setShowProgressBar(false);
+            called.current = false; 
+        }
     }   
   };
 
@@ -147,17 +157,28 @@ const EditTicketModal = memo(({ modalOpen, setModalOpen, onSaveCallback, onDelet
     else {
 
         called.current = true;
+        
+        const deleteTicketData = await deleteTicket(ticketID);
+        console.log('-- DELETING TICKET --')  
+        console.log(deleteTicketData)    
 
-        // TODO: DELETE API
-
-        setTimeout(async () => {
+        if (deleteTicketData[0] === 200) {
+            setTimeout(async () => {
           
-          await onDeleteCallback();
-          setModalOpen(false);           
-          setShowProgressBar(false);
-          called.current = false; 
+                await onDeleteCallback();
+                setModalOpen(false);           
+                setShowProgressBar(false);
+                called.current = false; 
+      
+              }, 1400);
+        }
+        else {
 
-        }, 1400);
+            await onDeleteCallback({failed: true});
+            setModalOpen(false);           
+            setShowProgressBar(false);
+            called.current = false;
+        }   
     }   
   };
   
@@ -277,7 +298,7 @@ const EditTicketModal = memo(({ modalOpen, setModalOpen, onSaveCallback, onDelet
             <div className='d-flex flex-column mt-5'>
                 <div className='d-flex'>
                     <label className='ms-2 mb-2'>Conforme Slip</label>
-                    <a href='#' className='ms-2 mb-auto' style={{marginTop: '-.1em'}}><PostAddIcon color={'success'} /></a>
+                    <a href='#' className='ms-2 mb-auto' style={{marginTop: '-.18em'}}><PostAddIcon color={'success'} /></a>
                 </div>
                 <FileUpload maxFiles={1} />
                 <label className='ms-2 mb-2'>Proof of Payment</label>

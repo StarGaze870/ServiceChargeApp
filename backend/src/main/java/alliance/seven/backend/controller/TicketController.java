@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -86,11 +87,29 @@ public class TicketController {
     }
 
     @PatchMapping("/update/tickets/{id}")
-    public ResponseEntity<?> updateTicket(@PathVariable("id") int id, @RequestBody Ticket updatedTicket) {
+    public ResponseEntity<?> updateTicketById(@PathVariable("id") int id, @RequestBody Ticket updatedTicket) {
         try {
-            Optional<Ticket> ticketOpt = ticketService.updateTicket(updatedTicket, id);
+            Optional<Ticket> ticketOpt = ticketService.updateTicketById(updatedTicket, id);
             if (ticketOpt.isPresent()) {
                 Response<Ticket> data = new Response<>(HttpStatus.OK.value(), ticketOpt.get());
+                return ResponseEntity.status(HttpStatus.OK).body(data);
+            } else {
+                Response<String> error = new Response<>(HttpStatus.NOT_FOUND.value(), "Ticket not found");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+            }
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+            Response<String> error = new Response<>(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
+        }
+    }
+    
+    @DeleteMapping("/delete/tickets/{id}")
+    public ResponseEntity<?> deleteTicketById(@PathVariable("id") int id) {
+        try {
+            Optional<Boolean> isDeleted = ticketService.deleteTicketById(id);
+            if (isDeleted.isPresent() && isDeleted.get()) {
+                Response<String> data = new Response<>(HttpStatus.OK.value(), "Ticket successfully deleted");
                 return ResponseEntity.status(HttpStatus.OK).body(data);
             } else {
                 Response<String> error = new Response<>(HttpStatus.NOT_FOUND.value(), "Ticket not found");

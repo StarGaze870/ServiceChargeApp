@@ -13,5 +13,6 @@ public interface TicketService {
     Optional<Ticket> findById(int id);
     Optional<TicketDTO> findByIdWithRelations(int id);
     Optional<Ticket> save(Ticket ticket);
-    Optional<Ticket> updateTicket(Ticket updatedTicket, int id);
+    Optional<Ticket> updateTicketById(Ticket updatedTicket, int id);
+    Optional<Boolean> deleteTicketById(int id);
 }
