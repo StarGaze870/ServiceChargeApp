@@ -7,9 +7,9 @@ import Fade from '@mui/material/Fade';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import { useRouter } from 'next/router';
-import { CircularProgress } from '@mui/material';
 import { login } from '@/apiRequests/authentication/loginRequest';
 import CryptoJS from 'crypto-js';
+import CircularProgressModal from './CircularProgressModal';
 
 const style = {
   position: 'absolute',
@@ -107,6 +107,7 @@ export default function LoginModal({ modalOpen, setModalOpen }) {
 
   return (
     <div>
+      <CircularProgressModal modalOpen={showProgress} />
       <Modal
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
@@ -122,25 +123,6 @@ export default function LoginModal({ modalOpen, setModalOpen }) {
       >
         <Fade in={modalOpen}>
           <Box sx={style}>
-          {showProgress && (
-              <div
-                style={{
-                  position: 'fixed',
-                  top: 0,
-                  left: 0,
-                  width: '100%',
-                  height: '100%',
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  background: 'rgba(0, 0, 0, 0.5)',
-                  zIndex: 9999,
-                }}
-              >
-                <CircularProgress color="warning" size="5rem" thickness={5}/>
-              </div>
-            )}
-
             <div className="d-flex flex-column flex-xxl-row align-items-center mx-auto mb-5">
               <img
                 className='mb-4 me-xxl-5 mb-xxl-3'

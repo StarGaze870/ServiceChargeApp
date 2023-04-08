@@ -33,6 +33,24 @@ function createData({ticketID, userID, subject, description, user, status, prior
   };
 }
 
+const generateWelcomeRow = () => {
+  return [{
+    subject: 'Welcome to the Service Charge App from Alliance Cebu!',
+    status: 'About the App',
+    priority: 'Key Features',
+    date: new Date(),
+    details: [
+      {
+        ticketID: '1',
+        userid: 'N/A',
+        description: 'The Service Charge App is designed to help you manage and track service requests efficiently. It allows you to create, update, and manage service tickets with ease, providing a seamless experience for both you and your customers.',
+        user: 'Alliance Cebu Team',
+      },
+    ],
+  }];
+};
+
+
 function Row(props) {
    
   const { 
@@ -338,13 +356,13 @@ export default function TicketCollapsibleTable({data, initialStatusFilter, initi
             </TableRow>
           </TableHead>          
           <TableBody>
-            {sortedRows
+            {(sortedRows.length > 0 ? sortedRows : generateWelcomeRow())
               .filter((row) => (statusFilter !== 'All' ? row.status === statusFilter : true))
               .filter((row) => (priorityFilter !== 'All' ? row.priority === priorityFilter : true))
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((row, index) => (                
+              .map((row, index) => (
                 <Row
-                  key={row.details[0].ticketID}
+                  key={row.details[0].ticketID || `welcome-row`}
                   row={row}
                   onSubjectClick={handleSubjectClick}
                   onEditClick={handleEditClick}
@@ -352,7 +370,6 @@ export default function TicketCollapsibleTable({data, initialStatusFilter, initi
                 />
               ))}
           </TableBody>
-          {/* TABLE FOOTER */}
         </Table>
       </TableContainer>     
     </div> 

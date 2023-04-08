@@ -28,7 +28,7 @@ const AdminDashboard = () => {
   const [alertMessage, setAlertMessage] = useState('');
 
   // TICKET TABLE VARIABLE
-  const [ticketTableData, setTicketTableData] = useState(null)
+  const [ticketTableData, setTicketTableData] = useState([])
   const [initialStatusFilter, setInitialStatusFilter] = useState('All');
   const [initialPriorityFilter, setInitialPriotityFilter] = useState('All');
 
@@ -41,14 +41,15 @@ const AdminDashboard = () => {
   const [logoutModalOpen, setLogoutModalOpen] = useState(false);    
 
   useEffect(() => {
-    if (query.isFromAddTicket && !loading) {
-      if (ticketTableData && ticketTableData.length > 0) {
-        const reorderedTicketData = [
-          ticketTableData[ticketTableData.length - 1],
-          ...ticketTableData.slice(0, ticketTableData.length - 1),
-        ];
-        setTicketTableData(reorderedTicketData);
-      }
+
+    if (query.isFromAddTicket && !loading && ticketTableData.length > 0) {
+      
+      const reorderedTicketData = [
+        ticketTableData[ticketTableData.length - 1],
+        ...ticketTableData.slice(0, ticketTableData.length - 1),
+      ];
+      setTicketTableData(reorderedTicketData);
+      
     }
   }, [query, loading]);
   
@@ -66,12 +67,10 @@ const AdminDashboard = () => {
         
         if (isAuthrorized[1].toString() !== 'Admin') {
           await router.replace(`/dashboard/${isAuthrorized[1].toString().toLowerCase()}`);
-        } else {
-          setLoading(false);
         }
       }      
       await getTicketFunc();
-
+      setLoading(false);
     };
     ini();
 
