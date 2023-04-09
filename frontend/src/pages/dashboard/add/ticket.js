@@ -14,6 +14,7 @@ import adminUser from '@/db_default_variables/userAdmin';
 import { createTicket } from '@/apiRequests/tickets/createTicket';
 import CircularProgressModal from '@/components/modal/CircularProgressModal';
 import SucessSlide from '@/components/transitions/SucessSlide';
+import UserAutoComplete from '@/components/user/UserAutoComplete';
 
 const AddTicket = () => {    
 
@@ -109,6 +110,7 @@ const AddTicket = () => {
 
   const handleSelectedUser = useCallback((user) => {    
     setUser(user);
+    console.log(user)
   });
 
   const onNewTicketYesCallback = useCallback(async () => {
@@ -176,7 +178,7 @@ const AddTicket = () => {
             <SucessSlide toggleShow={showSuccessAlert} message={'Ticket Sucessfully Added'} hrefPath='/dashboard/admin' queryDataJSON={{isFromAddTicket: true}}/>            
             <div className='d-flex flex-column flex-xl-row'>            
               <div className='col-12 col-xl-5 d-flex flex-column'>
-                <div className=''>
+                <div className='mb-4'>
                   <Select                
                     className=''
                     sx={{minWidth: '7em'}}                    
@@ -190,7 +192,8 @@ const AddTicket = () => {
                   </Select>
                   <label className='my-auto ms-3' style={{fontSize: '1.1em'}}>Priority</label>
                 </div>
-                <UserSelect selectedUser={user} userSelectedCallback={handleSelectedUser}/>  
+                {/* <UserSelect selectedUser={user} userSelectedCallback={handleSelectedUser}/> */}
+                <UserAutoComplete selectedUser={user} userSelectedCallback={handleSelectedUser}/>
                 <TextField
                   className="mt-4"
                   name="subject"
@@ -243,7 +246,7 @@ const AddTicket = () => {
                       <br />
                       <br />
                       <br />
-                      <label className='align-self-end'>from: <strong>{user.name}</strong></label>
+                      <label className='align-self-end'>from: <strong>{user?.displayLabel}</strong></label>
                     </div>
                   </div>
                 </div>

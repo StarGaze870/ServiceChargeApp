@@ -15,7 +15,7 @@ const SucessSlide = memo(({toggleShow=false, title='Success', message='Message',
       <Slide direction={toggleShow ? 'right' : 'up'} in={checked} mountOnEnter unmountOnExit>
         <Box>
           {disableLink ? (
-            <Alert severity={severity}>
+            <Alert variant='filled' severity={severity}>
               <AlertTitle className=''>{title}</AlertTitle>
               {message}
             </Alert>
@@ -28,9 +28,9 @@ const SucessSlide = memo(({toggleShow=false, title='Success', message='Message',
               className='text-decoration-none' 
               target="_blank">
 
-              <Alert severity={severity}>
+              <Alert variant='filled' severity={severity}>
                 <AlertTitle className=''>{title}</AlertTitle>
-                {message} — <strong className='text-success'>check it out!</strong>
+                {message} — <strong className='text-white'>check it out!</strong>
               </Alert>
             </Link>
           )}

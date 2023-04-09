@@ -41,7 +41,7 @@ const generateWelcomeRow = () => {
     date: new Date(),
     details: [
       {
-        ticketID: '1',
+        ticketID: '0',
         userid: 'N/A',
         description: 'The Service Charge App is designed to help you manage and track service requests efficiently. It allows you to create, update, and manage service tickets with ease, providing a seamless experience for both you and your customers.',
         user: 'Alliance Cebu Team',
