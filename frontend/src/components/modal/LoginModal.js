@@ -17,7 +17,7 @@ const style = {
   left: '50%',
   transform: 'translate(-50%, -50%)',
   width: '30vw',
-  minWidth: '500px',
+  minWidth: '310px',
   maxHeight: '95vh',
   overflowY: 'scroll',
   scrollbarWidth: 'none', // Add this line for Firefox
@@ -152,10 +152,14 @@ export default function LoginModal({ modalOpen, setModalOpen }) {
                 variant="outlined"
                 error={error === 'Password does not match' || statusCode === 500}
               />
-            </form>            
-            <Button variant="text" onClick={handleForgotPassword} style={{ textAlign: 'right', display: 'block', marginBottom: '1em' }}>
-              Forgot password?
-            </Button>
+            </form>                       
+            <div className="d-flex justify-content-end mb-3">
+              <a className='text-decoration-none me-2' href='/forgot-password'>
+                Forgot password?
+              </a>
+            </div>
+
+           
             <div className="d-flex justify-content-end">
               <button className="btn btn-dark me-3" onClick={handleLogin} style={{ marginTop: '16px' }}>
                 Sign In

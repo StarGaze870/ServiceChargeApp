@@ -6,6 +6,7 @@ import isLoggedIn from './isLoggedIn';
 import LockIcon from '@mui/icons-material/Lock';
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
+import { Button } from '@mui/material';
 
 export default function forgotPassword() {  
 
@@ -89,7 +90,7 @@ export default function forgotPassword() {
         </Head>          
         <div className="content-wrapper">              
         <section>                 
-          <div className='d-flex align-items-end' style={{height: '85vh' }}>                            
+          <div className='d-flex align-items-end' style={{height: '85vh', minWidth: '460px' }}>                            
             <div
               className="d-flex justify-content-center align-items-center h-100 w-100"
               style={{
@@ -178,6 +179,9 @@ export default function forgotPassword() {
                       error={passwordMismatchError}
                       helperText={passwordMismatchError ? 'Passwords do not match' : ''}
                     />
+                    <a className='me-2 mb-3 text-decoration-none d-block align-self-end' href='/'>
+                      Login Instead?
+                    </a>
                     <button className='btn btn-dark p-2 mt-4' onClick={handleResetClick}>
                       Reset
                     </button>
@@ -187,7 +191,7 @@ export default function forgotPassword() {
           </div> 
         </section>                      
       <footer>         
-        <div className='d-flex flex-column' style={{backgroundColor: "rgb(234, 234, 238)"}}>
+        <div className='d-flex flex-column' style={{backgroundColor: "rgb(234, 234, 238)", minWidth: '460px'}}>
           <div className='d-flex flex-column flex-xl-row' style={{backgroundColor: "rgb(234, 234, 238)"}}>                
             <div className="d-flex col-xl-4 flex-column mt-5" style={{ backgroundColor: "rgb(234, 234, 238)" }}>          
               <h1 className='d-flex mx-auto'>Alliance</h1>
