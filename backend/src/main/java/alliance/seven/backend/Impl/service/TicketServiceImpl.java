@@ -29,7 +29,8 @@ public class TicketServiceImpl implements TicketService {
                         ticket.getUser().getId(),
                         ticket.getUser().getEmail(),
                         ticket.getUser().getFirstname(),
-                        ticket.getUser().getLastname()
+                        ticket.getUser().getLastname(),
+                        ticket.getUser().getRole()
                 );
                 return new TicketDTO(
                         ticket.getId(),
@@ -69,7 +70,8 @@ public class TicketServiceImpl implements TicketService {
                     ticket.getUser().getId(),
                     ticket.getUser().getEmail(),
                     ticket.getUser().getFirstname(),
-                    ticket.getUser().getLastname()
+                    ticket.getUser().getLastname(),
+                    ticket.getUser().getRole()
             );
                         
             TicketDTO ticketDTO = new TicketDTO(

@@ -30,7 +30,10 @@ export default function UserAutoComplete({ selectedUser, userSelectedCallback })
     }
 
     (async () => {
-      const users = await getAllUsers();
+
+      const users = await getAllUsers();      
+      console.log('-- GETTING USERS --')
+      console.log(users)
 
       if (active) {
         setOptions(

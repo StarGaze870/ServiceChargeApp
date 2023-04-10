@@ -28,7 +28,8 @@ public class UserServiceImpl implements UserService {
                 user.getId(),
                 user.getEmail(),
                 user.getFirstname(),
-                user.getLastname()
+                user.getLastname(),
+                user.getRole()
         )).collect(Collectors.toList());
         return Optional.ofNullable(userSummaryDTOs);
     } 
