@@ -11,7 +11,6 @@ import alliance.seven.backend.AES_Encryption.EncryptDecrypt;
 import alliance.seven.backend.dto.UserSummaryDTO;
 import alliance.seven.backend.entity.User;
 import alliance.seven.backend.repository.UserRepository;
-import alliance.seven.backend.requests.ResetPasswordRequest;
 import alliance.seven.backend.service.UserService;
 
 @Service
@@ -33,20 +32,5 @@ public class UserServiceImpl implements UserService {
                 user.getRole()
         )).collect(Collectors.toList());
         return Optional.ofNullable(userSummaryDTOs);
-    } 
-    
-    @Override
-    public void resetPassword(ResetPasswordRequest resetPasswordRequest) throws Exception {
-        Optional<User> optionalUser = userRepository.findByEmail(resetPasswordRequest.getEmail());
-        
-        if (optionalUser.isPresent()) {
-            User user = optionalUser.get();
-            String encryptedPassword = aes.encrypt(resetPasswordRequest.getNewPassword());
-            user.setPassword(encryptedPassword);
-            userRepository.save(user);
-        } else {
-            throw new Exception("User not found.");
-        }
-    }
-
+    }     
 }
