@@ -7,5 +7,5 @@ import alliance.seven.backend.entity.User;
 public interface UserAuthService {
 	
     Optional<User> login(String email, String password);
-    
+    Optional<Integer> findUserIdByEmail(String email);
 }

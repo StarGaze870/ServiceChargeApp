@@ -10,6 +10,7 @@ import { useRouter } from 'next/router';
 import { login } from '@/apiRequests/authentication/loginRequest';
 import CryptoJS from 'crypto-js';
 import CircularProgressModal from './CircularProgressModal';
+import Link from 'next/link';
 
 const style = {
   position: 'absolute',
@@ -105,6 +106,17 @@ export default function LoginModal({ modalOpen, setModalOpen }) {
     }
   };
 
+  const handleForgotPasswordClick = (e) => {
+    e.preventDefault();
+    const formData = new FormData(formRef.current);
+    const data = Object.fromEntries(formData.entries());
+    const email = data.email;
+    router.push({
+      pathname: '/forgot-password',
+      query: { email: email },
+    });
+  };
+
   return (
     <div>
       <CircularProgressModal modalOpen={showProgress} />
@@ -125,12 +137,12 @@ export default function LoginModal({ modalOpen, setModalOpen }) {
           <Box sx={style}>
             <div className="d-flex flex-column flex-xxl-row align-items-center mx-auto mb-5">
               <img
-                className='mb-4 me-xxl-5 mb-xxl-3'
+                className='mb-4 mb-xxl-3'
                 src="/appLogoBlack.png"
                 alt="App Logo"
                 style={{ width: '150px', height: '150px' }}
               />
-              <h1 className='mx-auto my-auto text-center text-xxl-start'>Service Charge Application</h1>
+              <h1 className='ms-3 my-auto text-center text-xxl-start'>Service Charge Application</h1>
             </div>
             <h3 id="transition-modal-title" className='mb-4' style={{ textAlign: 'start' }}>Login</h3>                                    
             <form ref={formRef} onSubmit={handleLogin}>
@@ -153,13 +165,16 @@ export default function LoginModal({ modalOpen, setModalOpen }) {
                 error={error === 'Password does not match' || statusCode === 500}
               />
             </form>                       
-            <div className="d-flex justify-content-end mb-3">
-              <a className='text-decoration-none me-2' href='/forgot-password'>
+            <div className="d-flex justify-content-end mb-3">              
+            <a
+                className="text-decoration-none me-2"
+                href="/forgot-password"
+                onClick={handleForgotPasswordClick}
+              >
                 Forgot password?
               </a>
-            </div>
 
-           
+            </div>           
             <div className="d-flex justify-content-end">
               <button className="btn btn-dark me-3" onClick={handleLogin} style={{ marginTop: '16px' }}>
                 Sign In

@@ -20,17 +20,24 @@ export default function Home() {
         await router.replace(`/dashboard/${isAuthrorized[1].toString().toLowerCase()}`);
       }
       else {
-        setLoading(false);
+        setLoading(false);        
       }
     };
     ini();
 
   }, [])  
 
-  const onSign = () => {
-    console.log("FROM INDEX");
+  const onSign = () => {    
     setModalOpen(true);
   }  
+
+  useEffect(() => {
+
+    if(router.query.openSignIn) {
+      setModalOpen(true);
+    }
+
+  }, [router.query])
 
   return ( 
     !loading && (   

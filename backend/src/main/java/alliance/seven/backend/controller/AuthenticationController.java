@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -80,5 +81,16 @@ public class AuthenticationController {
 	    }
 	}
 
-	
+    @GetMapping("/user/get/id")
+    public ResponseEntity<?> getUserIdByEmail(@RequestParam String email) {
+        Optional<Integer> userId = userService.findUserIdByEmail(email);
+
+        if (userId.isPresent()) {
+            Response<Integer> data = new Response<>(HttpStatus.OK.value(), userId.get());
+            return ResponseEntity.status(HttpStatus.OK).body(data);
+        } else {
+            Response<String> error = new Response<>(HttpStatus.NOT_FOUND.value(), "User not found for email: " + email);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+        }
+    }
 }

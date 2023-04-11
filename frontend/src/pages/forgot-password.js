@@ -6,33 +6,66 @@ import isLoggedIn from './isLoggedIn';
 import LockIcon from '@mui/icons-material/Lock';
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
-import { Button } from '@mui/material';
+import SendIcon from '@mui/icons-material/Send';
+import CircularProgressModal from '@/components/modal/CircularProgressModal';
+import SucessSlide from '@/components/transitions/SucessSlide';
+import { getUserIdByEmail } from '@/apiRequests/users/getUserIdByEmail';
+import { sendOTp } from '@/apiRequests/users/sendOtp';
+import { otpResetUserPassword } from '@/apiRequests/users/otpResetUserPassword';
 
 export default function forgotPassword() {  
-
+  
   const divRef = useRef(null);
   const router = useRouter();
-  const [loading, setLoading] = useState(true);
+  const query = router.query; 
+  const [showProgressBar, setShowProgressBar] = useState(false);
+  const [showSuccessAlert, setShowSuccessAlert] = useState(false);
+  const [showErrorAlert, setShowErrorAlert] = useState(false);
+  const [showServerError, setShowServerError] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   
+  const [userId, setUserId] = useState(0);
   const [otp, setOtp] = useState('');
+  const [email, setEmail] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [passwordMismatchError, setPasswordMismatchError] = useState(false);
+
+  const [btnName, setBtnName] = useState('Send Code');
+  const [emailExist, setEmailExist] = useState(true);
 
   useEffect(() => {    
     const ini = async () => {
       const isAuthrorized = await isLoggedIn();      
       if (isAuthrorized[0]) {
         await router.replace(`/dashboard/${isAuthrorized[1].toString().toLowerCase()}`);
-      }
-      else {
-        setLoading(false);
-      }
+      }      
     };
     ini();
 
   }, [])    
+
+  useEffect(() => {
+    
+    if (query.email === undefined) {
+      router.replace('/')
+      return;
+    }
+    setEmail(query.email);
+
+    const func = async () => {
+      const data = await getUserIdByEmail(query.email);
+
+      if (data[0] === 200) {                
+        setUserId(data[1])
+      }
+      else if(data[0] !== 500) {      
+        setEmailExist(false)
+      }
+    }
+    func();
+
+  }, [query])
 
   const handleInput = (e, idx) => {
     if (e.target.value.length > 1) {
@@ -57,18 +90,83 @@ export default function forgotPassword() {
           input.value = char;
         }
       });
+      setOtp(pastedData);
     }
   };
 
-  const handleResetClick = () => {
-    if (newPassword !== confirmPassword) {
-      setPasswordMismatchError(true);
-      return;
-    }
+  const handleResetClick = async (e) => {    
 
-    // If passwords match, proceed with the reset logic
-    console.log('OTP:', otp);
-    console.log('New Password:', newPassword);
+    if (!emailExist) { return }
+
+    if (e.currentTarget.name === 'Send Code') {      
+            
+      setShowProgressBar(true);
+      const sendOtpData = await sendOTp({recipient: email, userId: userId});                        
+      console.log('-- SENDING OTP --');
+      console.log(sendOtpData);
+
+      if(sendOtpData[0] === 200) {
+        
+        setShowProgressBar(false);
+
+        setTimeout(async () => {    
+          setShowSuccessAlert(true)          
+        }, 600);              
+        setBtnName('Reset')
+      }
+      else {
+
+        setShowProgressBar(false);
+        setShowSuccessAlert(false);
+        setShowErrorAlert(true);
+
+        setTimeout(async () => {  
+          setShowErrorAlert(false)          
+        }, 15000); 
+      }            
+    }
+    else {
+
+      if (newPassword.trim() !== confirmPassword.trim() 
+        || (newPassword.trim().length === 0 && confirmPassword.trim().length === 0)) {
+
+        setPasswordMismatchError(true);
+        return;
+      }      
+      setShowProgressBar(true);
+
+      const resetData = await otpResetUserPassword({
+        userId: userId,
+        otp: otp,
+        newPassword: newPassword.trim()
+      });      
+      console.log('-- RESETTING PASSWORD --');
+      console.log(resetData);
+      
+
+      if (resetData[0] === 200) {
+
+          setShowProgressBar(true);
+
+          setTimeout(async () => {  
+            router.replace({
+              pathname: '/',
+              query: { openSignIn: true },
+            });
+            setShowProgressBar(false)          
+          }, 700);         
+      }
+      else {
+
+        setShowProgressBar(false);
+        setShowSuccessAlert(false);
+        setShowServerError(true);
+
+        setTimeout(async () => {  
+          setShowServerError(false)          
+        }, 15000); 
+      }
+    }        
   };
 
   const handleKeyDown = (e, idx) => {
@@ -82,13 +180,17 @@ export default function forgotPassword() {
 
   return (         
       <div ref={divRef} style={{ backgroundColor: "rgb(234, 234, 238)" }}>
+        <CircularProgressModal modalOpen={showProgressBar} />        
+        <SucessSlide toggleShow={showSuccessAlert} title={'Email Sent'} disableLink={true} message={`to: ${email}`}/>
+        <SucessSlide toggleShow={showErrorAlert} title={'Send Email Error'} disableLink={true} message={`to: ${email}`} severity='error'/>
+        <SucessSlide toggleShow={showServerError} title={'Error'} disableLink={true} message='view console for details' severity='error'/>
         <Head>      
           <title>Service Charge</title>
           <meta name="description" content="Generated by create next app" />
           <meta name="viewport" content="width=device-width, initial-scale=1" />
           <link rel="icon" href="/appLogoWhite.png" />        
         </Head>          
-        <div className="content-wrapper">              
+        <div className="content-wrapper">        
         <section>                 
           <div className='d-flex align-items-end' style={{height: '85vh', minWidth: '460px' }}>                            
             <div
@@ -112,7 +214,10 @@ export default function forgotPassword() {
                 className='d-flex flex-column p-5 m-5 m-xl-0'
               >
                 <LockIcon className='m-auto mt-2 mb-4' sx={{fontSize: '8em'}} />
-                <h1 className='mb-5 text-center'>Reset your password</h1>
+                <h1 className='text-center mb-3'>Reset your password</h1>
+                <p className={`mx-auto my-4 user-select-none ${!emailExist ? 'text-danger' : ''}`}>
+                  {!emailExist ? <><span className="text-decoration-underline">{email}</span> doesn't exist</>  : <span className="text-decoration-underline">{email}</span>}                  
+                </p>
                 <p className='ms-2'>OTP code</p>            
                 <Box
                     component="form"
@@ -145,23 +250,23 @@ export default function forgotPassword() {
                     ))}
                 </Box>
                 <div className='d-flex flex-column mt-3'>
-                  <TextField
+                    <TextField
                       name="newPassword"
                       fullWidth
                       onChange={(e) => {
                         setNewPassword(e.target.value);
                         setPasswordMismatchError(false);
                       }}
-                      label="New Password"                
+                      label="New Password"
                       type="password"
                       margin="normal"
                       variant="outlined"
                       inputProps={{
-                          autoComplete: "new-password",
+                        autoComplete: "new-password",
                       }}
                       error={passwordMismatchError}
-                      helperText={passwordMismatchError ? 'Passwords do not match' : ''}
-                    />              
+                      helperText={newPassword && confirmPassword ? (passwordMismatchError ? 'Passwords do not match' : '') : ''}
+                    />
                     <TextField
                       name="confirmPassword"
                       fullWidth
@@ -170,20 +275,21 @@ export default function forgotPassword() {
                         setPasswordMismatchError(false);
                       }}
                       label="Confirm Password"
-                      type="password"                
+                      type="password"
                       margin="normal"
-                      variant="outlined"  
+                      variant="outlined"
                       inputProps={{
-                          autoComplete: "new-password",
+                        autoComplete: "new-password",
                       }}
                       error={passwordMismatchError}
-                      helperText={passwordMismatchError ? 'Passwords do not match' : ''}
+                      helperText={newPassword && confirmPassword ? (passwordMismatchError ? 'Passwords do not match' : '') : ''}
                     />
                     <a className='me-2 mb-3 text-decoration-none d-block align-self-end' href='/'>
                       Login Instead?
                     </a>
-                    <button className='btn btn-dark p-2 mt-4' onClick={handleResetClick}>
-                      Reset
+                    <button name={btnName} className='btn btn-dark p-2 mt-4' onClick={handleResetClick}>
+                      {btnName}
+                      {btnName === 'Send Code' && <SendIcon className='ms-2' sx={{fontSize: '1.2em'}}/>}
                     </button>
                 </div>
               </Box>    

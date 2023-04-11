@@ -54,4 +54,10 @@ public class UserAuthServiceImpl implements UserAuthService {
 			throw new RuntimeException(e.getMessage());
 		}					
 	}
+	
+	@Override
+    public Optional<Integer> findUserIdByEmail(String email) {
+        Optional<User> user = userRepository.findByEmail(email);
+        return user.map(u -> u.getId());
+    }
 }
