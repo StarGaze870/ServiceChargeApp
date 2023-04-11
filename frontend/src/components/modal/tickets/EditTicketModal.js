@@ -13,6 +13,7 @@ import CircularProgressModal from '../CircularProgressModal';
 import DeleteTicketModal from '../DeleteTicketModal';
 import { updateTicket } from '@/apiRequests/tickets/updateTicket';
 import PostAddIcon from '@mui/icons-material/PostAdd';
+import EditNoteIcon from '@mui/icons-material/EditNote';
 import { deleteTicket } from '@/apiRequests/tickets/deleteTicket';
 
 const style = {    
@@ -52,8 +53,7 @@ const EditTicketModal = memo(({ modalOpen, setModalOpen, onSaveCallback, onDelet
 
   useEffect(() => {
     if (!data) return;            
-
-    console.log(data)
+    
     const priorityItem = priorityID.find((item) => item.type === data.priority);
     if (priorityItem) setPriority(priorityItem);
 
@@ -298,7 +298,7 @@ const EditTicketModal = memo(({ modalOpen, setModalOpen, onSaveCallback, onDelet
             <div className='d-flex flex-column mt-5'>
                 <div className='d-flex'>
                     <label className='ms-2 mb-2'>Conforme Slip</label>
-                    <a href='#' className='ms-2 mb-auto' style={{marginTop: '-.18em'}}><PostAddIcon color={'success'} /></a>
+                    <a title='Create Conforme Slip' href='#' className='ms-2 mb-auto' style={{marginTop: '-.18em'}}><PostAddIcon color={'success'} /></a>
                 </div>
                 <FileUpload maxFiles={1} />
                 <label className='ms-2 mb-2'>Proof of Payment</label>

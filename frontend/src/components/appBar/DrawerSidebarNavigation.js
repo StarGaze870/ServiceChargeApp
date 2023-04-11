@@ -18,17 +18,17 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import PersonIcon from '@mui/icons-material/Person';
 import LogoutIcon from '@mui/icons-material/Logout';
-import DeleteIcon from '@mui/icons-material/Delete';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1';
 import PostAddIcon from '@mui/icons-material/PostAdd';
 import SummarizeIcon from '@mui/icons-material/Summarize';
 import EmailIcon from '@mui/icons-material/Email';
 import ListAltIcon from '@mui/icons-material/ListAlt';
+import EditNoteIcon from '@mui/icons-material/EditNote';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 
-const drawerWidth = 260;
+const drawerWidth = 262;
 
 const topMenuItems = [
     { text: 'Dashboard', icon: <DashboardIcon />, href: '/dashboard/admin' },
@@ -41,6 +41,7 @@ const topMenuItems = [
         
     { text: 'View Tickets', icon: <ListAltIcon />, href: '/dashboard/admin' },
     { text: 'VIew Users', icon: <PersonIcon />, href: '/dashboard/admin' },
+    { text: 'Generate Conforme', icon: <EditNoteIcon />, href: '/dashboard/admin' },    
     { text: 'Generate Report', icon: <SummarizeIcon />, href: '/dashboard/admin' },    
     { text: 'Logout', icon: <LogoutIcon />, href: '' },
   ];
