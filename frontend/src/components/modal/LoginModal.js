@@ -17,7 +17,7 @@ const style = {
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  width: '30vw',
+  width: '32rem',
   minWidth: '310px',
   maxHeight: '95vh',
   overflowY: 'scroll',

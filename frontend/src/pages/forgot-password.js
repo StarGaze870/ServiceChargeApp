@@ -205,7 +205,7 @@ export default function forgotPassword() {
                 sx={{
                   backgroundColor: 'background.paper', 
                   borderRadius: 2, 
-                  maxHeight: '80vh',                  
+                  height: '82vh',                  
                   overflowY: 'auto',
                   '&::-webkit-scrollbar': { // Add this block for WebKit-based browsers
                     display: 'none',
