@@ -2,7 +2,6 @@ import Head from 'next/head'
 import { useEffect, useRef, useState } from 'react';
 import LoginModal from '@/components/modal/LoginModal';
 import { useRouter } from 'next/router';
-import isLoggedIn from './isLoggedIn';
 import LockIcon from '@mui/icons-material/Lock';
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
@@ -18,10 +17,13 @@ export default function forgotPassword() {
   const divRef = useRef(null);
   const router = useRouter();
   const query = router.query; 
+
+  const [otpError, setOtpError] = useState(false);
   const [showProgressBar, setShowProgressBar] = useState(false);
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [showErrorAlert, setShowErrorAlert] = useState(false);
   const [showServerError, setShowServerError] = useState(false);
+
   const [modalOpen, setModalOpen] = useState(false);
   
   const [userId, setUserId] = useState(0);
@@ -34,20 +36,10 @@ export default function forgotPassword() {
   const [btnName, setBtnName] = useState('Send Code');
   const [emailExist, setEmailExist] = useState(true);
 
-  useEffect(() => {    
-    const ini = async () => {
-      const isAuthrorized = await isLoggedIn();      
-      if (isAuthrorized[0]) {
-        await router.replace(`/dashboard/${isAuthrorized[1].toString().toLowerCase()}`);
-      }      
-    };
-    ini();
-
-  }, [])    
-
   useEffect(() => {
     
     if (query.email === undefined) {
+      console.log(query.email)
       router.replace('/')
       return;
     }
@@ -65,9 +57,12 @@ export default function forgotPassword() {
     }
     func();
 
-  }, [query])
+  }, [query.email])
 
   const handleInput = (e, idx) => {
+
+    setOtpError(false)
+
     if (e.target.value.length > 1) {
       e.target.value = e.target.value.slice(0, 1);
     }
@@ -126,6 +121,8 @@ export default function forgotPassword() {
       }            
     }
     else {
+      
+      setOtpError(false)
 
       if (newPassword.trim() !== confirmPassword.trim() 
         || (newPassword.trim().length === 0 && confirmPassword.trim().length === 0)) {
@@ -155,6 +152,13 @@ export default function forgotPassword() {
             });
             setShowProgressBar(false)          
           }, 700);         
+      }
+      else if (resetData[0] !== 500) {
+
+        setShowProgressBar(false);
+        setShowSuccessAlert(false);
+
+        setOtpError(true)
       }
       else {
 
@@ -218,7 +222,7 @@ export default function forgotPassword() {
                 <p className={`mx-auto my-4 user-select-none ${!emailExist ? 'text-danger' : ''}`}>
                   {!emailExist ? <><span className="text-decoration-underline">{email}</span> doesn't exist</>  : <span className="text-decoration-underline">{email}</span>}                  
                 </p>
-                <p className='ms-2'>OTP code</p>            
+                {otpError ? <p className='ms-2 text-danger'>Invalid OTP code</p> : <p className='ms-2'>OTP code</p>}
                 <Box
                     component="form"
                     autoComplete="off"
@@ -246,6 +250,7 @@ export default function forgotPassword() {
                         }}
                         onKeyDown={(e) => handleKeyDown(e, idx)}
                         onPaste={handlePaste}
+                        error={otpError}
                       />
                     ))}
                 </Box>
@@ -255,7 +260,7 @@ export default function forgotPassword() {
                       fullWidth
                       onChange={(e) => {
                         setNewPassword(e.target.value);
-                        setPasswordMismatchError(false);
+                        setPasswordMismatchError(false);                        
                       }}
                       label="New Password"
                       type="password"

@@ -7,6 +7,10 @@ spring.jpa.hibernate.ddl-auto=update
 #spring.jackson.serialization.FAIL_ON_EMPTY_BEANS=false
 #spring.jpa.properties.hibernate.hbm2ddl.auto: update
 
+#FOR SEND EMAIL CONFIGURATION
+# REFER TO STEP 2
+#https://www.geeksforgeeks.org/spring-boot-sending-email-via-smtp/
+
 spring.mail.host=smtp.gmail.com
 spring.mail.port=587
 spring.mail.senderName=Alliance Service Charge
