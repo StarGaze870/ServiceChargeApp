@@ -41,7 +41,7 @@ const topMenuItems = [
         
     { text: 'View Tickets', icon: <ListAltIcon />, href: '/dashboard/admin' },
     { text: 'VIew Users', icon: <PersonIcon />, href: '/dashboard/admin' },
-    { text: 'Generate Conforme', icon: <EditNoteIcon />, href: '/dashboard/admin' },    
+    { text: 'Generate Conforme', icon: <EditNoteIcon />, href: '/dashboard/generate/conforme' },    
     { text: 'Generate Report', icon: <SummarizeIcon />, href: '/dashboard/admin' },    
     { text: 'Logout', icon: <LogoutIcon />, href: '' },
   ];
@@ -113,16 +113,7 @@ export default function DrawerSidebarNavigation({headerTitle='Header Title', sel
   const handleItemClick = async (text) => {
 
     setSelectedItem(text);
-
-    if (text === 'Dashboard') {
-      // await router.replace('/dashboard/admin');
-      // return;
-    } 
-    if (text === 'Add New Ticket') {
-      
-      // await router.replace('/dashboard/add/ticket');
-      // return;
-    }
+    
     if (text === 'Logout') {
       onLogout();
       return;
@@ -191,21 +182,23 @@ export default function DrawerSidebarNavigation({headerTitle='Header Title', sel
         <Divider />
         <List>
             {bottomMenuItems.map((item) => (
-                <ListItem key={item.text} disablePadding>
-                <ListItemButton
-                    selected={item.text === selectedItem}
-                    onClick={() => handleItemClick(item.text)}
-                    sx={{
-                    backgroundColor: item.text === selectedItem ? 'rgba(23, 48, 88, 0.1)' : 'transparent',
-                    '&:hover': {
-                        backgroundColor: 'rgba(0, 0, 0, .1)',
-                    },
-                    }}
-                >
-                    <ListItemIcon>{item.icon}</ListItemIcon>
-                    <ListItemText primary={item.text} />
-                </ListItemButton>
+              <Link key={item.text} href={item.href} className='text-decoration-none text-black'>
+                <ListItem disablePadding>
+                  <ListItemButton
+                      selected={item.text === selectedItem}
+                      onClick={() => handleItemClick(item.text)}
+                      sx={{
+                      backgroundColor: item.text === selectedItem ? 'rgba(23, 48, 88, 0.1)' : 'transparent',
+                      '&:hover': {
+                          backgroundColor: 'rgba(0, 0, 0, .1)',
+                      },
+                      }}
+                  >
+                      <ListItemIcon>{item.icon}</ListItemIcon>
+                      <ListItemText primary={item.text} />
+                  </ListItemButton>
                 </ListItem>
+              </Link>
             ))}
         </List>
         <div className='d-flex flex-column mt-auto pt-4'>

@@ -6,7 +6,6 @@ import isLoggedIn from '../../isLoggedIn';
 import { MenuItem, Select, TextField } from '@mui/material';
 import DrawerSidebarNavigation from '@/components/appBar/DrawerSidebarNavigation';
 import FileUpload from '@/components/file/FileUpload';
-import UserSelect from '@/components/user/UserSelect';
 import YesNoModal from '@/components/modal/YesNoModal';
 import statusID from '@/db_default_variables/status';
 import priorityID from '@/db_default_variables/priorities';
@@ -104,13 +103,11 @@ const AddTicket = () => {
   })
   
   const handlePriorityChange = (event) => {
-
     setPriority(JSON.parse(event.target.value));        
   };
 
   const handleSelectedUser = useCallback((user) => {    
-    setUser(user);
-    console.log(user)
+    setUser(user);    
   });
 
   const onNewTicketYesCallback = useCallback(async () => {

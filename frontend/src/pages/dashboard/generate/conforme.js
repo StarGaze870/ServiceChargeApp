@@ -2,21 +2,14 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import Head from 'next/head';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useRouter } from 'next/router';
-import isLoggedIn from '../../isLoggedIn';
-import { MenuItem, Select, Table, TextField } from '@mui/material';
+import { TextField } from '@mui/material';
 import DrawerSidebarNavigation from '@/components/appBar/DrawerSidebarNavigation';
-import FileUpload from '@/components/file/FileUpload';
-import UserSelect from '@/components/user/UserSelect';
 import YesNoModal from '@/components/modal/YesNoModal';
-import statusID from '@/db_default_variables/status';
-import priorityID from '@/db_default_variables/priorities';
-import adminUser from '@/db_default_variables/userAdmin';
-import { createTicket } from '@/apiRequests/tickets/createTicket';
 import CircularProgressModal from '@/components/modal/CircularProgressModal';
-import SucessSlide from '@/components/transitions/SucessSlide';
-import UserAutoComplete from '@/components/user/UserAutoComplete';
 import exportAsImage from '@/utils/componentToImage/exportAsImage';
-import zIndex from '@mui/material/styles/zIndex';
+import isLoggedIn from '@/pages/isLoggedIn';
+import TicketAutoComplete from '@/components/ticket/TicketAutoComplete';
+import { getSingleTicket } from '@/apiRequests/tickets/getSingleTicket';
 
 const tableStyle = {
     borderCollapse: 'collapse',
@@ -52,10 +45,13 @@ const AddTicket = () => {
 
   // SELF VARIABLES
   const router = useRouter();
+  const [currentDate, setCurrentDate] = useState('');
   const [showProgress, setShowProgress] = useState(false);
   const [showSuccessAlert, setShowSuccessAlert] = useState(false)
   const [amountError, setAmountError] = useState(false);
+  
   const [amount, setAmount] = useState('');
+  const [ticket, setTicket] = useState('');
 
   // LOGOUT VARIABLE
   const [logoutModalOpen, setLogoutModalOpen] = useState(false);    
@@ -63,6 +59,37 @@ const AddTicket = () => {
 
   // DIV REFERENCE FOR HTML TO IMAGE 
   const exportRef = useRef();  
+
+  useEffect(() => {    
+    const ini = async () => {
+      // Check users validity
+      const isAuthrorized = await isLoggedIn();
+      if (!isAuthrorized[0]) {
+        await router.replace('/');
+        return;
+      }      
+    };
+    ini();
+
+    const today = new Date();
+    const dateStr = today.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    });
+    setCurrentDate(dateStr);
+
+  }, []) 
+
+  useEffect(() => {
+    
+    const savedAmount = localStorage.getItem('amount');
+    const savedTicket = localStorage.getItem('ticket');
+
+    if (savedAmount && savedAmount !== 'null') setAmount(savedAmount);
+    if (savedTicket && savedTicket !== 'null') setTicket(JSON.parse(savedTicket));    
+
+  }, []);   
 
   // SUCESS ALERT
   useEffect(() => {
@@ -88,16 +115,19 @@ const AddTicket = () => {
 
   const handleAmountChange = (e) => {
     const newAmount = parseInt(e.currentTarget.value);
-
+    
     if (e.currentTarget.value.length === 0) {
         setAmountError(false);
         setAmount(e.currentTarget.value);
+        localStorage.setItem('amount', e.currentTarget.value);
     } else if (isNaN(newAmount)) {
         setAmountError(true);
         setAmount(e.currentTarget.value);
+        localStorage.setItem('amount', e.currentTarget.value);
     } else {
         setAmountError(false);
         setAmount(newAmount);
+        localStorage.setItem('amount', newAmount);
     }
 }
 
@@ -106,6 +136,21 @@ const AddTicket = () => {
         style: 'currency',
         currency: 'Php'
     }).format(value);
+
+  
+  const handleSelectedTicket = useCallback(async (ticket) => {
+                                
+      localStorage.setItem('ticket', JSON.stringify(ticket));      
+      setTicket(ticket)
+  })
+
+  const generateConforme = () => {
+
+    if (ticket === null) { 
+      return 
+    }
+    exportAsImage(exportRef.current, `${ticket.subject} #${ticket.id}`)
+  }
 
   return (    
       <>                    
@@ -128,8 +173,9 @@ const AddTicket = () => {
           onGenerateReport={onLogoutClick}
           onLogout={onLogoutClick}
           >    
-            <div className='d-flex ms-3 mb-2'>
+            <div className='d-flex ms-3 mb-1'>
                 <TextField
+                    sx={{width: 300}}
                     name="amount"                
                     label="Amount"                
                     variant="outlined"
@@ -138,8 +184,11 @@ const AddTicket = () => {
                     onChange={handleAmountChange}
                     error={amountError}
                     helperText={amountError ? 'Invalid Amount' : ' '}
-              />  
-            </div>        
+              />                
+            </div>
+            <div className='d-flex ms-3 mb-4'>
+              <TicketAutoComplete selectedTicket={ticket} userSelectedCallback={handleSelectedTicket}/>    
+            </div>            
             <div className='d-block vw-100 overflow-x-auto'>
                 <div className="d-flex flex-column overflowX-auto overflowY-auto p-2" ref={exportRef} style={{ minWidth: '1000px', maxWidth: '1000px'}}>                                           
                     <table style={tableStyle}>
@@ -162,19 +211,19 @@ const AddTicket = () => {
                         <tbody>
                             <tr>
                             <td style={{ ...cellStyle, width: '30%' }}>Date:</td>
-                            <td style={{ ...cellStyle, width: '70%' }}>April 12, 2023</td>
+                            <td style={{ ...cellStyle, width: '70%' }}>{currentDate}</td>
                             </tr>
                             <tr>
                             <td style={{ ...cellStyle, width: '30%' }}>Ticket Number:</td>
-                            <td style={{ ...cellStyle, width: '70%' }}>103</td>
+                            <td style={{ ...cellStyle, width: '70%' }}>{ticket ? ticket.id : ''}</td>
                             </tr>
                             <tr>
                             <td style={{ ...cellStyle, width: '30%' }}>Subject:</td>
-                            <td style={{ ...cellStyle, width: '70%' }}>Website Redesign</td>
+                            <td style={{ ...cellStyle, width: '70%' }}>{ticket ? ticket.subject : ''}</td>
                             </tr>
                             <tr>
                             <td style={{ ...cellStyle, width: '30%' }}>Details:</td>
-                            <td style={{ ...cellStyle, width: '70%' }}>Redesign the website to improve user experience and incorporate new features. Update the layout and color scheme for better accessibility.</td>
+                            <td style={{ ...cellStyle, width: '70%' }}>{ticket ? ticket.description : ''}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -196,7 +245,7 @@ const AddTicket = () => {
                 </div>
             </div>    
           <div className='d-flex ms-4 my-4'>
-            <button className='btn btn-dark py-2 px-4' onClick={() => exportAsImage(exportRef.current, "test")}>Generate</button>
+            <button className='btn btn-dark py-2 px-4' onClick={generateConforme}>Generate</button>
           </div>    
         </DrawerSidebarNavigation>
       </>
