@@ -14,8 +14,9 @@ import { createTicket } from '@/apiRequests/tickets/createTicket';
 import CircularProgressModal from '@/components/modal/CircularProgressModal';
 import SucessSlide from '@/components/transitions/SucessSlide';
 import UserAutoComplete from '@/components/user/UserAutoComplete';
+import RoleAutoComplete from '@/components/user/RoleAutoComplete';
 
-const AddTicket = () => {    
+const AddUser = () => {    
 
   // SELF VARIABLES
   const router = useRouter();
@@ -28,7 +29,7 @@ const AddTicket = () => {
   const onLogoutClick = () => setLogoutModalOpen(true);
 
   // ADD TICKET VARIABLES
-  const [user, setUser] = useState(adminUser);  
+  const [role, setUser] = useState(adminUser);  
   const [priority, setPriority] = useState(priorityID[0]);  
   const [currentDate, setCurrentDate] = useState('');
   const [subject, setSubject] = useState('');
@@ -74,11 +75,11 @@ const AddTicket = () => {
   useEffect(() => {
 
     // Save ticket variables to local storage when they change
-    localStorage.setItem('user', JSON.stringify(user));
+    localStorage.setItem('user', JSON.stringify(role));
     localStorage.setItem('priority', JSON.stringify(priority));
     localStorage.setItem('subject', subject);
     localStorage.setItem('description', description);
-  }, [user, priority, subject, description]);    
+  }, [role, priority, subject, description]);    
 
   // SUCESS ALERT
   useEffect(() => {
@@ -106,7 +107,7 @@ const AddTicket = () => {
     setPriority(JSON.parse(event.target.value));        
   };
 
-  const handleSelectedUser = useCallback((user) => {    
+  const handleSelectedRole = useCallback((user) => {    
     setUser(user);    
   });
 
@@ -116,7 +117,7 @@ const AddTicket = () => {
     
     const newTicket = await createTicket({
 
-      userID: user.id,
+      userID: role.id,
       statusID: statusID[4].id,
       priorityID: priority.id,
       subject: subject,
@@ -161,8 +162,8 @@ const AddTicket = () => {
         <YesNoModal modalOpen={logoutModalOpen} setModalOpen={setLogoutModalOpen} onYesCallback={handleLogoutCallback} title='Logout'/>
         <YesNoModal modalOpen={newTicketModal} setModalOpen={setNewTicketModal} onYesCallback={onNewTicketYesCallback} title='Submit Ticket'/>        
         <DrawerSidebarNavigation
-          headerTitle='New Ticket'
-          selectedOption='Add New Ticket'
+          headerTitle='New User'
+          selectedOption='Add New User'
           onDashboard={onLogoutClick}
           onAddUser={onLogoutClick}          
           onSendEmail={onLogoutClick}
@@ -174,76 +175,61 @@ const AddTicket = () => {
           <div className="container-fluid">            
             <SucessSlide toggleShow={showSuccessAlert} message={'Ticket Sucessfully Added'} hrefPath='/dashboard/admin' queryDataJSON={{isFromAddTicket: true}}/>            
             <div className='d-flex flex-column flex-xl-row'>            
-              <div className='col-12 col-xl-5 d-flex flex-column'>
-                <div className='mb-4'>
-                  <Select                
-                    className=''
-                    sx={{minWidth: '7em'}}                    
-                    value={JSON.stringify({ id: priority.id, type: priority.type })}
-                    onChange={handlePriorityChange}            
-                    inputProps={{ 'aria-label': 'Without label' }}
-                  >            
-                    <MenuItem value={JSON.stringify({ id: priorityID[2].id, type: priorityID[2].type })}>High</MenuItem>
-                    <MenuItem value={JSON.stringify({ id: priorityID[1].id, type: priorityID[1].type })}>Medium</MenuItem>
-                    <MenuItem value={JSON.stringify({ id: priorityID[0].id, type: priorityID[0].type })}>Low</MenuItem>
-                  </Select>
-                  <label className='my-auto ms-3' style={{fontSize: '1.1em'}}>Priority</label>
-                </div>
-                {/* <UserSelect selectedUser={user} userSelectedCallback={handleSelectedUser}/> */}
-                <UserAutoComplete selectedUser={user} userSelectedCallback={handleSelectedUser}/>
+              <div className='col-12 col-xl-5 d-flex flex-column'>                
+                <RoleAutoComplete selectedRole={role} roleSelectedCallback={handleSelectedRole}/>
                 <TextField
                   className="mt-4"
-                  name="subject"
+                  name="firstname"
                   fullWidth
-                  label="Subject"
+                  label="First Name"
                   margin="normal"
                   variant="outlined"
                   value={subject}
                   onChange={(e) => setSubject(e.target.value)}
                 />
                 <TextField
-                  className="mt-3 mb-4"
+                  className="mt-3"
+                  name="lastname"
                   fullWidth
-                  label="Description"
-                  multiline
-                  rows={8}
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}                  
+                  label="Last Name"
+                  margin="normal"
+                  variant="outlined"
+                  value={subject}
+                  onChange={(e) => setSubject(e.target.value)}
                 />
-                  <label className='ms-2 mb-2'>Conforme Slip</label>
-                  <FileUpload maxFiles={1} />
-                  <label className='ms-2 mb-2'>Proof of Payment</label>
-                  <FileUpload maxFiles={1} />
-                  <label className='ms-2 mb-2'>Scanned Official Receipt Slip</label>
-                  <FileUpload maxFiles={1} />
+                <TextField
+                  className="mt-3"
+                  name="email"
+                  fullWidth
+                  label="Email"
+                  margin="normal"
+                  variant="outlined"
+                  value={subject}
+                  onChange={(e) => setSubject(e.target.value)}
+                />                                   
                 </div>
                 <div className='col-12 col-xl-7 ms-xl-3'>            
-                  <h3 className='ms-xl-5 mb-4 mt-5 mt-xl-0'>Ticket Summary</h3>
+                  <h3 className='ms-xl-5 mb-4 mt-5 mt-xl-0'>User Summary</h3>
                   <div className='d-flex flex-column mx-xl-5 shadow p-5'>                  
                     <div className='d-flex flex-column'>                      
                     <div className="d-flex flex-column">
                     <div>
-                      <label style={{width: '4.5em'}}>Date:</label>
+                      <label style={{width: '7em'}}>Name:</label>
                       <strong>{currentDate}</strong>
                     </div>
                     <div>
-                      <label style={{width: '4.5em'}}>Subject:</label>
+                      <label style={{width: '7em'}}>Email:</label>
                       <strong>{subject}</strong>
-                    </div>
-                    <div>
-                      <label style={{width: '4.5em'}}>Priority:</label>
-                      <strong>{priority.type.toUpperCase()}</strong>
-                    </div>
+                    </div>                    
                   </div>
-                      <br />
+                  <br />
                       <br />                      
                       <label>Description:</label>
                       <br />
                       <p className="description-text text-break">{description}</p>
                       <br />
                       <br />
-                      <br />
-                      <label className='align-self-end'>from: <strong>{user?.displayLabel}</strong></label>
+                      <br />                      
                     </div>
                   </div>
                 </div>
@@ -257,4 +243,4 @@ const AddTicket = () => {
     )  
 };
 
-export default AddTicket;
+export default AddUser;

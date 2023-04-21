@@ -1,6 +1,7 @@
 package alliance.seven.backend.Impl.service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -10,6 +11,8 @@ import org.springframework.stereotype.Service;
 import alliance.seven.backend.BeanUtilsHelper;
 import alliance.seven.backend.dto.TicketDTO;
 import alliance.seven.backend.dto.UserSummaryDTO;
+import alliance.seven.backend.entity.Priorities;
+import alliance.seven.backend.entity.Status;
 import alliance.seven.backend.entity.Ticket;
 import alliance.seven.backend.repository.TicketRepository;
 import alliance.seven.backend.service.TicketService;
@@ -115,4 +118,28 @@ public class TicketServiceImpl implements TicketService {
             return Optional.of(false);
         }
 	}
+
+	@Override
+    public Optional<Map<Integer, Long>> getPriorityCounts(List<Integer> priorityIds) {
+        List<Ticket> tickets = ticketRepository.findAll();
+        Map<Integer, Long> priorityCounts = tickets.stream()
+                .filter(ticket -> Optional.ofNullable(ticket.getPriority())
+                                         .map(Priorities::getId)
+                                         .filter(priorityIds::contains)
+                                         .isPresent())
+                .collect(Collectors.groupingBy(ticket -> ticket.getPriority().getId(), Collectors.counting()));
+        return Optional.ofNullable(priorityCounts);
+    }
+	
+	@Override
+    public Optional<Map<Integer, Long>> getStatusCounts(List<Integer> statusIds) {
+        List<Ticket> tickets = ticketRepository.findAll();
+        Map<Integer, Long> statusCount = tickets.stream()
+                .filter(ticket -> Optional.ofNullable(ticket.getStatus())
+                                         .map(Status::getId)
+                                         .filter(statusIds::contains)
+                                         .isPresent())
+                .collect(Collectors.groupingBy(ticket -> ticket.getStatus().getId(), Collectors.counting()));
+        return Optional.ofNullable(statusCount);
+    }
 }

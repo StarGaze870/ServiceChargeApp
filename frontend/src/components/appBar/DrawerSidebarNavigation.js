@@ -32,15 +32,14 @@ const drawerWidth = 262;
 
 const topMenuItems = [
     { text: 'Dashboard', icon: <DashboardIcon />, href: '/dashboard/admin' },
-    { text: 'Add New User', icon: <PersonAddAlt1Icon />, href: '/dashboard/admin' },
+    { text: 'Add New User', icon: <PersonAddAlt1Icon />, href: '/dashboard/add/user' },
     { text: 'Add New Ticket', icon: <PostAddIcon />, href: '/dashboard/add/ticket' },
     { text: 'Send Email', icon: <EmailIcon />, href: '/dashboard/admin' },    
   ];
   
   const bottomMenuItems = [
-        
-    { text: 'View Tickets', icon: <ListAltIcon />, href: '/dashboard/admin' },
-    { text: 'VIew Users', icon: <PersonIcon />, href: '/dashboard/admin' },
+            
+    { text: 'View Users', icon: <PersonIcon />, href: '/dashboard/view/users' },
     { text: 'Generate Conforme', icon: <EditNoteIcon />, href: '/dashboard/generate/conforme' },    
     { text: 'Generate Report', icon: <SummarizeIcon />, href: '/dashboard/admin' },    
     { text: 'Logout', icon: <LogoutIcon />, href: '' },

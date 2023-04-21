@@ -1,6 +1,8 @@
 package alliance.seven.backend.controller;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +24,6 @@ import alliance.seven.backend.ENV;
 import alliance.seven.backend.api.responses.Response;
 import alliance.seven.backend.dto.TicketDTO;
 import alliance.seven.backend.entity.Ticket;
-import alliance.seven.backend.repository.TicketRepository;
 import alliance.seven.backend.service.TicketService;
 
 @RestController
@@ -38,8 +39,20 @@ public class TicketController {
     public ResponseEntity<?> getAllTickets() {
         try {
         	 Optional<List<TicketDTO>> tickets = ticketService.getAllTickets();
-             Response<Optional<List<TicketDTO>>> data = new Response<>(HttpStatus.OK.value(), tickets);
-             return ResponseEntity.status(HttpStatus.OK).body(data);
+        	 
+        	 Optional<Map<Integer, Long>> ticketCountsByPriority = ticketService.getPriorityCounts(Arrays.asList(1, 2, 3));
+        	 Optional<Map<Integer, Long>> ticketCountsByStatus = ticketService.getStatusCounts(Arrays.asList(6));
+             
+        	 Response<Optional<List<TicketDTO>>> data = new Response<>(HttpStatus.OK.value(), tickets);
+             
+             Object[] arr = new Object[3];
+	            arr[0] = data;
+	            arr[1] = ticketCountsByPriority;
+	            arr[2] = ticketCountsByStatus;
+             
+	            Response<Object[]> response = new Response<Object[]>(HttpStatus.OK.value(), arr);
+	            
+             return ResponseEntity.status(HttpStatus.OK).body(response);
         } catch (Exception e) {
         	System.err.println(e.getMessage());		
             Response<String> error = new Response<>(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());

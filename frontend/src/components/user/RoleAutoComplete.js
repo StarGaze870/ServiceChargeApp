@@ -1,11 +1,9 @@
+import * as React from 'react';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import CircularProgress from '@mui/material/CircularProgress';
 import { styled, lighten } from '@mui/system';
 import { getAllUsers } from '@/apiRequests/users/getAllUsers';
-import { getAllTickets } from '@/apiRequests/tickets/getAllTickets';
-import { useEffect, useState } from 'react';
-import { Fragment } from 'react';
 
 const GroupHeader = styled('div')(({ theme }) => ({
   position: 'sticky',
@@ -19,18 +17,12 @@ const GroupItems = styled('ul')({
   padding: 0,
 });
 
-export default function TicketAutoComplete({ selectedTicket=null, userSelectedCallback }) {
-  
-  const [open, setOpen] = useState(false);
-  const [options, setOptions] = useState([]);
+export default function RoleAutoComplete({ selectedRole, roleSelectedCallback }) {
+  const [open, setOpen] = React.useState(false);
+  const [options, setOptions] = React.useState([]);
   const loading = open && options.length === 0;
-  const [ticketDefaultValue, setTicketDefaultValue] = useState(selectedTicket);
 
-  useEffect(() => {
-      setTicketDefaultValue(selectedTicket);
-  }, [selectedTicket])
-
-  useEffect(() => {
+  React.useEffect(() => {
     let active = true;
 
     if (!loading) {
@@ -39,18 +31,20 @@ export default function TicketAutoComplete({ selectedTicket=null, userSelectedCa
 
     (async () => {
 
-      const tickets = await getAllTickets();      
-      console.log('-- GETTING TICKETS --')
-      console.log(tickets)
+      const users = await getAllUsers();      
+      console.log('-- GETTING USERS --')
+      console.log(users)
 
       if (active) {
         setOptions(
-          tickets[1][0].data.map((option) => {
-            const firstLetter = option.subject[0].toUpperCase();
-            const displayLabel = option.subject;
-
+          users[1].map((option) => {
+            const firstLetter = option.firstname[0].toUpperCase();
+            const displayLabel =
+              option.firstname.toLowerCase() === 'admin' && option.lastname.toLowerCase() === 'admin'
+                ? 'Admin'
+                : `${option.firstname} ${option.lastname}`;
             return {
-              firstLetter: firstLetter,
+              firstLetter: displayLabel === 'Admin' ? '0' : firstLetter,
               displayLabel,
               ...option,
             };
@@ -64,22 +58,21 @@ export default function TicketAutoComplete({ selectedTicket=null, userSelectedCa
     };
   }, [loading]);
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (!open) {
       setOptions([]);
     }
   }, [open]);
 
   const handleSelection = (event, value) => {
-            
-    userSelectedCallback(value);
+    roleSelectedCallback(value);
   };
 
   return (
     <Autocomplete
       id="asynchronous-demo"
-      sx={{ width: 300 }}    
-      value={ticketDefaultValue || null}  
+      sx={{ width: 300 }}
+      value={selectedRole || null}
       onChange={handleSelection}
       options={options.sort((a, b) => -b.firstLetter.localeCompare(a.firstLetter))}
       groupBy={(option) => option.firstLetter}
@@ -102,14 +95,14 @@ export default function TicketAutoComplete({ selectedTicket=null, userSelectedCa
       renderInput={(params) => (
         <TextField
           {...params}
-          label="Ticket"
+          label="Role"
           InputProps={{
             ...params.InputProps,
             endAdornment: (
-              <Fragment>
+              <React.Fragment>
                 {loading ? <CircularProgress color="inherit" size={20} /> : null}
                 {params.InputProps.endAdornment}
-              </Fragment>
+              </React.Fragment>
             ),
           }}
         />

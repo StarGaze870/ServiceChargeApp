@@ -2,7 +2,6 @@ import React, { useCallback, useEffect, useState } from 'react';
 import Head from 'next/head';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useRouter } from 'next/router';
-import isLoggedIn from '../isLoggedIn';
 import { CircularProgress } from '@mui/material';
 import TicketCollapsibleTable from '@/components/table/TicketCollapsibleTable';
 import { getAllTickets } from '@/apiRequests/tickets/getAllTickets';
@@ -11,9 +10,11 @@ import { getSingleTicket } from '@/apiRequests/tickets/getSingleTicket';
 import LogoutModal from '@/components/modal/LogoutModal';
 import EditTicketModal from '@/components/modal/tickets/EditTicketModal';
 import SucessSlide from '@/components/transitions/SucessSlide';
+import isLoggedIn from '@/pages/isLoggedIn';
+import UserCollapsibleTable from '@/components/table/UserCollapsibleTable';
 
 
-const AdminDashboard = () => {    
+const ViewUsers = () => {    
 
   // SELF VARIABLES
   const router = useRouter();
@@ -196,8 +197,8 @@ const AdminDashboard = () => {
 
           />
         <DrawerSidebarNavigation
-          headerTitle='Dashboard'
-          selectedOption='Dashboard'
+          headerTitle='View Users'
+          selectedOption='View Users'
           onDashboard={onLogoutClick}
           onAddUser={onLogoutClick}          
           onSendEmail={onLogoutClick}
@@ -217,15 +218,15 @@ const AdminDashboard = () => {
                 {/* PENDING TICKETS */}
                 <div className="col-6 d-flex" style={{minHeight: '13rem'}}>
                   <button value='Pending' className='btn d-flex flex-column rounded-4 flex-fill m-3 shadow' onClick={(e) => onCardsClickDashboard(e)}>        
-                    <h5 className="mx-auto pt-4">Pending Tickets</h5>
-                    <h1 className="mx-auto pt-3 text-success text-opacity-75" style={{ fontSize: "3.5em" }}>{pendingCount}</h1>        
+                    <h5 className="mx-auto pt-4">Sales</h5>
+                    <h1 className="mx-auto pt-3 text-opacity-75" style={{ fontSize: "3.5em" }}>{pendingCount}</h1>        
                   </button>
                 </div>
                 {/* HIGH PRIORITY TICKETS */}
                 <div className="col-6 d-flex">
                   <button value='High' className='btn d-flex flex-column rounded-4 flex-fill m-3 shadow' onClick={(e) => onCardsClickDashboard(e)}>
-                    <h5 className="mx-auto pt-4">High Priority</h5>
-                    <h1 className="mx-auto pt-3 text-danger text-opacity-75" style={{ fontSize: "3.5em" }}>{highCount}</h1>
+                    <h5 className="mx-auto pt-4">Billing</h5>
+                    <h1 className="mx-auto pt-3 text-opacity-75" style={{ fontSize: "3.5em" }}>{highCount}</h1>
                   </button>
                 </div>
               </div>                
@@ -234,14 +235,14 @@ const AdminDashboard = () => {
                 {/* MEDIUM PRIORITY */}
                 <div className="col-6 d-flex" style={{minHeight: '13rem'}} >
                   <button value='Medium' className='btn d-flex flex-column rounded-4 flex-fill m-3 shadow' onClick={(e) => onCardsClickDashboard(e)}>
-                    <h5 className="mx-auto pt-4">Medium Priority</h5>
-                    <h1 className="mx-auto pt-3 text-warning text-opacity-75" style={{ fontSize: "3.5em"}}>{mediumCount}</h1>
+                    <h5 className="mx-auto pt-4">Collection</h5>
+                    <h1 className="mx-auto pt-3 text-opacity-75" style={{ fontSize: "3.5em"}}>{mediumCount}</h1>
                   </button>
                 </div>
                 {/* LOW PRIORITY TICKETS */}
                 <div className="col-6 d-flex">
                   <button value='Low' className='btn d-flex flex-column rounded-4 flex-fill m-3 shadow' onClick={(e) => onCardsClickDashboard(e)}>
-                    <h5 className="mx-auto pt-4">Low Priority</h5>
+                    <h5 className="mx-auto pt-4">Treasury</h5>
                     <h1 className="mx-auto pt-3 text-opacity-75 text-dark" style={{ fontSize: "3.5em" }}>{lowCount}</h1>
                   </button>
                 </div>
@@ -250,9 +251,9 @@ const AdminDashboard = () => {
           </div>
           {/* DASHBOARD TABLE */}
           <div className="d-flex flex-column">
-            <h3 className="ms-2">Tickets</h3>
+            <h3 className="ms-2">Users</h3>
             {!loading && ticketTableData !== null && 
-              <TicketCollapsibleTable 
+              <UserCollapsibleTable 
                 data={ticketTableData} 
                 initialStatusFilter={initialStatusFilter} 
                 initialPriorityFilter={initialPriorityFilter} 
@@ -265,4 +266,4 @@ const AdminDashboard = () => {
     )  
 };
 
-export default AdminDashboard;
+export default ViewUsers;
