@@ -34,14 +34,14 @@ const topMenuItems = [
     { text: 'Dashboard', icon: <DashboardIcon />, href: '/dashboard/admin' },
     { text: 'Add New User', icon: <PersonAddAlt1Icon />, href: '/dashboard/add/user' },
     { text: 'Add New Ticket', icon: <PostAddIcon />, href: '/dashboard/add/ticket' },
-    { text: 'Send Email', icon: <EmailIcon />, href: '/dashboard/admin' },    
+    { text: 'Send Email', icon: <EmailIcon />, href: '/dashboard/send/email' },    
   ];
   
   const bottomMenuItems = [
             
     { text: 'View Users', icon: <PersonIcon />, href: '/dashboard/view/users' },
     { text: 'Generate Conforme', icon: <EditNoteIcon />, href: '/dashboard/generate/conforme' },    
-    { text: 'Generate Report', icon: <SummarizeIcon />, href: '/dashboard/admin' },    
+    { text: 'Generate Report', icon: <SummarizeIcon />, href: '/dashboard/generate/report' },    
     { text: 'Logout', icon: <LogoutIcon />, href: '' },
   ];
   

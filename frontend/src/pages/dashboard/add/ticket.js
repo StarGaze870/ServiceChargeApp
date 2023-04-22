@@ -171,7 +171,7 @@ const AddTicket = () => {
           onGenerateReport={onLogoutClick}
           onLogout={onLogoutClick}
           >                
-          <div className="container-fluid">            
+          <div className="container-fluid w-auto">            
             <SucessSlide toggleShow={showSuccessAlert} message={'Ticket Sucessfully Added'} hrefPath='/dashboard/admin' queryDataJSON={{isFromAddTicket: true}}/>            
             <div className='d-flex flex-column flex-xl-row'>            
               <div className='col-12 col-xl-5 d-flex flex-column'>
@@ -221,15 +221,15 @@ const AddTicket = () => {
                   <h3 className='ms-xl-5 mb-4 mt-5 mt-xl-0'>Ticket Summary</h3>
                   <div className='d-flex flex-column mx-xl-5 shadow p-5'>                  
                     <div className='d-flex flex-column'>                      
-                    <div className="d-flex flex-column">
-                    <div>
-                      <label style={{width: '4.5em'}}>Date:</label>
-                      <strong>{currentDate}</strong>
+                    <div className="d-flex flex-column">                  
+                    <div class="d-flex flex-row">
+                        <label style={{minWidth: '4.5em'}}>Date:</label>
+                        <strong className='text-break'>{currentDate}</strong>
                     </div>
-                    <div>
-                      <label style={{width: '4.5em'}}>Subject:</label>
-                      <strong>{subject}</strong>
-                    </div>
+                    <div class="d-flex flex-row my-1">
+                        <label style={{minWidth: '4.5em'}}>Subject:</label>
+                        <strong className='text-break'>{subject}</strong>
+                    </div>                                        
                     <div>
                       <label style={{width: '4.5em'}}>Priority:</label>
                       <strong>{priority.type.toUpperCase()}</strong>

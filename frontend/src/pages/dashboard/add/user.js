@@ -15,6 +15,7 @@ import CircularProgressModal from '@/components/modal/CircularProgressModal';
 import SucessSlide from '@/components/transitions/SucessSlide';
 import UserAutoComplete from '@/components/user/UserAutoComplete';
 import RoleAutoComplete from '@/components/user/RoleAutoComplete';
+import PersonIcon from '@mui/icons-material/Person';
 
 const AddUser = () => {    
 
@@ -184,8 +185,8 @@ const AddUser = () => {
                   label="First Name"
                   margin="normal"
                   variant="outlined"
-                  value={subject}
-                  onChange={(e) => setSubject(e.target.value)}
+                  // value={subject}
+                  // onChange={(e) => setSubject(e.target.value)}
                 />
                 <TextField
                   className="mt-3"
@@ -194,8 +195,8 @@ const AddUser = () => {
                   label="Last Name"
                   margin="normal"
                   variant="outlined"
-                  value={subject}
-                  onChange={(e) => setSubject(e.target.value)}
+                  // value={subject}
+                  // onChange={(e) => setSubject(e.target.value)}
                 />
                 <TextField
                   className="mt-3"
@@ -204,29 +205,30 @@ const AddUser = () => {
                   label="Email"
                   margin="normal"
                   variant="outlined"
-                  value={subject}
-                  onChange={(e) => setSubject(e.target.value)}
+                  // value={subject}
+                  // onChange={(e) => setSubject(e.target.value)}
                 />                                   
                 </div>
                 <div className='col-12 col-xl-7 ms-xl-3'>            
                   <h3 className='ms-xl-5 mb-4 mt-5 mt-xl-0'>User Summary</h3>
                   <div className='d-flex flex-column mx-xl-5 shadow p-5'>                  
                     <div className='d-flex flex-column'>                      
-                    <div className="d-flex flex-column">
-                    <div>
-                      <label style={{width: '7em'}}>Name:</label>
-                      <strong>{currentDate}</strong>
-                    </div>
-                    <div>
-                      <label style={{width: '7em'}}>Email:</label>
-                      <strong>{subject}</strong>
-                    </div>                    
-                  </div>
+                      <div className="d-flex flex-column">
+                        <PersonIcon className='d-flex align-self-center' sx={{fontSize: '10em'}} />
+                        <div className="d-flex flex-row mb-1">
+                            <label style={{minWidth: '4.5em'}}>Name:</label>
+                            <strong className='text-break'>Juan Dela Cruz</strong>
+                        </div>
+                        <div className="d-flex flex-row mt-1">
+                            <label style={{minWidth: '4.5em'}}>Email:</label>
+                            <strong className='text-break'>juandelacruz@gmail.com</strong>
+                        </div>                                       
+                      </div>
                   <br />
                       <br />                      
                       <label>Description:</label>
                       <br />
-                      <p className="description-text text-break">{description}</p>
+                      <p className="description-text text-break">a user who has full access and control over the system</p>
                       <br />
                       <br />
                       <br />                      

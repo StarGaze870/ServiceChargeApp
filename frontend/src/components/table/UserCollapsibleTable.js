@@ -35,16 +35,15 @@ function createData({ticketID, userID, subject, description, user, status, prior
 
 const generateWelcomeRow = () => {
   return [{
-    subject: 'Welcome to the Service Charge App from Alliance Cebu!',
-    status: 'About the App',
-    priority: 'Key Features',
+    subject: 'juandelacruz@gmail.com',
+    status: 'Juan Dela Cruz',    
     date: new Date(),
     details: [
       {
-        ticketID: '0',
+        ticketID: '1',
         userid: 'N/A',
-        description: 'The Service Charge App is designed to help you manage and track service requests efficiently. It allows you to create, update, and manage service tickets with ease, providing a seamless experience for both you and your customers.',
-        user: 'Alliance Cebu Team',
+        description: 'a user who has full access and control over the system',
+        user: 'Admin',
       },
     ],
   }];
@@ -84,7 +83,7 @@ function Row(props) {
         {/* TABLE DATA */}
         <TableCell component="th" scope="row"><button className='btn m-0 p-0' onClick={() => onSubjectClick(row)}>{row.subject}</button></TableCell>
         <TableCell align="right">{row.status}</TableCell>
-        <TableCell align="right">{row.priority}</TableCell>
+        {/* <TableCell align="right">{row.priority}</TableCell> */}
         <TableCell align="right">
           {new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', year: 'numeric' }).format(row.date)}
         </TableCell>
@@ -109,9 +108,9 @@ function Row(props) {
               {/* EXTENDED TABLE HEADERS*/}
                 <TableHead>
                   <TableRow>
-                    <TableCell>Ticket ID</TableCell>
+                    <TableCell>User ID</TableCell>
                     <TableCell align="center">Description</TableCell>
-                    <TableCell align="right">Requested From</TableCell>                    
+                    <TableCell align="right">Role</TableCell>                    
                   </TableRow>
                 </TableHead>
                 {/* EXTENDED TABLE DATA*/}
@@ -149,17 +148,17 @@ export default function UserCollapsibleTable({data, initialStatusFilter, initial
 
   useEffect(() => {                  
 
-      let rowData = data.map(item => 
-        createData({
-          ticketID: item.id,
-          userID: item.user.id,
-          subject: item.subject,
-          description: item.description,
-          status: item.status.type,
-          user: item.user.firstname + ' ' + item.user.lastname,
-          priority: item.priority && item.priority.type !== null ? item.priority.type : 'Pending', 
-          date: item.created_at}));
-      setRows(rowData);
+      // let rowData = data.map(item => 
+      //   createData({
+      //     ticketID: item.id,
+      //     userID: item.user.id,
+      //     subject: item.subject,
+      //     description: item.description,
+      //     status: item.status.type,
+      //     user: item.user.firstname + ' ' + item.user.lastname,
+      //     priority: item.priority && item.priority.type !== null ? item.priority.type : 'Pending', 
+      //     date: item.created_at}));
+      // setRows(rowData);
 
   }, [data]);
   
@@ -295,7 +294,7 @@ export default function UserCollapsibleTable({data, initialStatusFilter, initial
               <TableCell className='' style={{backgroundColor: 'rgba(23, 48, 88, 0.1)'}} align="right">
                   <div className='d-flex flex-column flex-lg-row justify-content-end'>                  
                   <InputLabel className='d-flex align-self-end me-lg-3 text-black'>Name</InputLabel>
-                  <Select
+                  {/* <Select
                       className='d-flex align-self-end'
                       value={statusFilter}
                       onChange={onStatusChange}
@@ -317,7 +316,7 @@ export default function UserCollapsibleTable({data, initialStatusFilter, initial
                       <MenuItem value="Processing">Processing</MenuItem>
                       <MenuItem value="Closed">Closed</MenuItem>
                       <MenuItem value="Rejected">Rejected</MenuItem>
-                  </Select>
+                  </Select> */}
                   </div>
               </TableCell>              
               <TableCell className='' style={{backgroundColor: 'rgba(23, 48, 88, 0.1)'}} align="right">
