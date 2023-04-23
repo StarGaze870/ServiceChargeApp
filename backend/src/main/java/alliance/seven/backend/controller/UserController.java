@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -107,5 +108,41 @@ public class UserController {
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
 	    }
 	}	
+	//ryan 
+//	POST http://localhost:8080/user/register/user
+//	{
+//	    "role": {"id": 1},
+//	    "email": "john.doe@example.com",
+//	    "firstname": "John",
+//	    "lastname": "Doe",
+//	    "password": "password123"
+//	}
+	@PostMapping("/user/register/user")
+	public ResponseEntity<?> saveUser(@RequestBody User user) {
+		if(userService.saveuser(user)) {
+			 Response<String> data = new Response<>(HttpStatus.OK.value(), "User Saved Successfully");
+		        return ResponseEntity.status(HttpStatus.OK).body(data);
+		} else {
+			Response<String> data = new Response<>(HttpStatus.BAD_REQUEST.value(), "User Already Exist");
+	        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(data);
+		}
+	}
+	//ryan
+	//post http://localhost:8080/api/v1/user/display/user
+//		{
+//		  "role": {"id": 0}
+//		}
+	
+	@PostMapping("/user/display/user")
+	public ResponseEntity<?> displayUser(@RequestBody User user) {
+		try {
+			List<User> users = userService.getUserByRole(user);
+		      return ResponseEntity.ok(users);
+		} catch (Exception e) {
+	        System.err.println(e.getMessage());
+	        Response<String> error = new Response<>(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
+	    }
+	}
 
 }
