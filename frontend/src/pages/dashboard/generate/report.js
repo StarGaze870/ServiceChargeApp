@@ -281,10 +281,10 @@ const GenerateReport = () => {
           {/* DASHBOARD TABLE */}
           <div className="d-flex flex-column">
             <h3 className="ms-2">Data</h3>         
-            {/* {!loading && ticketTableData !== null && 
+            {!loading && ticketTableData !== null && selectedTable === 'Tickets' &&
               <GenerateTicketsTable tableData={ticketTableData} />              
-            } */}
-            {!loading && ticketTableData !== null && 
+            }
+            {!loading && ticketTableData !== null && selectedTable === 'Users' &&
               <GenerateUsersTable tableData={userTableData} />              
             }
           </div>
