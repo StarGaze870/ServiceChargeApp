@@ -48,8 +48,8 @@ public class UserController {
 	@PostMapping("/create/users")
 	public ResponseEntity<?> store(@RequestBody User user) {
 		try {
-            User newUser = userRepository.save(user);
-            Response<User> data = new Response<>(HttpStatus.CREATED.value(), newUser);
+            Optional<User> newUser = userService.save(user);
+            Response<Optional<User>> data = new Response<Optional<User>>(HttpStatus.CREATED.value(), newUser);
             return ResponseEntity.status(HttpStatus.CREATED).body(data);
         } catch (Exception e) {
             System.err.println(e.getMessage());

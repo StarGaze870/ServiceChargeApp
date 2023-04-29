@@ -40,19 +40,19 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public Optional<User> save(User user) {
-				
-		try {
-			String encryptedPassword = aes.encrypt(user.getPassword());
-			user.setPassword(encryptedPassword);			
-			User newUser = userRepository.save(user);
-			
-			return Optional.ofNullable(newUser);	
-		}
-		catch(Exception e) {
-			return null;
-		}		
+	    try {
+	    	
+	    	aes = new EncryptDecrypt();
+	        String encryptedPassword = aes.encrypt(user.getPassword());	        
+	        user.setPassword(encryptedPassword);
+	        userRepository.save(user);
+	        
+	        return Optional.of(user);
+	    } catch (Exception e) {
+	        System.err.println("Error saving user: " + e.getMessage());
+	        return Optional.empty();
+	    }
 	}
-
 	@Override
     public Optional<Map<Integer, Long>> getRoleCounts() {
         List<User> users = userRepository.findAll();
