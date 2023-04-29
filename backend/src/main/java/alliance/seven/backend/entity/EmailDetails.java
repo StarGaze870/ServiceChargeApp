@@ -4,6 +4,7 @@ package alliance.seven.backend.entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 //Annotations
 @Data
@@ -18,4 +19,6 @@ public class EmailDetails {
  private String msgBody;
  private String subject;
  private String attachment;
+ private String attachmentPath;
+ private MultipartFile file;
 }

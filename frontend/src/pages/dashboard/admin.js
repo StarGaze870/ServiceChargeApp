@@ -218,14 +218,14 @@ const AdminDashboard = () => {
                 <div className="col-6 d-flex" style={{minHeight: '13rem'}}>
                   <button value='Pending' className='btn d-flex flex-column rounded-4 flex-fill m-3 shadow' onClick={(e) => onCardsClickDashboard(e)}>        
                     <h5 className="mx-auto pt-4">Pending Tickets</h5>
-                    <h1 className="mx-auto pt-3 text-success text-opacity-75" style={{ fontSize: "3.5em" }}>{pendingCount}</h1>        
+                    <h1 className="mx-auto pt-3 text-success text-opacity-75" style={{ fontSize: "3.5em" }}>{pendingCount ? pendingCount : 0}</h1>        
                   </button>
                 </div>
                 {/* HIGH PRIORITY TICKETS */}
                 <div className="col-6 d-flex">
                   <button value='High' className='btn d-flex flex-column rounded-4 flex-fill m-3 shadow' onClick={(e) => onCardsClickDashboard(e)}>
                     <h5 className="mx-auto pt-4">High Priority</h5>
-                    <h1 className="mx-auto pt-3 text-danger text-opacity-75" style={{ fontSize: "3.5em" }}>{highCount}</h1>
+                    <h1 className="mx-auto pt-3 text-danger text-opacity-75" style={{ fontSize: "3.5em" }}>{highCount ? highCount : 0}</h1>
                   </button>
                 </div>
               </div>                
@@ -235,14 +235,14 @@ const AdminDashboard = () => {
                 <div className="col-6 d-flex" style={{minHeight: '13rem'}} >
                   <button value='Medium' className='btn d-flex flex-column rounded-4 flex-fill m-3 shadow' onClick={(e) => onCardsClickDashboard(e)}>
                     <h5 className="mx-auto pt-4">Medium Priority</h5>
-                    <h1 className="mx-auto pt-3 text-warning text-opacity-75" style={{ fontSize: "3.5em"}}>{mediumCount}</h1>
+                    <h1 className="mx-auto pt-3 text-warning text-opacity-75" style={{ fontSize: "3.5em"}}>{mediumCount ? mediumCount : 0 }</h1>
                   </button>
                 </div>
                 {/* LOW PRIORITY TICKETS */}
                 <div className="col-6 d-flex">
                   <button value='Low' className='btn d-flex flex-column rounded-4 flex-fill m-3 shadow' onClick={(e) => onCardsClickDashboard(e)}>
                     <h5 className="mx-auto pt-4">Low Priority</h5>
-                    <h1 className="mx-auto pt-3 text-opacity-75 text-dark" style={{ fontSize: "3.5em" }}>{lowCount}</h1>
+                    <h1 className="mx-auto pt-3 text-opacity-75 text-dark" style={{ fontSize: "3.5em" }}>{lowCount ? lowCount : 0}</h1>
                   </button>
                 </div>
               </div>                        

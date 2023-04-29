@@ -22,6 +22,7 @@ const AddTicket = () => {
   const [showProgress, setShowProgress] = useState(false);
   const [showSuccessAlert, setShowSuccessAlert] = useState(false)
   const [loading, setLoading] = useState(true);
+  const [submitClicked, setSubmitClicked] = useState(false)
 
   // LOGOUT VARIABLE
   const [logoutModalOpen, setLogoutModalOpen] = useState(false);    
@@ -35,7 +36,17 @@ const AddTicket = () => {
   const [description, setDescription] = useState(''); 
 
   const [newTicketModal, setNewTicketModal] = useState(false);    
-  const onSubmitClick = () => setNewTicketModal(true);
+
+  const onSubmitClick = () => {
+
+    if (!subject || !description || !user) {
+      setSubmitClicked(true);    
+    }
+    else {
+      setSubmitClicked(false);
+      setNewTicketModal(true);
+    }       
+  }
 
   useEffect(() => {    
     
@@ -200,6 +211,8 @@ const AddTicket = () => {
                   variant="outlined"
                   value={subject}
                   onChange={(e) => setSubject(e.target.value)}
+                  error={submitClicked && !subject}
+                  helperText={submitClicked && !subject ? 'Subject is required' : ' '}
                 />
                 <TextField
                   className="mt-3 mb-4"
@@ -208,7 +221,9 @@ const AddTicket = () => {
                   multiline
                   rows={8}
                   value={description}
-                  onChange={(e) => setDescription(e.target.value)}                  
+                  onChange={(e) => setDescription(e.target.value)}       
+                  error={submitClicked && !description}
+                  helperText={submitClicked && !description ? 'Description is required' : ' '}
                 />
                   <label className='ms-2 mb-2'>Conforme Slip</label>
                   <FileUpload maxFiles={1} />
@@ -222,11 +237,11 @@ const AddTicket = () => {
                   <div className='d-flex flex-column mx-xl-5 shadow p-5'>                  
                     <div className='d-flex flex-column'>                      
                     <div className="d-flex flex-column">                  
-                    <div class="d-flex flex-row">
+                    <div className="d-flex flex-row">
                         <label style={{minWidth: '4.5em'}}>Date:</label>
                         <strong className='text-break'>{currentDate}</strong>
                     </div>
-                    <div class="d-flex flex-row my-1">
+                    <div className="d-flex flex-row my-1">
                         <label style={{minWidth: '4.5em'}}>Subject:</label>
                         <strong className='text-break'>{subject}</strong>
                     </div>                                        

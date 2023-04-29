@@ -5,7 +5,6 @@ import { useRouter } from 'next/router';
 import isLoggedIn from '../../isLoggedIn';
 import { MenuItem, Select, TextField } from '@mui/material';
 import DrawerSidebarNavigation from '@/components/appBar/DrawerSidebarNavigation';
-import FileUpload from '@/components/file/FileUpload';
 import YesNoModal from '@/components/modal/YesNoModal';
 import statusID from '@/db_default_variables/status';
 import priorityID from '@/db_default_variables/priorities';
@@ -13,9 +12,9 @@ import adminUser from '@/db_default_variables/userAdmin';
 import { createTicket } from '@/apiRequests/tickets/createTicket';
 import CircularProgressModal from '@/components/modal/CircularProgressModal';
 import SucessSlide from '@/components/transitions/SucessSlide';
-import UserAutoComplete from '@/components/user/UserAutoComplete';
 import RoleAutoComplete from '@/components/user/RoleAutoComplete';
 import PersonIcon from '@mui/icons-material/Person';
+import { createUser } from '@/apiRequests/users/createUser';
 
 const AddUser = () => {    
 
@@ -23,43 +22,44 @@ const AddUser = () => {
   const router = useRouter();
   const [showProgress, setShowProgress] = useState(false);
   const [showSuccessAlert, setShowSuccessAlert] = useState(false)
+  const [showErrorAlert, setShowErrorAlert] = useState(false)
   const [loading, setLoading] = useState(true);
+  const [submitClicked, setSubmitClicked] = useState(false)
 
   // LOGOUT VARIABLE
   const [logoutModalOpen, setLogoutModalOpen] = useState(false);    
   const onLogoutClick = () => setLogoutModalOpen(true);
 
-  // ADD TICKET VARIABLES
-  const [role, setUser] = useState(adminUser);  
-  const [priority, setPriority] = useState(priorityID[0]);  
-  const [currentDate, setCurrentDate] = useState('');
-  const [subject, setSubject] = useState('');
-  const [description, setDescription] = useState(''); 
+  // ADD USER VARIABLES
+  const [role, setRole] = useState(null);  
+  const [firstname, setFirstname] = useState('');  
+  const [lastname, setLastname] = useState('');
+  const [email, setEmail] = useState('');  
 
-  const [newTicketModal, setNewTicketModal] = useState(false);    
-  const onSubmitClick = () => setNewTicketModal(true);
+  const [newUserModal, setNewUserModal] = useState(false);    
+  const onSubmitClick = () => {
 
-  useEffect(() => {    
-    
+    if (!firstname || !lastname || !email || !role) {
+      setSubmitClicked(true);    
+    }
+    else {
+      setSubmitClicked(false);
+      setNewUserModal(true);
+    }       
+  }
+
+  useEffect(() => {                    
+
     // Check for saved data in local storage and set the state if it exists
-    const savedUser = localStorage.getItem('user');
-    const savedPriority = localStorage.getItem('priority');
-    const savedSubject = localStorage.getItem('subject');
-    const savedDescription = localStorage.getItem('description');    
-
-    if (savedUser && savedUser !== 'null') setUser(JSON.parse(savedUser));    
-    if (savedPriority && savedPriority !== 'null') setPriority(JSON.parse(savedPriority));
-    if (savedSubject && savedSubject !== 'null') setSubject(savedSubject);
-    if (savedDescription && savedDescription !== 'null') setDescription(savedDescription);  
-  
-    // Get current date
-    const today = new Date();
-    const dateStr = today.toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-    });
-    setCurrentDate(dateStr);
+    const savedRole = localStorage.getItem('newUserRole');
+    const savedFirstname = localStorage.getItem('firstname');
+    const savedLastname = localStorage.getItem('lastname');
+    const savedEmail = localStorage.getItem('newEmail');        
+    
+    if (savedRole && savedRole !== null) setRole(JSON.parse(savedRole));    
+    if (savedFirstname && savedFirstname !== 'null') setFirstname(savedFirstname);
+    if (savedLastname && savedLastname !== 'null') setLastname(savedLastname);
+    if (savedEmail && savedEmail !== 'null') setEmail(savedEmail);    
   
     const ini = async () => {
       // Check users validity
@@ -71,27 +71,30 @@ const AddUser = () => {
       setLoading(false);
     };
     ini();
+
   }, []);
   
   useEffect(() => {
 
     // Save ticket variables to local storage when they change
-    localStorage.setItem('user', JSON.stringify(role));
-    localStorage.setItem('priority', JSON.stringify(priority));
-    localStorage.setItem('subject', subject);
-    localStorage.setItem('description', description);
-  }, [role, priority, subject, description]);    
+    localStorage.setItem('newUserRole', JSON.stringify(role));
+    localStorage.setItem('firstname', firstname);
+    localStorage.setItem('lastname', lastname);
+    localStorage.setItem('newEmail', email);    
+
+  }, [role, firstname, lastname, email]);    
 
   // SUCESS ALERT
   useEffect(() => {
 
-    if (!showSuccessAlert) return;
+    if (!showSuccessAlert && !showErrorAlert) return;
 
     setTimeout(async () => {      
       setShowSuccessAlert(false)
+      setShowErrorAlert(false)
     }, 5000);
 
-  }, [showSuccessAlert]);
+  }, [showSuccessAlert, showErrorAlert]);
 
   const handleLogoutCallback = useCallback(async () => {
 
@@ -99,56 +102,64 @@ const AddUser = () => {
 
     localStorage.removeItem('email');
     localStorage.removeItem('password');
-    localStorage.removeItem('role');              
+    localStorage.removeItem('role');
+
     await router.push('/');
     
-  })
-  
-  const handlePriorityChange = (event) => {
-    setPriority(JSON.parse(event.target.value));        
-  };
+  })    
 
-  const handleSelectedRole = useCallback((user) => {    
-    setUser(user);    
+  const handleSelectedRole = useCallback((newRole) => {    
+    setRole(newRole);        
   });
 
-  const onNewTicketYesCallback = useCallback(async () => {
+  const onNewUserYesCallback = useCallback(async () => {
     
-    setShowProgress(true);
-    
-    const newTicket = await createTicket({
+    setShowProgress(true);        
 
-      userID: role.id,
-      statusID: statusID[4].id,
-      priorityID: priority.id,
-      subject: subject,
-      description: description
+    const newUser = await createUser({
 
+      roleID: role.id,
+      firstname: firstname,
+      lastname: lastname,
+      email: email,
     });
+    console.log(newUser);
 
 
-    if(newTicket[0] === 201) {
-      localStorage.setItem('user', null);
-      localStorage.setItem('priority', null);
-      localStorage.setItem('subject', null);
+    if(newUser[0] === 201) {      
+
+      localStorage.setItem('newUserRole', null);
+      localStorage.setItem('firstname', null);
+      localStorage.setItem('lastname', null);
+      localStorage.setItem('newEmail', null);
       localStorage.setItem('description', null);
 
-      setUser(adminUser);    
-      setPriority(priorityID[0]);
-      setSubject('');
-      setDescription('');  
-
-      console.log(newTicket)
-    }
-
-    setTimeout(() => {      
-      setShowProgress(false);
+      setRole(null);
+      setFirstname('')
+      setLastname('')
+      setEmail('')      
 
       setTimeout(() => {      
-        setShowSuccessAlert(true);           
-      }, 600);
-      
-    }, 1000);
+        setShowProgress(false);
+  
+        setTimeout(() => {      
+          setShowSuccessAlert(true);           
+        }, 600);
+        
+      }, 1000);
+    }
+    else {
+      if (newUser[1].data.includes('users.email_UNIQUE')) {
+        setTimeout(() => {      
+          setShowProgress(false);
+    
+          setTimeout(() => {      
+            setShowErrorAlert(true);           
+          }, 600);
+          
+        }, 1000);
+      }
+    }    
   })
 
   return (    
@@ -161,7 +172,7 @@ const AddUser = () => {
           <link rel="icon" href="/appLogoWhite.png" />        
         </Head>                        
         <YesNoModal modalOpen={logoutModalOpen} setModalOpen={setLogoutModalOpen} onYesCallback={handleLogoutCallback} title='Logout'/>
-        <YesNoModal modalOpen={newTicketModal} setModalOpen={setNewTicketModal} onYesCallback={onNewTicketYesCallback} title='Submit Ticket'/>        
+        <YesNoModal modalOpen={newUserModal} setModalOpen={setNewUserModal} onYesCallback={onNewUserYesCallback} title='Submit Ticket'/>        
         <DrawerSidebarNavigation
           headerTitle='New User'
           selectedOption='Add New User'
@@ -174,7 +185,8 @@ const AddUser = () => {
           onLogout={onLogoutClick}
           >                
           <div className="container-fluid">            
-            <SucessSlide toggleShow={showSuccessAlert} message={'Ticket Sucessfully Added'} hrefPath='/dashboard/admin' queryDataJSON={{isFromAddTicket: true}}/>            
+            <SucessSlide toggleShow={showSuccessAlert} message={'User Sucessfully Added'} hrefPath='/dashboard/view/users' queryDataJSON={{isFrommAddUsers: true}}/>            
+            <SucessSlide toggleShow={showErrorAlert} title={'Error'} disableLink={true} message={`Email already exists: ${email}`} severity='error'/>
             <div className='d-flex flex-column flex-xl-row'>            
               <div className='col-12 col-xl-5 d-flex flex-column'>                
                 <RoleAutoComplete selectedRole={role} roleSelectedCallback={handleSelectedRole}/>
@@ -185,28 +197,34 @@ const AddUser = () => {
                   label="First Name"
                   margin="normal"
                   variant="outlined"
-                  // value={subject}
-                  // onChange={(e) => setSubject(e.target.value)}
+                  value={firstname}
+                  onChange={(e) => setFirstname(e.target.value)}
+                  error={submitClicked && !firstname}
+                  helperText={submitClicked && !firstname ? 'First name is required' : ' '}
                 />
                 <TextField
-                  className="mt-3"
+                  className="mt-2"
                   name="lastname"
                   fullWidth
                   label="Last Name"
                   margin="normal"
                   variant="outlined"
-                  // value={subject}
-                  // onChange={(e) => setSubject(e.target.value)}
+                  value={lastname}
+                  onChange={(e) => setLastname(e.target.value)}
+                  error={submitClicked && !lastname}
+                  helperText={submitClicked && !lastname ? 'Last name is required' : ' '}
                 />
                 <TextField
-                  className="mt-3"
+                  className="mt-2"
                   name="email"
                   fullWidth
                   label="Email"
                   margin="normal"
                   variant="outlined"
-                  // value={subject}
-                  // onChange={(e) => setSubject(e.target.value)}
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  error={submitClicked && !email}
+                  helperText={submitClicked && !email ? 'Email is required' : ' '}
                 />                                   
                 </div>
                 <div className='col-12 col-xl-7 ms-xl-3'>            
@@ -217,18 +235,18 @@ const AddUser = () => {
                         <PersonIcon className='d-flex align-self-center' sx={{fontSize: '10em'}} />
                         <div className="d-flex flex-row mb-1">
                             <label style={{minWidth: '4.5em'}}>Name:</label>
-                            <strong className='text-break'>Juan Dela Cruz</strong>
+                            <strong className='text-break'>{firstname + ' ' + lastname}</strong>
                         </div>
                         <div className="d-flex flex-row mt-1">
                             <label style={{minWidth: '4.5em'}}>Email:</label>
-                            <strong className='text-break'>juandelacruz@gmail.com</strong>
+                            <strong className='text-break'>{email}</strong>
                         </div>                                       
                       </div>
                   <br />
                       <br />                      
                       <label>Description:</label>
                       <br />
-                      <p className="description-text text-break">a user who has full access and control over the system</p>
+                      <p className="description-text text-break">{role ? role.description : ''}</p>
                       <br />
                       <br />
                       <br />                      

@@ -3,7 +3,7 @@ import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import CircularProgress from '@mui/material/CircularProgress';
 import { styled, lighten } from '@mui/system';
-import { getAllUsers } from '@/apiRequests/users/getAllUsers';
+import { getAllRoles } from '@/apiRequests/users/getAllRoles';
 
 const GroupHeader = styled('div')(({ theme }) => ({
   position: 'sticky',
@@ -31,20 +31,17 @@ export default function RoleAutoComplete({ selectedRole, roleSelectedCallback })
 
     (async () => {
 
-      const users = await getAllUsers();      
-      console.log('-- GETTING USERS --')
+      const users = await getAllRoles();      
+      console.log('-- GETTING ROLES --')
       console.log(users)
 
       if (active) {
         setOptions(
           users[1].map((option) => {
-            const firstLetter = option.firstname[0].toUpperCase();
-            const displayLabel =
-              option.firstname.toLowerCase() === 'admin' && option.lastname.toLowerCase() === 'admin'
-                ? 'Admin'
-                : `${option.firstname} ${option.lastname}`;
+            const firstLetter = option.type[0].toUpperCase();
+            const displayLabel = option.type;
             return {
-              firstLetter: displayLabel === 'Admin' ? '0' : firstLetter,
+              firstLetter: firstLetter,
               displayLabel,
               ...option,
             };

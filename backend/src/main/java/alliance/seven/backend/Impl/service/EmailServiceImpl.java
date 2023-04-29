@@ -1,20 +1,20 @@
 package alliance.seven.backend.Impl.service;
 
-import java.io.File;
 import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.InputStreamSource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import alliance.seven.backend.entity.EmailDetails;
 import alliance.seven.backend.entity.SendOTPDetails;
 import alliance.seven.backend.service.EmailService;
 import alliance.seven.backend.service.OtpService;
-import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 
 @Service
@@ -95,25 +95,29 @@ public class EmailServiceImpl implements EmailService {
     }
 
 
-    public String sendMailWithAttachment(EmailDetails details){
+    public String sendMailWithAttachment(EmailDetails details, MultipartFile file) {
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         MimeMessageHelper mimeMessageHelper;
 
         try {
-            mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
+            mimeMessageHelper = new MimeMessageHelper(mimeMessage, file != null);
             mimeMessageHelper.setFrom(senderName + " <" + sender + ">");
             mimeMessageHelper.setTo(details.getRecipient());
             mimeMessageHelper.setText(details.getMsgBody(), true); // Set html flag to true
             mimeMessageHelper.setSubject(details.getSubject());
 
-            FileSystemResource file = new FileSystemResource(new File(details.getAttachment()));
-            mimeMessageHelper.addAttachment(file.getFilename(), file);
+            if (file != null) {
+                InputStreamSource inputStreamSource = new ByteArrayResource(file.getBytes());
+                mimeMessageHelper.addAttachment(file.getOriginalFilename(), inputStreamSource);
+            }
 
             javaMailSender.send(mimeMessage);
             return "Mail sent Successfully";
-        } catch (Exception e) {        	
-        	System.err.println(e.getMessage());                   
-        	throw new RuntimeException(e.getMessage());
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+            throw new RuntimeException(e.getMessage());
         }
     }
+
+
 }

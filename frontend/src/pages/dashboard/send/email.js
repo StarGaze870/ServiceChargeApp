@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { Fragment, useCallback, useEffect, useState } from 'react';
 import Head from 'next/head';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useRouter } from 'next/router';
@@ -14,6 +14,7 @@ import { createTicket } from '@/apiRequests/tickets/createTicket';
 import CircularProgressModal from '@/components/modal/CircularProgressModal';
 import SucessSlide from '@/components/transitions/SucessSlide';
 import UserAutoComplete from '@/components/user/UserAutoComplete';
+import { sendEmailWithAttachment } from '@/apiRequests/email/sendEmailWithAttachment';
 
 const SendEmail = () => {    
 
@@ -22,31 +23,40 @@ const SendEmail = () => {
   const [showProgress, setShowProgress] = useState(false);
   const [showSuccessAlert, setShowSuccessAlert] = useState(false)
   const [loading, setLoading] = useState(true);
+  const [submitClicked, setSubmitClicked] = useState(false)
 
   // LOGOUT VARIABLE
   const [logoutModalOpen, setLogoutModalOpen] = useState(false);    
   const onLogoutClick = () => setLogoutModalOpen(true);
 
-  // ADD TICKET VARIABLES
-  const [user, setUser] = useState(adminUser);  
-  const [priority, setPriority] = useState(priorityID[0]);  
+  // SEND EMAIL VARIABLES
+  const [user, setUser] = useState(null);    
   const [currentDate, setCurrentDate] = useState('');
   const [subject, setSubject] = useState('');
   const [description, setDescription] = useState(''); 
+  const [attachment, setAttachment] = useState(null);
+  const [resetFilePond, setResetFilePond] = useState(false);    
 
-  const [newTicketModal, setNewTicketModal] = useState(false);    
-  const onSubmitClick = () => setNewTicketModal(true);
+  const [sendEmailModal, setSendEmailModal] = useState(false);    
+  const onSubmitClick = () => {
+
+    if (!subject || !description || !user) {
+      setSubmitClicked(true);    
+    }
+    else {
+      setSubmitClicked(false);
+      setSendEmailModal(true);
+    }      
+  }
 
   useEffect(() => {    
     
     // Check for saved data in local storage and set the state if it exists
-    const savedUser = localStorage.getItem('user');
-    const savedPriority = localStorage.getItem('priority');
-    const savedSubject = localStorage.getItem('subject');
-    const savedDescription = localStorage.getItem('description');    
+    const savedUser = localStorage.getItem('emailUser');    
+    const savedSubject = localStorage.getItem('emailSubject');
+    const savedDescription = localStorage.getItem('emailDdescription');    
 
-    if (savedUser && savedUser !== 'null') setUser(JSON.parse(savedUser));    
-    if (savedPriority && savedPriority !== 'null') setPriority(JSON.parse(savedPriority));
+    if (savedUser && savedUser !== 'null') setUser(JSON.parse(savedUser));        
     if (savedSubject && savedSubject !== 'null') setSubject(savedSubject);
     if (savedDescription && savedDescription !== 'null') setDescription(savedDescription);  
   
@@ -74,11 +84,10 @@ const SendEmail = () => {
   useEffect(() => {
 
     // Save ticket variables to local storage when they change
-    localStorage.setItem('user', JSON.stringify(user));
-    localStorage.setItem('priority', JSON.stringify(priority));
-    localStorage.setItem('subject', subject);
-    localStorage.setItem('description', description);
-  }, [user, priority, subject, description]);    
+    localStorage.setItem('emailUser', JSON.stringify(user));    
+    localStorage.setItem('emailSubject', subject);
+    localStorage.setItem('emailDdescription', description);
+  }, [user, subject, description]);    
 
   // SUCESS ALERT
   useEffect(() => {
@@ -100,43 +109,36 @@ const SendEmail = () => {
     localStorage.removeItem('role');              
     await router.push('/');
     
-  })
-  
-  const handlePriorityChange = (event) => {
-    setPriority(JSON.parse(event.target.value));        
-  };
+  })    
 
   const handleSelectedUser = useCallback((user) => {    
-    setUser(user);    
+    setUser(user);        
   });
 
   const onNewTicketYesCallback = useCallback(async () => {
     
     setShowProgress(true);
     
-    const newTicket = await createTicket({
-
-      userID: user.id,
-      statusID: statusID[4].id,
-      priorityID: priority.id,
+    const emailDetals = {
+      recipient: user.email,
       subject: subject,
-      description: description
+      msgBody: description,
+    }    
 
-    });
+    const email = await sendEmailWithAttachment(emailDetals, attachment);
+    console.log(email)
 
+    if(email[0] === 200) {
+      
+      localStorage.setItem('emailUser', null);
+      localStorage.setItem('emailSubject', null);
+      localStorage.setItem('emailDdescription', null);
 
-    if(newTicket[0] === 201) {
-      localStorage.setItem('user', null);
-      localStorage.setItem('priority', null);
-      localStorage.setItem('subject', null);
-      localStorage.setItem('description', null);
-
-      setUser(adminUser);    
-      setPriority(priorityID[0]);
+      setUser(null);        
       setSubject('');
-      setDescription('');  
-
-      console.log(newTicket)
+      setDescription('');
+      setAttachment(null);
+      setResetFilePond(true)
     }
 
     setTimeout(() => {      
@@ -147,7 +149,20 @@ const SendEmail = () => {
       }, 600);
       
     }, 1000);
-  })
+  })  
+
+  const handleAttachmentUpload = ({files}) => {            
+    
+    if (files.length > 0) {
+      setResetFilePond(false)
+      setAttachment(files[0].file)
+    }
+    else {
+      setAttachment(null)
+      setResetFilePond(true)
+    }
+    
+  };    
 
   return (    
       <>                    
@@ -159,7 +174,7 @@ const SendEmail = () => {
           <link rel="icon" href="/appLogoWhite.png" />        
         </Head>                        
         <YesNoModal modalOpen={logoutModalOpen} setModalOpen={setLogoutModalOpen} onYesCallback={handleLogoutCallback} title='Logout'/>
-        <YesNoModal modalOpen={newTicketModal} setModalOpen={setNewTicketModal} onYesCallback={onNewTicketYesCallback} title='Submit Ticket'/>        
+        <YesNoModal modalOpen={sendEmailModal} setModalOpen={setSendEmailModal} onYesCallback={onNewTicketYesCallback} title='Send Email'/>        
         <DrawerSidebarNavigation
           headerTitle='Send Email'
           selectedOption='Send Email'
@@ -172,7 +187,7 @@ const SendEmail = () => {
           onLogout={onLogoutClick}
           >                
           <div className="container-fluid w-auto">            
-            <SucessSlide toggleShow={showSuccessAlert} message={'Ticket Sucessfully Added'} hrefPath='/dashboard/admin' queryDataJSON={{isFromAddTicket: true}}/>            
+            <SucessSlide toggleShow={showSuccessAlert} message={'Email Sent'} hrefPath='/dashboard/admin' disableLink={true}/>            
             <div className='d-flex flex-column flex-xl-row'>            
               <div className='mt-3 col-12 col-xl-5 d-flex flex-column'>                
                 <UserAutoComplete selectedUser={user} userSelectedCallback={handleSelectedUser}/>
@@ -185,6 +200,8 @@ const SendEmail = () => {
                   variant="outlined"
                   value={subject}
                   onChange={(e) => setSubject(e.target.value)}
+                  error={submitClicked && !subject}
+                  helperText={submitClicked && !subject ? 'Subject is required' : ' '}
                 />
                 <TextField
                   className="mt-3 mb-4"
@@ -193,25 +210,27 @@ const SendEmail = () => {
                   multiline
                   rows={8}
                   value={description}
-                  onChange={(e) => setDescription(e.target.value)}                  
+                  onChange={(e) => setDescription(e.target.value)}    
+                  error={submitClicked && !description}
+                  helperText={submitClicked && !description ? 'Description is required' : ' '}              
                 />
                   <label className='ms-2 mb-2'>Attachement</label>
-                  <FileUpload maxFiles={3} />                  
+                  <FileUpload maxFiles={1} getFilesCallback={handleAttachmentUpload} reset={resetFilePond} />                                    
                 </div>
                 <div className='col-12 col-xl-7 ms-xl-3'>            
                   <h3 className='ms-xl-5 mb-4 mt-5 mt-xl-0'>Email Summary</h3>
                   <div className='d-flex flex-column mx-xl-5 shadow p-5'>                  
                     <div className='d-flex flex-column'>                      
                     <div className="d-flex flex-column">                  
-                    <div class="d-flex flex-row">
+                    <div className="d-flex flex-row">
                         <label style={{minWidth: '4.5em'}}>Date:</label>
                         <strong className='text-break'>{currentDate}</strong>
                     </div>
                     <div className='mt-1'>
                       <label style={{width: '4.5em'}}>To:</label>
-                      <strong>juandelacruz@gmail.com</strong>
+                      <strong>{user ? user.email : ''}</strong>
                     </div>
-                    <div class="d-flex flex-row my-1">
+                    <div className="d-flex flex-row my-1">
                         <label style={{minWidth: '4.5em'}}>Subject:</label>
                         <strong className='text-break'>{subject}</strong>
                     </div>                                                            
@@ -224,7 +243,7 @@ const SendEmail = () => {
                       <br />
                       <br />
                       <br />
-                      <label className='align-self-end'>from: <strong>alliance.servicecharge.gmail.com</strong></label>
+                      <label className='align-self-end'>from: <strong>Alliance Service Charge</strong></label>
                     </div>
                   </div>
                 </div>
@@ -240,10 +259,10 @@ const SendEmail = () => {
 
 function formatDescription(text) {
     return text.split('\n').map((line, index) => (
-      <>
+      <Fragment key={index}>
         {line}
         <br />
-        </>
+        </Fragment>
     ));
   }
 

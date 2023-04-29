@@ -1,5 +1,7 @@
 package alliance.seven.backend.dto;
 
+import java.util.Date;
+
 import alliance.seven.backend.entity.Role;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -15,6 +17,7 @@ public class UserSummaryDTO {
     private String email;
     private String firstname;
     private String lastname;
+    private Date createdAt;
     private Role role;
     // Getters and setters
 }

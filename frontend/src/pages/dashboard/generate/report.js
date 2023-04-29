@@ -11,7 +11,31 @@ import LogoutModal from '@/components/modal/LogoutModal';
 import EditTicketModal from '@/components/modal/tickets/EditTicketModal';
 import SucessSlide from '@/components/transitions/SucessSlide';
 import isLoggedIn from '@/pages/isLoggedIn';
+import GenerateTicketsTable from '@/components/table/GenerateTicketsTable';
+import XLSX from 'xlsx';
+import GenerateUsersTable from '@/components/table/GenerateUsersTable';
+import { getAllUsers } from '@/apiRequests/users/getAllUsers';
 
+function createDataTicket(data) {
+  return {
+    ticketID: data.id,
+    subject: data.subject, 
+    status: data.status.type, 
+    priority: data.priority && data.priority.type !== null ? data.priority.type : 'Pending', 
+    date: new Date(data.created_at),
+  };
+}
+
+function createDataUsers(data) {
+  return {
+    userID: data.id,
+    email: data.email, 
+    firstname: data.firstname, 
+    lastname: data.lastname, 
+    role: data.role.type,
+    date: new Date(data.createdAt),       
+  };
+}
 
 const GenerateReport = () => {    
 
@@ -22,10 +46,8 @@ const GenerateReport = () => {
   const [loading, setLoading] = useState(true);
 
   // DASHBOARD VARIABLES
-  const [pendingCount, setPendingCount] = useState(0);
-  const [highCount, setHighCount] = useState(0);
-  const [mediumCount, setMediumCount] = useState(0);
-  const [lowCount, setLowcCount] = useState(0);
+  const [ticketRows, setTicketRows] = React.useState([]);
+  const [userRows, setUserRows] = React.useState([]);
 
   // ALERT MESSAGE
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
@@ -35,8 +57,7 @@ const GenerateReport = () => {
 
   // TICKET TABLE VARIABLE
   const [ticketTableData, setTicketTableData] = useState([])
-  const [initialStatusFilter, setInitialStatusFilter] = useState('All');
-  const [initialPriorityFilter, setInitialPriotityFilter] = useState('All');
+  const [userTableData, setUserTableData] = useState([])
 
   // EDIT TICKET VARIABLE
   const [singleTicketData, setSingleTIcketData] = useState(null)
@@ -76,6 +97,7 @@ const GenerateReport = () => {
         }
       }      
       await getTicketFunc();
+      await getUserFunc();
       setLoading(false);
     };
     ini();
@@ -101,27 +123,24 @@ const GenerateReport = () => {
 
     console.log("-- GETTING ALL TICKETS --")
     console.log(getTickets);
-
-    setTicketTableData(getTickets[1][0].data);    
     
-    setPendingCount(getTickets[1][2][6])    
-    setHighCount(getTickets[1][1][3])
-    setMediumCount(getTickets[1][1][2])
-    setLowcCount(getTickets[1][1][1])
+    setTicketTableData(getTickets[1][0].data);    
+    let rowData = getTickets[1][0].data.map((item) => createDataTicket(item));
+    setTicketRows(rowData);
 
+  }
 
-    if (fromEditTicket) {
-            
-      setTimeout(async () => {        
-        
-        if (failed) {
-          setAlertMessage('Update Failed!')
-        } else {
-          setAlertMessage('Updated Successfully')
-        } 
-        setShowSuccessAlert(true);
-      }, 600);
-    }
+  const getUserFunc = async () => {
+    
+    const getUsers = await getAllUsers();
+
+    console.log("-- GETTING ALL USERS --")
+    console.log(getUsers);
+    
+    setUserTableData(getUsers[1][0].data);    
+    let rowData = getUsers[1][0].data.map((item) => createDataUsers(item));
+    setUserRows(rowData);
+
   }
 
   const onDeleteTicketCallback = useCallback(async ({failed=false} = {}) => {    
@@ -141,13 +160,6 @@ const GenerateReport = () => {
     }, 600);
   })
 
-  const newTicketRefreshCallback = useCallback(async ({ticketId}) => {
-        
-    const newTicket = await getSingleTicket(ticketId);    
-    setTicketTableData([ticketTableData[3], ...ticketTableData])
-    
-  });
-
   const onLogoutClick = () => setLogoutModalOpen(true);
   const handleLogoutCallback = useCallback(async () => {
     
@@ -158,30 +170,58 @@ const GenerateReport = () => {
         
   })    
 
-  const onCardsClickDashboard = useCallback((e) => {
-            
-    if (e.currentTarget.value === 'Pending') {
-    
-      setInitialStatusFilter('Pending');
-      setInitialPriotityFilter('All');            
-    } 
-    else {
-      setInitialStatusFilter('All');
-      setInitialPriotityFilter(e.currentTarget.value);
-    }               
-  })
-
-  const receiveTicketDataFromChild = (data) => {
-        
-    setSingleTIcketData(data);
-    onEditClick();
-  }
-
-  const [age, setAge] = useState('');
+  const [selectedTable, setSelectedTable] = useState('Tickets');
 
   const handleChange = (event) => {
-    setAge(event.target.value);
-  };
+    setSelectedTable(event.target.value);
+  };  
+
+  const onGenerateClick = () => {
+
+    if (selectedTable === 'Tickets') {
+      ticketDownloadExcelFile();
+    }
+    else {
+      userDownloadExcelFile();
+    }
+  }
+
+  const ticketDownloadExcelFile = () => {
+    const headers = ['Ticket ID', 'Subject', 'Status', 'Priority', 'Date'];
+  
+    const data = ticketRows.map((row) => [
+      row.ticketID,
+      row.subject,
+      row.status,
+      row.priority,
+      new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', year: 'numeric' }).format(row.date),    
+    ]);
+  
+    const worksheet = XLSX.utils.aoa_to_sheet([headers, ...data]);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
+  
+    XLSX.writeFile(workbook, 'Tickets Report.xlsx');
+  }
+
+  const userDownloadExcelFile = () => {
+    const headers = ['User ID', 'First Name', 'Last Name', 'Email', 'Role', 'Joined On'];
+  
+    const data = userRows.map((row) => [
+      row.userID,
+      row.firstname,
+      row.lastname,
+      row.email,
+      row.role,
+      new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', year: 'numeric' }).format(row.date),    
+    ]);
+  
+    const worksheet = XLSX.utils.aoa_to_sheet([headers, ...data]);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
+  
+    XLSX.writeFile(workbook, 'Users Report.xlsx');
+  }
 
   return (    
       <>      
@@ -224,31 +264,29 @@ const GenerateReport = () => {
                     <Select
                         labelId="demo-simple-select-label"
                         id="demo-simple-select"
-                        value={age}
-                        label="Age"
+                        value={selectedTable}
+                        label="Table"
                         onChange={handleChange}
                     >
-                        <MenuItem value={10}>Ticket</MenuItem>
-                        <MenuItem value={20}>User</MenuItem>
-                        <MenuItem value={30}>Thirty</MenuItem>
+                        <MenuItem value={'Tickets'}>Tickets</MenuItem>
+                        <MenuItem value={'Users'}>Users</MenuItem>                        
                     </Select>
                     </FormControl>
                 </div>
                 <div className='d-flex'>
-                    <button className='btn btn-dark py-2 px-4 me-5 '>Generate</button>
+                    <button className='btn btn-dark py-2 px-4 me-5 ' onClick={onGenerateClick}>Generate</button>
                 </div>
         </div>
           </div>
           {/* DASHBOARD TABLE */}
           <div className="d-flex flex-column">
-            <h3 className="ms-2">Data</h3>
+            <h3 className="ms-2">Data</h3>         
+            {/* {!loading && ticketTableData !== null && 
+              <GenerateTicketsTable tableData={ticketTableData} />              
+            } */}
             {!loading && ticketTableData !== null && 
-              <TicketCollapsibleTable 
-                data={ticketTableData} 
-                initialStatusFilter={initialStatusFilter} 
-                initialPriorityFilter={initialPriorityFilter} 
-                sendTicketDataToParent={receiveTicketDataFromChild}
-                />}
+              <GenerateUsersTable tableData={userTableData} />              
+            }
           </div>
         </div>       
         </DrawerSidebarNavigation>

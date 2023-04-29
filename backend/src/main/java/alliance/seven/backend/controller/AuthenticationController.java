@@ -61,6 +61,7 @@ public class AuthenticationController {
 	                user.getEmail(),
 	                user.getFirstname(),
 	                user.getLastname(),
+	                user.getCreatedAt(),
 	                user.getRole()
 	            );
 

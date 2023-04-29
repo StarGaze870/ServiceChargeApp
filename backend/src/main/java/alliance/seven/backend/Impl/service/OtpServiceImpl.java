@@ -35,6 +35,7 @@ public class OtpServiceImpl implements OtpService{
 			user.getEmail(),
 			user.getFirstname(),
 			user.getLastname(),
+			user.getCreatedAt(),
 			user.getRole()
         );
 

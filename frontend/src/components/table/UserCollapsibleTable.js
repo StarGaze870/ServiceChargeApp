@@ -16,18 +16,18 @@ import { TablePagination } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import { Select, MenuItem, InputLabel } from '@mui/material';
 
-function createData({ticketID, userID, subject, description, user, status, priority, date}) {
+function createData({userID, email, firstname, lastname, role, date}) {
   return {
-    subject,
-    status,
-    priority,
+    email,
+    firstname,
+    lastname,
+    name: firstname + ' ' + lastname,    
     date: new Date(date),
     details: [
       {
-        ticketID: ticketID,
-        userid: userID,
-        description: description,
-        user: user,
+        userID: userID,        
+        description: role.description,
+        role: role.type,
       },      
     ],
   };
@@ -35,15 +35,16 @@ function createData({ticketID, userID, subject, description, user, status, prior
 
 const generateWelcomeRow = () => {
   return [{
-    subject: 'juandelacruz@gmail.com',
-    status: 'Juan Dela Cruz',    
+    email: 'juandelacruz@gmail.com',
+    firstname: 'Juan',
+    lastname: 'Dela Cruz',
+    name: 'Juan Dela Cruz',    
     date: new Date(),
     details: [
-      {
-        ticketID: '1',
-        userid: 'N/A',
+      {        
+        userID: 0,
         description: 'a user who has full access and control over the system',
-        user: 'Admin',
+        role: 'Admin',
       },
     ],
   }];
@@ -54,8 +55,7 @@ function Row(props) {
    
   const { 
 
-    row, 
-    onSubjectClick,
+    row,
     onEditClick, 
     index,    
 
@@ -81,9 +81,8 @@ function Row(props) {
           </IconButton>
         </TableCell>
         {/* TABLE DATA */}
-        <TableCell component="th" scope="row"><button className='btn m-0 p-0' onClick={() => onSubjectClick(row)}>{row.subject}</button></TableCell>
-        <TableCell align="right">{row.status}</TableCell>
-        {/* <TableCell align="right">{row.priority}</TableCell> */}
+        <TableCell component="th" scope="row">{row.email}</TableCell>
+        <TableCell align="right">{row.name}</TableCell>        
         <TableCell align="right">
           {new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', year: 'numeric' }).format(row.date)}
         </TableCell>
@@ -92,6 +91,7 @@ function Row(props) {
             className="btn m-0 p-0"
             onClick={() => onEditClick(row)}
           >
+            {/* // TODO: UPDATE USER */}
             <EditIcon></EditIcon>
           </button>
         </TableCell>
@@ -116,14 +116,14 @@ function Row(props) {
                 {/* EXTENDED TABLE DATA*/}
                 <TableBody>
                   {row.details.map((details) => (
-                    <TableRow key={details.ticketID}>
+                    <TableRow key={details.userID}>
                       <TableCell component="th" scope="row">
-                        {details.ticketID}
+                        {details.userID}
                       </TableCell>
                       <TableCell align="center" style={{ maxWidth: '50em',overflowWrap: 'break-word', wordWrap: 'break-word', wordBreak: 'break-all' }}>
                       {details.description}
                       </TableCell>
-                      <TableCell align="right">{details.user}</TableCell>                      
+                      <TableCell align="right">{details.role}</TableCell>                      
                     </TableRow>
                   ))}
                 </TableBody>
@@ -136,41 +136,34 @@ function Row(props) {
   );
 }
 
-export default function UserCollapsibleTable({data, initialStatusFilter, initialPriorityFilter, sendTicketDataToParent}) {    
+export default function UserCollapsibleTable({data, initialRoleFilter, sendTicketDataToParent}) {    
 
   const [rows, setRows] = useState([]);
   const [filteredRowCount, setFilteredRowCount] = useState(rows.length);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [sortConfig, setSortConfig] = useState({ key: '', direction: 'asc' });
-  const [priorityFilter, setPriorityFilter] = useState(initialPriorityFilter);
-  const [statusFilter, setStatusFilter] = useState(initialStatusFilter);
+  const [sortConfig, setSortConfig] = useState({ key: '', direction: 'asc' });  
+  const [roleFilter, setRoleFilter] = useState(initialRoleFilter);
 
   useEffect(() => {                  
 
-      // let rowData = data.map(item => 
-      //   createData({
-      //     ticketID: item.id,
-      //     userID: item.user.id,
-      //     subject: item.subject,
-      //     description: item.description,
-      //     status: item.status.type,
-      //     user: item.user.firstname + ' ' + item.user.lastname,
-      //     priority: item.priority && item.priority.type !== null ? item.priority.type : 'Pending', 
-      //     date: item.created_at}));
-      // setRows(rowData);
+      let rowData = data.map(item => 
+        createData({
+          userID: item.id,
+          firstname: item.firstname,
+          lastname: item.lastname,
+          email: item.email,
+          role: item.role,          
+          date: item.createdAt}));
+      setRows(rowData);
 
   }, [data]);
   
   useEffect(() => {
-    setStatusFilter(initialStatusFilter);
-  }, [initialStatusFilter]);
-  
-  useEffect(() => {
-    setPriorityFilter(initialPriorityFilter);
-  }, [initialPriorityFilter]);
-  
+    setRoleFilter(initialRoleFilter);
+  }, [initialRoleFilter]);
 
+  
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -198,7 +191,7 @@ export default function UserCollapsibleTable({data, initialStatusFilter, initial
   };
   
   const onStatusChange = (e) => {
-    setStatusFilter(e.target.value)
+    setRoleFilter(e.target.value)
   }
 
   const onPriorityChange = (e) => {
@@ -210,17 +203,8 @@ export default function UserCollapsibleTable({data, initialStatusFilter, initial
   
     sortableRows.sort((a, b) => {
 
-      // Status sorting      
-      if (statusFilter !== 'All') {
-        if (a.priority === statusFilter && b.priority !== statusFilter) return -1;
-        if (b.priority === statusFilter && a.priority !== statusFilter) return 1;
-      }
-
-      // Priority sorting      
-      if (priorityFilter !== 'All') {
-        if (a.priority === priorityFilter && b.priority !== priorityFilter) return -1;
-        if (b.priority === priorityFilter && a.priority !== priorityFilter) return 1;
-      }  
+      if (a.priority === roleFilter && b.priority !== roleFilter) return -1;
+      if (b.priority === roleFilter && a.priority !== roleFilter) return 1;
 
       // Other sorting based on sortConfig.key
       if (sortConfig.key) {
@@ -243,17 +227,15 @@ export default function UserCollapsibleTable({data, initialStatusFilter, initial
   
       return 0;
     });
-  
+
     const filteredRows = sortableRows
-      .filter((row) => (statusFilter !== 'All' ? row.status === statusFilter : true))
-      .filter((row) => (priorityFilter !== 'All' ? row.priority === priorityFilter : true));
-  
+    .filter((row) => (row.role === roleFilter))
 
-    setFilteredRowCount(filteredRows.length);
+    setFilteredRowCount(filteredRows.length);            
 
-    return filteredRows;
+    return sortableRows;
 
-  }, [rows, sortConfig, priorityFilter, statusFilter]);      
+  }, [rows, sortConfig, roleFilter]);          
 
   return (   
     <div className='d-flex flex-column shadow w-100'>
@@ -287,13 +269,16 @@ export default function UserCollapsibleTable({data, initialStatusFilter, initial
             <TableRow>
               <TableCell className='' style={{backgroundColor: 'rgba(23, 48, 88, 0.1)'}} />            
               <TableCell className='' style={{backgroundColor: 'rgba(23, 48, 88, 0.1)'}}>
-                <button className='btn m-0 p-0' onClick={() => requestSort('subject')}>
+                <button className='btn m-0 p-0' onClick={() => requestSort('email')}>
                   Email
                 </button>
               </TableCell>              
               <TableCell className='' style={{backgroundColor: 'rgba(23, 48, 88, 0.1)'}} align="right">
                   <div className='d-flex flex-column flex-lg-row justify-content-end'>                  
-                  <InputLabel className='d-flex align-self-end me-lg-3 text-black'>Name</InputLabel>
+                  {/* <InputLabel className='d-flex align-self-end me-lg-3 text-black'>Name</InputLabel> */}
+                  <button className='btn m-0 p-0' onClick={() => requestSort('name')}>
+                    Name
+                  </button>
                   {/* <Select
                       className='d-flex align-self-end'
                       value={statusFilter}
@@ -325,19 +310,16 @@ export default function UserCollapsibleTable({data, initialStatusFilter, initial
                 </button>
               </TableCell>              
               <TableCell className='' style={{backgroundColor: 'rgba(23, 48, 88, 0.1)'}} align="right" />                                
-              <TableCell className='' style={{backgroundColor: 'rgba(23, 48, 88, 0.1)'}} />
+              {/* <TableCell className='' style={{backgroundColor: 'rgba(23, 48, 88, 0.1)'}} /> */}
             </TableRow>
           </TableHead>          
-          <TableBody>
-            {(sortedRows.length > 0 ? sortedRows : generateWelcomeRow())
-              .filter((row) => (statusFilter !== 'All' ? row.status === statusFilter : true))
-              .filter((row) => (priorityFilter !== 'All' ? row.priority === priorityFilter : true))
+          <TableBody>                  
+            {(sortedRows.length > 0 ? sortedRows : generateWelcomeRow())              
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((row, index) => (
                 <Row
-                  key={row.details[0].ticketID || `welcome-row`}
-                  row={row}
-                  onSubjectClick={handleSubjectClick}
+                  key={row.details[0].userID || `welcome-row`}
+                  row={row}                  
                   onEditClick={handleEditClick}
                   index={index}
                 />

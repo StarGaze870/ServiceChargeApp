@@ -28,7 +28,8 @@ function ResponsiveAppBar({onSignIn}) {
 
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
-  const pages = isSmallScreen ? ['Home', 'Guide', 'About', 'Sign in'] : ['Home', 'Guide', 'About'];
+  // const pages = isSmallScreen ? ['Home', 'Guide', 'About', 'Sign in'] : ['Home', 'Guide', 'About'];
+  const pages = isSmallScreen ? ['Home', 'Sign in'] : ['Home'];
 
   const handleCloseNavMenu = (event) => {
     setAnchorElNav(null);

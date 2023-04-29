@@ -1,6 +1,8 @@
-import { FilePond, registerPlugin } from 'react-filepond'
-import FilePondPluginImageExifOrientation from 'filepond-plugin-image-exif-orientation'
-import FilePondPluginImagePreview from 'filepond-plugin-image-preview'
+import { FilePond, registerPlugin } from 'react-filepond';
+import FilePondPluginImageExifOrientation from 'filepond-plugin-image-exif-orientation';
+import FilePondPluginImagePreview from 'filepond-plugin-image-preview';
+import 'filepond/dist/filepond.min.css';
+import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css';
 import { useEffect, useState } from 'react';
 
 registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview);
@@ -9,31 +11,39 @@ const FileUpload = ({
 
     getFilesCallback,
     maxFiles=3,
-    lableIdle='Drag & Drop your attachment'
+    lableIdle='Drag & Drop your attachment',
+    reset
 
 }) => {
 
     const [files, setFiles] = useState([])
     const [fileCount, setFileCount] = useState(0)
 
-    useEffect(() => {
+    useEffect(() => {        
+      
+      getFilesCallback({ files: files });          
 
-        // TODO: call getFilesCallback({files: files})
-        setFileCount(files.length)
+    }, [files]);
 
-    }, [files])
+    useEffect(() => {        
+      
+      if (reset) {
+        setFiles([])
+      }      
 
+    }, [reset]);
 
     return (        
-        <FilePond            
+    
+        <FilePond
             files={files}
             onupdatefiles={setFiles}
             allowMultiple={true}
             maxFiles={maxFiles}
-            // server="/api"
-            name="files" /* sets the file input name, it's filepond by default */
-            labelIdle={`[${fileCount}/${maxFiles}] ${lableIdle} or <span class="filepond--label-action">Browse</span>`}
-        />        
+            allowFileSizeValidation={true}
+            maxFileSize="20MB"
+            name="files"            
+            />
     );
 }
 

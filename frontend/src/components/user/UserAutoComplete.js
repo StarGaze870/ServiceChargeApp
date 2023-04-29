@@ -33,11 +33,11 @@ export default function UserAutoComplete({ selectedUser, userSelectedCallback })
 
       const users = await getAllUsers();      
       console.log('-- GETTING USERS --')
-      console.log(users)
+      console.log(users)      
 
       if (active) {
         setOptions(
-          users[1].map((option) => {
+          users[1][0].data.map((option) => {
             const firstLetter = option.firstname[0].toUpperCase();
             const displayLabel =
               option.firstname.toLowerCase() === 'admin' && option.lastname.toLowerCase() === 'admin'

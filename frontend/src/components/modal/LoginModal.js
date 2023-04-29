@@ -31,7 +31,7 @@ const style = {
   },
 };
 
-export default function LoginModal({ modalOpen, setModalOpen }) {
+export default function LoginModal({ modalOpen, setModalOpen, redirectToAddTicket=false}) {
   
   const router = useRouter();
   const formRef = useRef();
@@ -82,6 +82,14 @@ export default function LoginModal({ modalOpen, setModalOpen }) {
     localStorage.setItem('role', encryptedRole);
   
     setTimeout(async () => {      
+
+      if (redirectToAddTicket) {
+        
+        await router.push(`/dashboard/add/ticket`);      
+        setShowProgress(false);
+        return
+      }
+
       await router.push(`/dashboard/${getLoginResponse[1].role.type.toString().toLowerCase()}`);      
       setShowProgress(false);
     }, 1500);
@@ -153,7 +161,7 @@ export default function LoginModal({ modalOpen, setModalOpen }) {
                 label="Email"                
                 margin="normal"
                 variant="outlined"
-                error={error === 'Email does not exist' || statusCode === 500}
+                error={error === 'Email does not exist' || statusCode === 500}                
               />              
               <TextField
                 name="password"

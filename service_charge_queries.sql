@@ -10,6 +10,8 @@ select * from otps;
 
 UPDATE TICKETS SET priority_id = null WHERE status_id = 6;
 
+
+
 DELETE FROM tickets where id > 0;
 
 INSERT INTO tickets (user_id, status_id, priority_id, subject, description, created_at, updated_at)

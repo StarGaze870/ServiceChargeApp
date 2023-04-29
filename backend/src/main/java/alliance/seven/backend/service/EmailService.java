@@ -1,5 +1,7 @@
 package alliance.seven.backend.service;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import alliance.seven.backend.entity.EmailDetails;
 import alliance.seven.backend.entity.SendOTPDetails;
 
@@ -16,5 +18,5 @@ public interface EmailService {
 
  // Method
  // To send an email with attachment
- String sendMailWithAttachment(EmailDetails details);
+ String sendMailWithAttachment(EmailDetails details, MultipartFile file);
 }

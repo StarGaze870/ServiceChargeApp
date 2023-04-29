@@ -1,12 +1,16 @@
 package alliance.seven.backend.controller;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,7 +20,6 @@ import alliance.seven.backend.ENV;
 import alliance.seven.backend.AES_Encryption.EncryptDecrypt;
 import alliance.seven.backend.api.responses.Response;
 import alliance.seven.backend.dto.UserSummaryDTO;
-import alliance.seven.backend.entity.Otp;
 import alliance.seven.backend.entity.User;
 import alliance.seven.backend.repository.OtpRepository;
 import alliance.seven.backend.repository.UserRepository;
@@ -42,17 +45,34 @@ public class UserController {
 	
 	private EncryptDecrypt aes;
 	
-	@PostMapping("/user/create")
-	public String store() {
-	    return "user";
+	@PostMapping("/create/users")
+	public ResponseEntity<?> store(@RequestBody User user) {
+		try {
+            User newUser = userRepository.save(user);
+            Response<User> data = new Response<>(HttpStatus.CREATED.value(), newUser);
+            return ResponseEntity.status(HttpStatus.CREATED).body(data);
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+            Response<String> error = new Response<>(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
+        }
 	}	
 	
 	@GetMapping("/get/users")
     public ResponseEntity<?> getAllUsers() {
         try {
             Optional<List<UserSummaryDTO>> users = userService.findAll();
-            Response<Optional<List<UserSummaryDTO>>> data = new Response<>(HttpStatus.OK.value(), users);
-            return ResponseEntity.status(HttpStatus.OK).body(data);
+            Optional<Map<Integer, Long>> roleCounts = userService.getRoleCounts();
+
+            Response<Optional<List<UserSummaryDTO>>> userData = new Response<>(HttpStatus.OK.value(), users);
+
+            Object[] arr = new Object[2];
+            arr[0] = userData;
+            arr[1] = roleCounts;
+
+            Response<Object[]> response = new Response<Object[]>(HttpStatus.OK.value(), arr);
+
+            return ResponseEntity.status(HttpStatus.OK).body(response);
         } catch (Exception e) {
             System.err.println(e.getMessage());
             Response<String> error = new Response<>(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
@@ -60,6 +80,41 @@ public class UserController {
         }
     }
 	
+	@PatchMapping("/update/users/{id}")
+	public ResponseEntity<?> updateUserById(@PathVariable("id") Integer id, @RequestBody User updatedUser) {
+	    try {
+	        Optional<User> userOpt = userService.updateUser(id, updatedUser);
+	        if (userOpt.isPresent()) {
+	            Response<User> data = new Response<>(HttpStatus.OK.value(), userOpt.get());
+	            return ResponseEntity.status(HttpStatus.OK).body(data);
+	        } else {
+	            Response<String> error = new Response<>(HttpStatus.NOT_FOUND.value(), "User not found");
+	            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+	        }
+	    } catch (Exception e) {
+	        System.err.println(e.getMessage());
+	        Response<String> error = new Response<>(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
+	    }
+	}
+	
+	@DeleteMapping("/delete/users/{id}")
+    public ResponseEntity<?> deleteTicketById(@PathVariable("id") int id) {
+        try {
+            Optional<Boolean> isDeleted = userService.deleteUserById(id);
+            if (isDeleted.isPresent() && isDeleted.get()) {
+                Response<String> data = new Response<>(HttpStatus.OK.value(), "User successfully deleted");
+                return ResponseEntity.status(HttpStatus.OK).body(data);
+            } else {
+                Response<String> error = new Response<>(HttpStatus.NOT_FOUND.value(), "User not found");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+            }
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+            Response<String> error = new Response<>(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
+        }
+    }
 	
 //	@PutMapping("/user/reset-password")
 //	public ResponseEntity<?> resetPassword(@RequestBody ResetPasswordRequest resetPasswordRequest) {

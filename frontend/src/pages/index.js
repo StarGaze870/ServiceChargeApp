@@ -12,7 +12,12 @@ export default function Home() {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
+  const [submitClicked, setSubmitClicked] = useState(false)
+  const [redirectToAddTicket, setRedirectToAddTicket] = useState(false)
   
+  const [subject, setSubject] = useState('');
+  const [description, setDescription] = useState(''); 
+
   useEffect(() => {    
     const ini = async () => {
       const isAuthrorized = await isLoggedIn();      
@@ -38,6 +43,21 @@ export default function Home() {
     }
 
   }, [router.query])
+
+  const handleSubmit = () => {
+
+    if (!subject || !description) {
+      setSubmitClicked(true);    
+    }
+    else {
+
+      setSubmitClicked(false);      
+      localStorage.setItem('subject', subject);
+      localStorage.setItem('description', description);
+      setRedirectToAddTicket(true);
+      setModalOpen(true);
+    } 
+  }
 
   return ( 
     !loading && (   
@@ -81,9 +101,12 @@ export default function Home() {
           <h1 className="ms-5 ps-2 mb-4" style={{ fontSize: "3em", fontFamily: "Calibri" }}>Submit a Ticket</h1>            
 
             <Mui.TextField
-              className='mx-5'              
-              label="Subject"              
               sx={{backgroundColor: "rgb(255, 255, 255)"}}
+              className='mx-5'              
+              label="Subject"                            
+              value={subject}
+              onChange={(e) => setSubject(e.target.value)}
+              error={submitClicked && !subject}              
             />
 
             <Mui.TextField
@@ -92,8 +115,11 @@ export default function Home() {
               multiline
               rows={6}                            
               sx={{backgroundColor: "rgb(255, 255, 255)"}}
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}       
+              error={submitClicked && !description}              
             />     
-            <button className='m-5 btn btn-dark p-3'>Submit</button>
+            <button className='m-5 btn btn-dark p-3' onClick={handleSubmit}>Submit</button>
           </div>
         </div>
       </div>      
@@ -131,7 +157,7 @@ export default function Home() {
         </div>  
         <hr/>                
         <a className='mx-auto text-decoration-none mt-3 mb-4 text-black'>© Team Seven</a>  
-        <LoginModal modalOpen={modalOpen} setModalOpen={setModalOpen} />
+        <LoginModal modalOpen={modalOpen} setModalOpen={setModalOpen} redirectToAddTicket={redirectToAddTicket}/>
       </div>          
     </footer> 
     </div>                 

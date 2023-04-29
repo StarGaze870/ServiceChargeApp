@@ -7,6 +7,10 @@ spring.jpa.hibernate.ddl-auto=update
 #spring.jackson.serialization.FAIL_ON_EMPTY_BEANS=false
 #spring.jpa.properties.hibernate.hbm2ddl.auto: update
 
+spring.http.multipart.enabled=true
+spring.servlet.multipart.max-file-size=20MB
+spring.servlet.multipart.max-request-size=20MB
+
 #FOR SEND EMAIL CONFIGURATION
 # REFER TO STEP 2
 #https://www.geeksforgeeks.org/spring-boot-sending-email-via-smtp/
@@ -14,8 +18,8 @@ spring.jpa.hibernate.ddl-auto=update
 spring.mail.host=smtp.gmail.com
 spring.mail.port=587
 spring.mail.senderName=Alliance Service Charge
-spring.mail.username=<email>
-spring.mail.password=<password>
+spring.mail.username=stargaze.lt@gmail.com
+spring.mail.password=rgkcmqcefyknyitg
 spring.mail.properties.mail.smtp.auth=true
 spring.mail.properties.mail.smtp.starttls.enable=true
 
