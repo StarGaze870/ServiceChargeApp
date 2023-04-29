@@ -172,7 +172,7 @@ const AddUser = () => {
           <link rel="icon" href="/appLogoWhite.png" />        
         </Head>                        
         <YesNoModal modalOpen={logoutModalOpen} setModalOpen={setLogoutModalOpen} onYesCallback={handleLogoutCallback} title='Logout'/>
-        <YesNoModal modalOpen={newUserModal} setModalOpen={setNewUserModal} onYesCallback={onNewUserYesCallback} title='Submit Ticket'/>        
+        <YesNoModal modalOpen={newUserModal} setModalOpen={setNewUserModal} onYesCallback={onNewUserYesCallback} title='Submit User'/>        
         <DrawerSidebarNavigation
           headerTitle='New User'
           selectedOption='Add New User'
