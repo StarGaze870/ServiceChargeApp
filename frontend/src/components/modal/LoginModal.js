@@ -174,13 +174,13 @@ export default function LoginModal({ modalOpen, setModalOpen, redirectToAddTicke
               />
             </form>                       
             <div className="d-flex justify-content-end mb-3">              
-            <a
+            <Link
                 className="text-decoration-none me-2"
                 href="/forgot-password"
                 onClick={handleForgotPasswordClick}
               >
                 Forgot password?
-              </a>
+              </Link>
 
             </div>           
             <div className="d-flex justify-content-end">

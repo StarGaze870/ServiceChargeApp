@@ -4,7 +4,8 @@ import React, { useEffect } from 'react';
 import CryptoJS from 'crypto-js';
 
 const withAuth = (WrappedComponent) => {
-  return (props) => {
+  const WithAuthWrapper = (props) => {
+
     const router = useRouter();
 
     useEffect(() => {
@@ -18,26 +19,26 @@ const withAuth = (WrappedComponent) => {
 
         try {
 
-            const decryptedEmailBytes = CryptoJS.AES.decrypt(encryptedEmail, 'email');
-            const decryptedEmail = decryptedEmailBytes.toString(CryptoJS.enc.Utf8);
-            const decryptedPasswordBytes = CryptoJS.AES.decrypt(encryptedPassword, 'password');
-            const decryptedPassword = decryptedPasswordBytes.toString(CryptoJS.enc.Utf8);
+          const decryptedEmailBytes = CryptoJS.AES.decrypt(encryptedEmail, 'email');
+          const decryptedEmail = decryptedEmailBytes.toString(CryptoJS.enc.Utf8);
+          const decryptedPasswordBytes = CryptoJS.AES.decrypt(encryptedPassword, 'password');
+          const decryptedPassword = decryptedPasswordBytes.toString(CryptoJS.enc.Utf8);
 
-            if (!decryptedEmail || !decryptedPassword) {
-                router.replace('/');
-              } else {
-                const data = await checkAuth({ email: decryptedEmail, password: decryptedPassword });
-                console.log('-- CHECK AUTH --')    
-                console.log(data)                       
+          if (!decryptedEmail || !decryptedPassword) {
+            router.replace('/');
+          } else {
+            const data = await checkAuth({ email: decryptedEmail, password: decryptedPassword });
+            console.log('-- CHECK AUTH --')
+            console.log(data)
 
-                if (!data[1].data) {
-                  router.replace('/');
-                }
-              }
+            if (!data[1].data) {
+              router.replace('/');
+            }
+          }
 
         } catch {
-            router.replace('/');
-        }                
+          router.replace('/');
+        }
       };
 
       getCheckAuthResponse();
@@ -45,6 +46,9 @@ const withAuth = (WrappedComponent) => {
 
     return <WrappedComponent {...props} />;
   };
+
+  WithAuthWrapper.displayName = 'WithAuthWrapper';
+  return WithAuthWrapper;
 };
 
 export default withAuth;

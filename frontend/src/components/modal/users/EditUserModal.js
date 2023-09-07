@@ -40,7 +40,7 @@ const style = {
 };
 
 const EditUserModal = memo(({ modalOpen, setModalOpen, onSaveCallback, onDeleteCallback, data}) => {        
-
+  EditUserModal.displayName = 'EditUserModal';
   const called = useRef(false);  
   const [showProgressBar, setShowProgressBar] = useState(false);
 

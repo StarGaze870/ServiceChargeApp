@@ -27,6 +27,7 @@ import ListAltIcon from '@mui/icons-material/ListAlt';
 import EditNoteIcon from '@mui/icons-material/EditNote';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
+import Image from 'next/image';
 
 const drawerWidth = 262;
 
@@ -201,7 +202,7 @@ export default function DrawerSidebarNavigation({headerTitle='Header Title', sel
             ))}
         </List>
         <div className='d-flex flex-column mt-auto pt-4'>
-        <img
+        <Image
               className='d-flex mx-auto mb-4'
               src="/appLogoBlack.png"
               alt="App Logo"

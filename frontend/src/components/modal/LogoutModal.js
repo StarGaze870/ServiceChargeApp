@@ -21,7 +21,7 @@ const style = {
 };
 
 const LogoutModal = memo(({ width='50vw', modalOpen, setModalOpen, onYesCallback, title='Title', yesMessage='Yes', cancelMessage='Cancel' }) => {        
-
+  LogoutModal.displayName = 'LogoutModal';
   const called = useRef(false);  
   const [showProgress, setShowProgress] = useState(false)
 

@@ -37,7 +37,7 @@ const style = {
 };
 
 const EditTicketModal = memo(({ modalOpen, setModalOpen, onSaveCallback, onDeleteCallback, data}) => {        
-
+  EditTicketModal.displayName = 'EditTicketModal';
   const called = useRef(false);  
   const [showProgressBar, setShowProgressBar] = useState(false);
 

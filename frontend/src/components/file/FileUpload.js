@@ -9,7 +9,7 @@ registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview);
 
 const FileUpload = ({
 
-    getFilesCallback=()=>{},
+    getFilesCallback=()=>{ console.log('EMPTY getFilesCallback()') },
     maxFiles=3,
     lableIdle='Drag & Drop your attachment',
     reset

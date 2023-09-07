@@ -21,7 +21,7 @@ const style = {
 };
 
 const InfoModal = React.memo(({ width='50vw', modalOpen, setModalOpen, onYesCallback, title='Title', messageData='Message Data', yesMessage='Yes'}) => {        
-
+  InfoModal.displayName = 'InfoModal';
   const called = useRef(false);
 
   const handleYes = () => {
