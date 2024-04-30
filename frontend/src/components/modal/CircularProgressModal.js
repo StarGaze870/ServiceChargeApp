@@ -21,7 +21,6 @@ const style = {
 };
 
 const CircularProgressModal = memo(({ modalOpen=false }) => {
-  CircularProgressModal.displayName = 'CircularProgressModal';
   
   const [open, setOpen] = useState(modalOpen);  
 

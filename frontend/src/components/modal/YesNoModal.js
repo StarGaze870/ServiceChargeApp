@@ -21,7 +21,7 @@ const style = {
 };
 
 const YesNoModal = React.memo(({ width='50vw', modalOpen, setModalOpen, onYesCallback, title='Title', yesMessage='Yes', cancelMessage='Cancel' }) => {        
-  YesNoModal.displayName = 'YesNoModal';
+
   const called = useRef(false);
 
   const handleYes = () => {

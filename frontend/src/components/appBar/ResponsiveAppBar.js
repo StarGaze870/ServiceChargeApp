@@ -17,7 +17,6 @@ import LoginModal from '../modal/LoginModal';
 import { useState, useRef, useEffect } from 'react';
 import { useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material';
-import Image from 'next/image';
 
 const pages = ['Home', 'Guide', 'About'];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
@@ -65,7 +64,7 @@ function ResponsiveAppBar({onSignIn}) {
       <Container maxWidth="">
         <Toolbar disableGutters>
           <Icon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }}> 
-            <Image src='/appLogoBlack.png'></Image>
+            <img src='/appLogoBlack.png'></img>
           </Icon>          
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' }, color: 'black' }}>
             <IconButton
@@ -104,7 +103,7 @@ function ResponsiveAppBar({onSignIn}) {
             </Menu>
           </Box>          
           <Icon  sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} > 
-            <Image src='/appLogoBlack.png'></Image>
+            <img src='/appLogoBlack.png'></img>
           </Icon>
           <Typography
             variant="h5"

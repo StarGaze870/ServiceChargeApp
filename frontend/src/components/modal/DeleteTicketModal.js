@@ -21,7 +21,7 @@ const style = {
 };
 
 const DeleteTicketModal = React.memo(({ width='50vw', modalOpen, setModalOpen, onYesCallback, title='Title', yesMessage='Yes', cancelMessage='Cancel' }) => {        
-  DeleteTicketModal.displayName = 'DeleteTicketModal';
+
   const called = useRef(false);
 
   const handleYes = () => {

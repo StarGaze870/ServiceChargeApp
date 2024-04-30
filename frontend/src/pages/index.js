@@ -133,11 +133,9 @@ export default function Home() {
             <div className='d-flex mt-4 ms-5'>
               <img className='img-fluid' src='/allianceLogo.png' style={{height: '60px', width: '70px'}}/>  
               <p className='mx-3'>
-              {
-                `Alliance Software, Inc. is a global IT services and solutions company. Alliance was established in 
+                Alliance Software, Inc. is a global IT services and solutions company. Alliance was established in 
                 2000 and has since grown to become one of the Philippines' largest and most respected independent 
-                software development outsourcing company.                        `
-              }                
+                software development outsourcing company.                        
               </p>
             </div>            
           </div> 

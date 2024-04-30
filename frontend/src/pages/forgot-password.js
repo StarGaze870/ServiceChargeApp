@@ -11,9 +11,8 @@ import SucessSlide from '@/components/transitions/SucessSlide';
 import { getUserIdByEmail } from '@/apiRequests/users/getUserIdByEmail';
 import { sendOTp } from '@/apiRequests/users/sendOtp';
 import { otpResetUserPassword } from '@/apiRequests/users/otpResetUserPassword';
-import Link from 'next/link';
 
-export default function ForgotPassword() {  
+export default function forgotPassword() {  
   
   const divRef = useRef(null);
   const router = useRouter();
@@ -221,7 +220,7 @@ export default function ForgotPassword() {
                 <LockIcon className='m-auto mt-2 mb-4' sx={{fontSize: '8em'}} />
                 <h1 className='text-center mb-3'>Reset your password</h1>
                 <p className={`mx-auto my-4 user-select-none ${!emailExist ? 'text-danger' : ''}`}>
-                  {!emailExist ? <><span className="text-decoration-underline">{email}</span>{`doesn't exist`}</>  : <span className="text-decoration-underline">{email}</span>}                  
+                  {!emailExist ? <><span className="text-decoration-underline">{email}</span> doesn't exist</>  : <span className="text-decoration-underline">{email}</span>}                  
                 </p>
                 {otpError ? <p className='ms-2 text-danger'>Invalid OTP code</p> : <p className='ms-2'>OTP code</p>}
                 <Box
@@ -290,9 +289,9 @@ export default function ForgotPassword() {
                       error={passwordMismatchError}
                       helperText={newPassword && confirmPassword ? (passwordMismatchError ? 'Passwords do not match' : '') : ''}
                     />
-                    <Link className='me-2 mb-3 text-decoration-none d-block align-self-end' href='/'>
+                    <a className='me-2 mb-3 text-decoration-none d-block align-self-end' href='/'>
                       Login Instead?
-                    </Link>
+                    </a>
                     <button name={btnName} className='btn btn-dark p-2 mt-4' onClick={handleResetClick}>
                       {btnName}
                       {btnName === 'Send Code' && <SendIcon className='ms-2' sx={{fontSize: '1.2em'}}/>}
@@ -310,29 +309,27 @@ export default function ForgotPassword() {
               <div className='d-flex mt-4 ms-5'>
                 <img className='img-fluid' src='/allianceLogo.png' style={{height: '60px', width: '70px'}}/>  
                 <p className='mx-3'>
-                {
-                  `Alliance Software, Inc. is a global IT services and solutions company. Alliance was established in 
+                  Alliance Software, Inc. is a global IT services and solutions company. Alliance was established in 
                   2000 and has since grown to become one of the Philippines' largest and most respected independent 
-                  software development outsourcing company.`
-                }                  
+                  software development outsourcing company.                        
                 </p>
               </div>            
             </div>   
             <div className="d-flex col-xl-4 flex-column mt-5" style={{ backgroundColor: "rgb(234, 234, 238)" }}>
               <h1 className='mx-auto'>About</h1>
               <h5 className='mx-auto my-3'>Made by:</h5>
-              <Link className='mx-auto mt-1' href="https://www.facebook.com/jl.vincent.92" target="_blank">Lj Vincent Tudtud</Link>
-              <Link className='mx-auto mt-1' href="https://www.facebook.com/joergeryan.lou" target="_blank">Joerge Ryan Lou</Link>
-              <Link className='mx-auto mt-1' href="https://www.facebook.com/cathgadiane" target="_blank">Cathleen Rose Gadiane</Link>
+              <a className='mx-auto mt-1' href="https://www.facebook.com/jl.vincent.92" target="_blank">Lj Vincent Tudtud</a>
+              <a className='mx-auto mt-1' href="https://www.facebook.com/joergeryan.lou" target="_blank">Joerge Ryan Lou</a>
+              <a className='mx-auto mt-1' href="https://www.facebook.com/cathgadiane" target="_blank">Cathleen Rose Gadiane</a>
             </div>  
             <div className="d-flex col-xl-4 flex-column mt-5" style={{ backgroundColor: "rgb(234, 234, 238)" }}>
               <h1 className='mx-auto'>Contact</h1>
               <img className='img-fluid mx-auto mt-3 mb-2' src='/appLogoBlack.png' style={{height: '60px', width: '70px'}}/>  
-              <Link className='mx-auto mt-3' href="#">alliance.servicecharge.gmail.com</Link>          
+              <a className='mx-auto mt-3' href="#">alliance.servicecharge.gmail.com</a>            
             </div>  
           </div>  
           <hr/>                
-          <Link className='mx-auto text-decoration-none mt-3 mb-4 text-black'>© Team Seven</Link>
+          <a className='mx-auto text-decoration-none mt-3 mb-4 text-black'>© Team Seven</a>  
           <LoginModal modalOpen={modalOpen} setModalOpen={setModalOpen} />
         </div>          
       </footer> 

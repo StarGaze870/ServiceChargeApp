@@ -4,7 +4,6 @@ import Slide from '@mui/material/Slide';
 import { Alert, AlertTitle, Box } from '@mui/material';
 
 const SucessSlide = memo(({toggleShow=false, title='Success', message='Message', hrefPath='/', queryDataJSON, disableLink=false, severity='success'}) => {
-  SucessSlide.displayName = 'SucessSlide';
   const [checked, setChecked] = useState(toggleShow);  
 
   useEffect(() => {
